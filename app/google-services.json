@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "441500532356",
+    "firebase_url": "https://hellocal-c2e9f.firebaseio.com",
+    "project_id": "hellocal-c2e9f",
+    "storage_bucket": "hellocal-c2e9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441500532356:android:2aac9e78bd3c16ca",
+        "android_client_info": {
+          "package_name": "nmct.howest.be.hellocal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "441500532356-amj1d97m9se569crakubhbq81nrrocg5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nmct.howest.be.hellocal",
+            "certificate_hash": "4DB71DE1FE38C026394627C52BC2A56F1A6C4903"
+          }
+        },
+        {
+          "client_id": "441500532356-5s9qob34mjgptc2bujuf2p60ioagpa05.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA--Aq3U0l2ATiTitolBXfdD9MkT9OMFZw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "441500532356-5s9qob34mjgptc2bujuf2p60ioagpa05.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
