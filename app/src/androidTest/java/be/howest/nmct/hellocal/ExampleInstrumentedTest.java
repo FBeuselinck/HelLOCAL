@@ -1,4 +1,4 @@
-package nmct.howest.be.hellocal;
+package be.howest.nmct.hellocal;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("nmct.howest.be.hellocal", appContext.getPackageName());
+        assertEquals("nmct.howest.nmct.nmct.howest.nmct.hellocal", appContext.getPackageName());
     }
 }

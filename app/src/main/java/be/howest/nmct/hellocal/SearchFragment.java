@@ -1,4 +1,4 @@
-package nmct.howest.be.hellocal;
+package be.howest.nmct.hellocal;
 
 
 import android.os.Bundle;
@@ -8,13 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class BecomeAGuideFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
 
-    public BecomeAGuideFragment() {
+    public SearchFragment() {
         // Required empty public constructor
     }
 
@@ -23,7 +20,7 @@ public class BecomeAGuideFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_become_aguide, container, false);
+        return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
 }

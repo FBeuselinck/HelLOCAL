@@ -1,5 +1,6 @@
-package nmct.howest.be.hellocal;
+package be.howest.nmct.hellocal;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -13,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import be.howest.nmct.hellocal.auth.AuthHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -54,6 +57,30 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (AuthHelper.isUserLoggedIn(this)) {
+            showSearchFragment();
+        } else {
+            //showLoginFragment();
+            showSignInActivity();
+        }
+    }
+
+    private void showSignInActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    protected void showSearchFragment(){
+        SearchFragment searchFragment = new SearchFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainer, searchFragment);
+        fragmentTransaction.commit();
+        setTitle("Search");
     }
 
     @Override

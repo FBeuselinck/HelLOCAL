@@ -1,4 +1,4 @@
-package nmct.howest.be.hellocal;
+package be.howest.nmct.hellocal;
 
 import org.junit.Test;
 
