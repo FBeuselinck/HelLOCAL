@@ -1,15 +1,162 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     tools:context="be.howest.nmct.hellocal.SearchFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:inputType="textPostalAddress"
+        android:ems="10"
+        android:layout_marginTop="12dp"
+        android:id="@+id/txtLocation"
+        android:layout_width="350dp"
+        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/btnSearch"
+        android:layout_alignStart="@+id/btnSearch" />
+
     <TextView
+        android:text="Date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is the search fragment"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/textView3"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/txtLocation"
+        android:layout_alignLeft="@+id/txtLocation"
+        android:layout_alignStart="@+id/txtLocation" />
+
+    <EditText
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/editText4"
+        android:layout_below="@+id/textView3"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignStart="@+id/textView3"
+        android:layout_marginTop="13dp" />
+
+    <Spinner
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView4"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignStart="@+id/textView4"
+        android:layout_marginTop="15dp"
+        android:id="@+id/spinner5"
+        android:entries="@array/people_array"/>
+
+    <Spinner
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner6"
+        android:layout_alignTop="@+id/spinner5"
+        android:layout_alignRight="@+id/editText4"
+        android:layout_alignEnd="@+id/editText4"
+        android:entries="@array/type_array"/>
+
+    <TextView
+        android:text="Type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5"
+        android:layout_above="@+id/spinner5"
+        android:layout_alignLeft="@+id/spinner6"
+        android:layout_alignStart="@+id/spinner6" />
+
+    <TextView
+        android:text="Language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView7"
+        android:layout_alignBaseline="@+id/textView6"
+        android:layout_alignBottom="@+id/textView6"
+        android:layout_alignLeft="@+id/spinner8"
+        android:layout_alignStart="@+id/spinner8" />
+
+    <Spinner
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner8"
+        android:layout_alignTop="@+id/spinner9"
+        android:layout_alignRight="@+id/btnSearch"
+        android:layout_alignEnd="@+id/btnSearch"
+        android:entries="@array/language_array"/>
+
+    <TextView
+        android:text="Location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="59dp"
+        android:id="@+id/textView2"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/txtLocation"
+        android:layout_alignStart="@+id/txtLocation" />
+
+    <TextView
+        android:text="People"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/textView4"
+        android:layout_below="@+id/editText4"
+        android:layout_alignLeft="@+id/editText4"
+        android:layout_alignStart="@+id/editText4" />
+
+    <TextView
+        android:text="Transport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:id="@+id/textView6"
+        android:layout_below="@+id/spinner5"
+        android:layout_alignLeft="@+id/spinner5"
+        android:layout_alignStart="@+id/spinner5" />
+
+    <Spinner
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:id="@+id/spinner9"
+        android:layout_below="@+id/textView6"
+        android:layout_alignLeft="@+id/textView6"
+        android:layout_alignStart="@+id/textView6"
+        android:entries="@array/transport_array"/>
+
+    <Button
+        android:text="SEARCH"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="13dp"
+        android:id="@+id/btnSearch"
+
+        android:layout_width="350dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#02D31C"/>
+
+    <TextView
+        android:text="Price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView8"
+        android:layout_below="@+id/spinner9"
+        android:layout_alignLeft="@+id/spinner9"
+        android:layout_alignStart="@+id/spinner9"
+        android:layout_marginTop="17dp" />
+
+    <SeekBar
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar2"
+        android:layout_below="@+id/textView8"
+        android:layout_alignLeft="@+id/textView8"
+        android:layout_alignStart="@+id/textView8"
+        android:layout_marginTop="11dp" />
+
+
 
 </RelativeLayout>

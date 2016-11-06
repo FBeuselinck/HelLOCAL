@@ -33,7 +33,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:text="@string/wrong_password"
+        android:text="@string/error_incorrect_password"
         android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/colorContrast"
