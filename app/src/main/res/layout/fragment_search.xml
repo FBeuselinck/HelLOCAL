@@ -1,162 +1,159 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
-    tools:context="be.howest.nmct.hellocal.SearchFragment">
+    android:fillViewport="true"
+    android:padding="10dp">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <EditText
-        android:layout_height="wrap_content"
-        android:inputType="textPostalAddress"
-        android:ems="10"
-        android:layout_marginTop="12dp"
-        android:id="@+id/txtLocation"
-        android:layout_width="350dp"
-        android:layout_below="@+id/textView2"
-        android:layout_alignLeft="@+id/btnSearch"
-        android:layout_alignStart="@+id/btnSearch" />
-
-    <TextView
-        android:text="Date"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/LinearLayoutsz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView3"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/txtLocation"
-        android:layout_alignLeft="@+id/txtLocation"
-        android:layout_alignStart="@+id/txtLocation" />
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="70dp">
 
-    <EditText
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
-        android:id="@+id/editText4"
-        android:layout_below="@+id/textView3"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_alignStart="@+id/textView3"
-        android:layout_marginTop="13dp" />
 
-    <Spinner
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView4"
-        android:layout_alignLeft="@+id/textView4"
-        android:layout_alignStart="@+id/textView4"
-        android:layout_marginTop="15dp"
-        android:id="@+id/spinner5"
-        android:entries="@array/people_array"/>
+        <TextView
+            android:id="@+id/textViewLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            />
 
-    <Spinner
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner6"
-        android:layout_alignTop="@+id/spinner5"
-        android:layout_alignRight="@+id/editText4"
-        android:layout_alignEnd="@+id/editText4"
-        android:entries="@array/type_array"/>
+        <EditText
+            android:id="@+id/editTextLocation"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:inputType="text"
+            />
 
-    <TextView
-        android:text="Type"
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            />
+
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:inputType="date"
+            />
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutsz2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView5"
-        android:layout_above="@+id/spinner5"
-        android:layout_alignLeft="@+id/spinner6"
-        android:layout_alignStart="@+id/spinner6" />
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        >
 
-    <TextView
-        android:text="Language"
+    <LinearLayout
+        android:id="@+id/LinearLayoutsz3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView7"
-        android:layout_alignBaseline="@+id/textView6"
-        android:layout_alignBottom="@+id/textView6"
-        android:layout_alignLeft="@+id/spinner8"
-        android:layout_alignStart="@+id/spinner8" />
+        android:orientation="vertical"
+        >
 
-    <Spinner
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner8"
-        android:layout_alignTop="@+id/spinner9"
-        android:layout_alignRight="@+id/btnSearch"
-        android:layout_alignEnd="@+id/btnSearch"
-        android:entries="@array/language_array"/>
 
-    <TextView
-        android:text="Location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="59dp"
-        android:id="@+id/textView2"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/txtLocation"
-        android:layout_alignStart="@+id/txtLocation" />
+        <TextView
+            android:id="@+id/textViewPeople"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="People"
+            />
 
-    <TextView
-        android:text="People"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/editText4"
-        android:layout_alignLeft="@+id/editText4"
-        android:layout_alignStart="@+id/editText4" />
+        <Spinner
+            android:id="@+id/spinnerPeople"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/people_array"/>
+        <TextView
+            android:id="@+id/textViewTransport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Transport"
+            android:layout_marginTop="10dp"
+            />
 
-    <TextView
-        android:text="Transport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
-        android:id="@+id/textView6"
-        android:layout_below="@+id/spinner5"
-        android:layout_alignLeft="@+id/spinner5"
-        android:layout_alignStart="@+id/spinner5" />
-
-    <Spinner
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:id="@+id/spinner9"
-        android:layout_below="@+id/textView6"
-        android:layout_alignLeft="@+id/textView6"
-        android:layout_alignStart="@+id/textView6"
-        android:entries="@array/transport_array"/>
-
-    <Button
-        android:text="SEARCH"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="13dp"
-        android:id="@+id/btnSearch"
-
-        android:layout_width="350dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="#02D31C"/>
-
-    <TextView
-        android:text="Price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView8"
-        android:layout_below="@+id/spinner9"
-        android:layout_alignLeft="@+id/spinner9"
-        android:layout_alignStart="@+id/spinner9"
-        android:layout_marginTop="17dp" />
-
-    <SeekBar
-        android:layout_width="360dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/seekBar2"
-        android:layout_below="@+id/textView8"
-        android:layout_alignLeft="@+id/textView8"
-        android:layout_alignStart="@+id/textView8"
-        android:layout_marginTop="11dp" />
+        <Spinner
+            android:id="@+id/spinnerTransport"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/transport_array"/>
 
 
 
-</RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutsz4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+
+            <TextView
+                android:id="@+id/textViewType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type"
+                />
+
+            <Spinner
+                android:id="@+id/spinnerType"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/type_array"/>
+            <TextView
+                android:id="@+id/textViewLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Language"
+                android:layout_marginTop="10dp"
+                />
+
+            <Spinner
+                android:id="@+id/spinnerLanguage"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/language_array"/>
+
+
+
+        </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price"
+            android:layout_marginTop="20dp"
+            />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_marginTop="30dp"
+            android:text="SEARCH"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:id="@+id/btnSearch"
+
+            android:layout_width="350dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="#02D31C"/>
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
