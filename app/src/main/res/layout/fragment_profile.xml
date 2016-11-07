@@ -97,7 +97,8 @@
                 <Spinner
                     android:id="@+id/spinner1"
                     android:layout_width="150dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:entries="@array/language_array"/>
 
 
 
@@ -117,10 +118,11 @@
                     android:layout_height="wrap_content"
                     android:text="Hometown"/>
 
-                <Spinner
+                <EditText
                     android:id="@+id/spinner2"
                     android:layout_width="150dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="Ghent"/>
 
 
 
@@ -158,6 +160,7 @@
                     android:id="@+id/EditText2"
                     android:layout_width="300dp"
                     android:layout_height="50dp"
+                    android:text="0479780923"
                     />
 
 
@@ -181,7 +184,8 @@
                 <EditText
                     android:id="@+id/EditText1"
                     android:layout_width="300dp"
-                    android:layout_height="50dp" />
+                    android:layout_height="50dp"
+                    android:text="george@george.com"/>
 
 
 
