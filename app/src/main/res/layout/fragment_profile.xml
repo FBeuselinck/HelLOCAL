@@ -86,6 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+
                 >
 
                 <TextView
@@ -98,10 +99,9 @@
                     android:id="@+id/spinner1"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:entries="@array/language_array"/>
-
-
-
+                    android:entries="@array/language_array"
+                    android:layout_marginTop="5dp"
+                    />
 
             </LinearLayout>
 
@@ -145,13 +145,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
 
+
                 >
 
                 <ImageView
                     android:id="@+id/imagePhone"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/ic_menu_camera"
+                    android:src="@drawable/ic_phone"
                     android:layout_gravity="center_vertical"/>
 
 
@@ -178,7 +179,7 @@
                     android:id="@+id/imageMail"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/ic_menu_camera"
+                    android:src="@drawable/ic_email"
                     android:layout_gravity="center_vertical"/>
 
                 <EditText

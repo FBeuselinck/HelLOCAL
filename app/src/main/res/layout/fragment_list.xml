@@ -1,8 +1,34 @@
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#dcdbdb">
+
+    <TextView
+        android:id="@+id/noGuides"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Movies Available Please Enter your fav movie by clicking + button"
+        android:textAlignment="center"
+        android:textSize="18sp"/>
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recyclerViewList"
+    android:id="@+id/recyclerViewLists"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:listitem="@layout/row_list" />
+
+        </FrameLayout>
+
+    </RelativeLayout>

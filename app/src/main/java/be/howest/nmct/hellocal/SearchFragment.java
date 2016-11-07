@@ -1,6 +1,7 @@
 package be.howest.nmct.hellocal;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -39,9 +40,13 @@ public class SearchFragment extends Fragment {
     }
 
     private void Search(){
-        final FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment fragment = new InfoFragment();
-        ft.replace(R.id.fragmentContainer, fragment, "NewFragmentTag");
-        ft.commit();
+//        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        Fragment fragment = new InfoFragment();
+//        ft.replace(R.id.fragmentContainer, fragment, "NewFragmentTag");
+//        ft.commit();
+
+        Intent intent = new Intent(getActivity(), TestActivity.class);
+        startActivity(intent);
+
     }
 }

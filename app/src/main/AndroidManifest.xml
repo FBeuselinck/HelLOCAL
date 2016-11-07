@@ -17,20 +17,31 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="be.howest.nmct.hellocal.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name="be.howest.nmct.hellocal.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/title_activity_list"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".TestActivity"
+            android:label="List"
+            android:parentActivityName=".MainActivity" >
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
         <service
-            android:name="be.howest.nmct.hellocal.auth.AuthenticatorService"
+            android:name=".auth.AuthenticatorService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -41,6 +52,7 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/account_authenticator" />
         </service>
+
     </application>
 
 </manifest>
