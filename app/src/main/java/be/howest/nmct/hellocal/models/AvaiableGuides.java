@@ -19,13 +19,14 @@ public class AvaiableGuides {
     public String type;
     public String transport;
     public String language;
+    public Integer userId;
 
 
     public AvaiableGuides(){
 
     }
 
-    public AvaiableGuides(String name, String location, String dateFrom, String dateTill, String maxPeople, String price, String type, String transport, String language){
+    public AvaiableGuides(String name, String location, String dateFrom, String dateTill, String maxPeople, String price, String type, String transport, String language, Integer userId){
         this.name=name;
         this.location=location;
         this.dateFrom=dateFrom;
@@ -35,6 +36,7 @@ public class AvaiableGuides {
         this.type=type;
         this.transport=transport;
         this.language=language;
+        this.userId = userId;
     }
 
     public String getName(){
@@ -107,6 +109,14 @@ public class AvaiableGuides {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }
 
