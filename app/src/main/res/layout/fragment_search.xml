@@ -132,13 +132,22 @@
             android:id="@+id/textViewPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Price"
+            android:text="Max price"
             android:layout_marginTop="20dp"
             />
 
         <SeekBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:id="@+id/rangeSeekbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:max="50"
+            />
+
+        <TextView
+            android:id="@+id/textViewseekbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
 
         <Button
             android:layout_marginTop="30dp"
