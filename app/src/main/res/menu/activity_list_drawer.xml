@@ -19,9 +19,13 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="Inbox" />
         <item
-            android:id="@+id/nav_Profile"
+        android:id="@+id/nav_Profile"
+        android:icon="@drawable/ic_menu_share"
+        android:title="Profile"/>
+        <item
+            android:id="@+id/nav_logOut"
             android:icon="@drawable/ic_menu_share"
-            android:title="Profile"/>
+            android:title="Sign Out"/>
     </group>
 
 </menu>

@@ -170,10 +170,17 @@ public class MainActivity extends AppCompatActivity
             setTitle("Profile");
 
         }
+        else if(id == R.id.nav_logOut){
+            SignOut();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void SignOut()
+    {
+        mAuth.signOut();
     }
 
     @Override
