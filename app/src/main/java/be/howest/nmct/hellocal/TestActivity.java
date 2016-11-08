@@ -34,7 +34,7 @@ public class TestActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabaseReference = database.getReference();
 
-    private int selectedPos = -1;
+
 
     static Activity thisActivity = null;
 
@@ -114,6 +114,8 @@ public class TestActivity extends AppCompatActivity {
         TextView textViewCountry;
         TextView textViewPrice;
 
+        String transport;
+
         public AvaiableGuides avaiableGuides;
 
         public GuideViewHolder(View v) {
@@ -123,23 +125,29 @@ public class TestActivity extends AppCompatActivity {
             textViewCountry = (TextView) v.findViewById(R.id.textViewCountry);
             textViewPrice = (TextView) v.findViewById(R.id.textViewPrice);
 
+
             ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                 @Override
                 public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                    Toast.makeText(thisActivity, "" + position,
-                            Toast.LENGTH_LONG).show();
+
+                    TextView Name = (TextView) v.findViewById(R.id.textViewNaam);
+                    TextView City = (TextView) v.findViewById(R.id.textViewCity);
+                    TextView Country = (TextView) v.findViewById(R.id.textViewCountry);
+                    TextView Price = (TextView) v.findViewById(R.id.textViewPrice);
+
+
+
+                    Intent intent = new Intent(thisActivity, InfoActivity.class);
+                    intent.putExtra("Name",Name.getText().toString());
+                    intent.putExtra("City",City.getText().toString());
+                    intent.putExtra("Country",Country.getText().toString());
+                    intent.putExtra("Price",Price.getText().toString());
+
+                    thisActivity.startActivity(intent);
                 }
             });
 
         }
     }
-    private OnItemClickListener clickListener;
 
-    public interface OnItemClickListener {
-        void onSpelItemClick(AvaiableGuides avaiableGuides);
-    }
-
-    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
-        this.clickListener = itemClickListener;
-    }
 }

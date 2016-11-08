@@ -16,9 +16,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
+
+        <!-- <activity -->
+        <!-- android:name=".LoginActivity" -->
+        <!-- android:label="@string/title_activity_login" /> -->
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_list"
@@ -32,12 +33,22 @@
         <activity
             android:name=".TestActivity"
             android:label="List"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".InfoActivity"
+            android:label="Info"
+            android:parentActivityName=".TestActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TestActivity" />
         </activity>
 
         <service
@@ -53,6 +64,7 @@
                 android:resource="@xml/account_authenticator" />
         </service>
 
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>
