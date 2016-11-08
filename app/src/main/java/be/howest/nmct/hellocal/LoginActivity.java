@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,10 +16,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginActivity extends AppCompatActivity implements
-        View.OnClickListener {
+public class LoginActivity extends AppCompatActivity {
 
     private EditText editTextEmail, editTextPassword;
+    private Button buttonSingUp;
 
     private static final String TAG = "LoginActivity";
 
@@ -43,6 +44,13 @@ public class LoginActivity extends AppCompatActivity implements
                 }
             }
         };
+        buttonSingUp = (Button) findViewById(R.id.sign_up_button);
+        buttonSingUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SignUp();
+            }
+        });
     }
 
     private void ChangeActivity()
@@ -51,18 +59,6 @@ public class LoginActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_in_button:
-                SignIn();
-                break;
-            case R.id.sign_out_button:
-                SignUp();
-                break;
-        }
-    }
 
     @Override
     public void onStart() {
