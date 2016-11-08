@@ -102,8 +102,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:background="@color/colorWhite"
-        android:text="@string/log_out"
-        android:visibility="gone" />
+        android:text="Register" />
 
 
 </LinearLayout>
