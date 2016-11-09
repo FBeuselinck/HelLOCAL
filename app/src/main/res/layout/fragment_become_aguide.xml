@@ -19,11 +19,31 @@
             android:layout_height="wrap_content"
             android:text="Location"/>
 
+    <LinearLayout
+        android:id="@+id/LinearLayoutsz13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <Spinner
+            android:id="@+id/SpinnerCountry"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/countries_array"/>
+
         <EditText
             android:id="@+id/EditTextLocation"
-            android:layout_width="300dp"
+            android:layout_width="150dp"
             android:layout_height="50dp"
+            android:hint="City"
             />
+
+
+
+
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textViewFrom"

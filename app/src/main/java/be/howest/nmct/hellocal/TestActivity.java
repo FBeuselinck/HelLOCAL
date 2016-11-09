@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -15,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
@@ -93,8 +96,14 @@ public class TestActivity extends AppCompatActivity {
 
                     viewHolder.textViewNaam.setText(model.getName());
                     viewHolder.textViewCity.setText(model.getLocation());
-                    viewHolder.textViewCountry.setText(model.getLocation());
+                    viewHolder.textViewCountry.setText(model.getCountry());
                     viewHolder.textViewPrice.setText(model.getPrice());
+
+
+
+
+                    viewHolder.textViewNaam.setTag(R.id.guideId,model.getUserId());
+
 
 
 
@@ -105,6 +114,7 @@ public class TestActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(adapter);
 
     }
+
 
 
     public static class GuideViewHolder extends RecyclerView.ViewHolder{
@@ -137,11 +147,13 @@ public class TestActivity extends AppCompatActivity {
 
 
 
+
                     Intent intent = new Intent(thisActivity, InfoActivity.class);
                     intent.putExtra("Name",Name.getText().toString());
                     intent.putExtra("City",City.getText().toString());
                     intent.putExtra("Country",Country.getText().toString());
                     intent.putExtra("Price",Price.getText().toString());
+                    intent.putExtra("UserId",Name.getTag(R.id.guideId).toString());
 
                     thisActivity.startActivity(intent);
                 }
@@ -149,5 +161,6 @@ public class TestActivity extends AppCompatActivity {
 
         }
     }
+
 
 }

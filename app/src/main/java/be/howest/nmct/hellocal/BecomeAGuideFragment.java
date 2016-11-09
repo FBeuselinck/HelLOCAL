@@ -30,6 +30,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
     private DatabaseReference mDatabaseReference;
     private EditText EditTextLocation;
+    private Spinner SpinnerCountry;
     private EditText EditTextFrom;
     private EditText EditTextTill;
     private Spinner spinnerPeople;
@@ -54,6 +55,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         View v = inflater.inflate(R.layout.fragment_become_aguide, container, false);
 
         EditTextLocation = (EditText) v.findViewById(R.id.EditTextLocation);
+        SpinnerCountry = (Spinner) v.findViewById(R.id.SpinnerCountry);
         EditTextFrom = (EditText) v.findViewById(R.id.EditTextFrom);
         EditTextTill = (EditText) v.findViewById(R.id.EditTextTill);
         spinnerPeople = (Spinner) v.findViewById(R.id.spinnerPeople);
@@ -77,7 +79,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         switch(view.getId()){
             case R.id.btnSave:
                 if(!isEmpty(EditTextLocation) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)){
-                    newBooking("TestNaam", EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
+                    newBooking("TestNaam", SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
                             EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
                             "Active",spinnerTransport.getSelectedItem().toString(),"Dutch",7);
                 }else{
@@ -95,9 +97,9 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void newBooking( String name, String location, String dateFrom, String dateTill, String maxPeople,String price, String type, String transport, String language, Integer userId) {
+    private void newBooking( String name,String country, String location, String dateFrom, String dateTill, String maxPeople,String price, String type, String transport, String language, Integer userId) {
         //Creating a movie object with user defined variables
-        AvaiableGuides guide = new AvaiableGuides(name,location,dateFrom,dateTill,maxPeople,price,type,transport,language,userId);
+        AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,language,userId);
         //referring to movies node and setting the values from movie object to that location
         mDatabaseReference.child("avaiableGuides").push().setValue(guide);
     }

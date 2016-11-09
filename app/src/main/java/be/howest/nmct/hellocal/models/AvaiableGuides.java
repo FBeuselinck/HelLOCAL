@@ -11,6 +11,7 @@ import java.util.Date;
 
 public class AvaiableGuides {
     public String name;
+    public String country;
     public String location;
     public String dateFrom;
     public String dateTill;
@@ -26,8 +27,9 @@ public class AvaiableGuides {
 
     }
 
-    public AvaiableGuides(String name, String location, String dateFrom, String dateTill, String maxPeople, String price, String type, String transport, String language, Integer userId){
+    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, String type, String transport, String language, Integer userId){
         this.name=name;
+        this.country = country;
         this.location=location;
         this.dateFrom=dateFrom;
         this.dateTill=dateTill;
@@ -117,6 +119,14 @@ public class AvaiableGuides {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }
 
