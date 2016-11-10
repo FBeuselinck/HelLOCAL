@@ -20,14 +20,14 @@ public class AvaiableGuides {
     public String type;
     public String transport;
     public String language;
-    public Integer userId;
+    public String userId;
 
 
     public AvaiableGuides(){
 
     }
 
-    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, String type, String transport, String language, Integer userId){
+    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, String type, String transport, String language, String userId){
         this.name=name;
         this.country = country;
         this.location=location;
@@ -113,11 +113,11 @@ public class AvaiableGuides {
         this.type = type;
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

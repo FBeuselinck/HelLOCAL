@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 import be.howest.nmct.hellocal.R;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -79,9 +82,18 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         switch(view.getId()){
             case R.id.btnSave:
                 if(!isEmpty(EditTextLocation) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)){
-                    newBooking("TestNaam", SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
-                            EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
-                            "Active",spinnerTransport.getSelectedItem().toString(),"Dutch",7);
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+
+                        String uid = user.getUid();
+                        newBooking("TestNaam", SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
+                                EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
+                                "Active",spinnerTransport.getSelectedItem().toString(),"Dutch",uid);
+
+                    }
+
+
                 }else{
                     if(isEmpty(EditTextLocation)){
                         Toast.makeText(getContext(), "Please enter a valid location!", Toast.LENGTH_SHORT).show();
@@ -97,7 +109,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void newBooking( String name,String country, String location, String dateFrom, String dateTill, String maxPeople,String price, String type, String transport, String language, Integer userId) {
+    private void newBooking( String name,String country, String location, String dateFrom, String dateTill, String maxPeople,String price, String type, String transport, String language, String userId) {
         //Creating a movie object with user defined variables
         AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,language,userId);
         //referring to movies node and setting the values from movie object to that location
