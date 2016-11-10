@@ -87,7 +87,8 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
                     if (user != null) {
 
                         String uid = user.getUid();
-                        newBooking("TestNaam", SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
+                        String Naam = user.getDisplayName();
+                        newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
                                 EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
                                 "Active",spinnerTransport.getSelectedItem().toString(),"Dutch",uid);
 
