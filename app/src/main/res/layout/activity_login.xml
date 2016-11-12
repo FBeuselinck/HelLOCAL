@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearlayout1"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_centerInParent="true"
     android:layout_gravity="center_vertical"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    android:gravity="center">
 
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:srcCompat="@drawable/title_blue"
+        android:id="@+id/imageView2" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -15,7 +24,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"
-        android:src="@drawable/logo_icon" />
+        android:src="@mipmap/ic_logo_white" />
 
     <TextView
         android:id="@+id/status"
@@ -43,7 +52,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentRight="true"
+        android:theme="@style/AppTheme.Login.EditText">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/editTextUseremail"
@@ -57,7 +67,7 @@
             android:ems="10"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:textColor="#000000" />
+            android:textColor="#fff" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -66,7 +76,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentRight="true"
+        android:theme="@style/AppTheme.Login.EditText">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edittextPassword"
@@ -80,7 +91,7 @@
             android:ems="10"
             android:hint="Wachtwoord"
             android:inputType="textPassword"
-            android:textColor="#000000" />
+            android:textColor="#fff" />
 
     </android.support.design.widget.TextInputLayout>
 
