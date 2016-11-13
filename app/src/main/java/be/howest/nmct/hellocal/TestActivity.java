@@ -1,6 +1,7 @@
 package be.howest.nmct.hellocal;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -74,6 +75,11 @@ public class TestActivity extends AppCompatActivity {
 
 
 
+        final ProgressDialog progress = new ProgressDialog(thisActivity);
+        progress.setTitle("Loading guides");
+        progress.setMessage("Hold on, we are finding your guides!");
+        progress.setCancelable(false);
+        progress.show();
 
 
         // Get a support ActionBar corresponding to this toolbar
@@ -85,6 +91,7 @@ public class TestActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewList);
         noGuides = (TextView) findViewById(R.id.noGuides);
+        noGuides.setVisibility(View.INVISIBLE);
 
         //scale animation to shrink floating actionbar
         shrinkAnim = new ScaleAnimation(1.15f, 0f, 1.15f, 0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -120,9 +127,11 @@ public class TestActivity extends AppCompatActivity {
         ) {
             @Override
             protected void populateViewHolder(GuideViewHolder viewHolder, AvaiableGuides model, int position) {
-                if(noGuides.getVisibility()== View.VISIBLE){
-                    noGuides.setVisibility(View.GONE);
-                }
+//                if(noGuides.getVisibility()== View.VISIBLE){
+                    progress.dismiss();
+
+//                    noGuides.setVisibility(View.GONE);
+//                }
 
 
                     viewHolder.textViewNaam.setText(model.getName());
