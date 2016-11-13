@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No Movies Available Please Enter your fav movie by clicking + button"
+        android:text="No Guides Available Please Enter your fav movie by clicking + button"
         android:textAlignment="center"
         android:textSize="18sp"/>
     <FrameLayout
