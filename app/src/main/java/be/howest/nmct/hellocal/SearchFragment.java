@@ -20,6 +20,7 @@ public class SearchFragment extends Fragment {
 
     private TextView textViewseekbar;
 
+    private Spinner spinnerCountry;
     private EditText editTextLocation;
     private EditText editTextDate;
     private Spinner spinnerPeople;
@@ -43,7 +44,8 @@ public class SearchFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        editTextLocation = (EditText) view.findViewById(R.id.editTextLocation);
+        spinnerCountry = (Spinner) view.findViewById(R.id.SpinnerCountry);
+        editTextLocation = (EditText) view.findViewById(R.id.EditTextLocation);
         editTextDate = (EditText) view.findViewById(R.id.editTextDate);
         spinnerPeople = (Spinner) view.findViewById(R.id.spinnerPeople);
         spinnerTransport = (Spinner) view.findViewById(R.id.spinnerTransport);
@@ -95,6 +97,7 @@ public class SearchFragment extends Fragment {
 
         Intent intent = new Intent(getActivity(), TestActivity.class);
         intent.putExtra("Location",editTextLocation.getText().toString().trim());
+        intent.putExtra("Country",spinnerCountry.getSelectedItem().toString());
         intent.putExtra("Date",editTextDate.getText().toString().trim());
         intent.putExtra("People",spinnerPeople.getSelectedItem().toString());
         intent.putExtra("Transport",spinnerTransport.getSelectedItem().toString());

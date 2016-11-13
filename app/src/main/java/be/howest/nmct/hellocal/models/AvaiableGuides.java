@@ -22,6 +22,7 @@ public class AvaiableGuides {
     public String transport;
     public String language;
     public String userId;
+//    public String combined;
 
 
     public AvaiableGuides(){
@@ -40,6 +41,7 @@ public class AvaiableGuides {
         this.transport=transport;
         this.language=language;
         this.userId = userId;
+//        this.combined=combined;
     }
 
     public String getName(){
@@ -138,6 +140,14 @@ public class AvaiableGuides {
 //        return "false";
 //    }
 
+
+//    public String getCombined() {
+//        return combined;
+//    }
+//
+//    public void setCombined(String combined) {
+//        this.combined = combined;
+//    }
 }
 
 

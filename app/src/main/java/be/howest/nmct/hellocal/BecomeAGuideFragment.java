@@ -106,6 +106,18 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
                         }
 
 
+//                        String Combined = SpinnerCountry.getSelectedItem().toString() + "_"
+//                                + EditTextLocation.getText().toString().trim() + "_"
+//                                + EditTextFrom.getText().toString().trim() + "_"
+//                                + EditTextTill.getText().toString().trim() + "_"
+//                                + spinnerPeople.getSelectedItem().toString() + "_"
+//                                + type.toString() + "_"
+//                                + spinnerTransport.getSelectedItem().toString() + "_"
+//                                + "Dutch" + "_"
+//                                + EditTextPrice.getText().toString().trim();
+
+
+
 
                         newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
                                 EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),

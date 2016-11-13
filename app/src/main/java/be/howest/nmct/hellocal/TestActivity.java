@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -35,6 +37,15 @@ public class TestActivity extends AppCompatActivity {
     private TextView noGuides;
 
     private String Location;
+    private String Country;
+    private String Date;
+    private String People;
+    private String Transport;
+    private String Type;
+    private String Language;
+    private String Price;
+
+//    private String Combined;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabaseReference = database.getReference();
@@ -53,12 +64,16 @@ public class TestActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Location = intent.getStringExtra("Location");
-        String Date = intent.getStringExtra("Date");
-        String People = intent.getStringExtra("People");
-        String Transport = intent.getStringExtra("Transport");
-        String Type = intent.getStringExtra("Type");
-        String Language = intent.getStringExtra("Language");
-        String Price = intent.getStringExtra("Price");
+        Country = intent.getStringExtra("Country");
+        Date = intent.getStringExtra("Date");
+        People = intent.getStringExtra("People");
+        Transport = intent.getStringExtra("Transport");
+        Type = intent.getStringExtra("Type");
+        Language = intent.getStringExtra("Language");
+        Price = intent.getStringExtra("Price");
+
+
+
 
 
         // Get a support ActionBar corresponding to this toolbar
@@ -84,7 +99,16 @@ public class TestActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mDatabaseReference = mDatabaseReference.child("avaiableGuides").getRef();
-        Query queryRef = mDatabaseReference.orderByChild("location").equalTo(Location);
+
+        Query queryRef;
+
+        if (Location.isEmpty()) {
+            queryRef = mDatabaseReference;
+        }else{
+            queryRef = mDatabaseReference.orderByChild("location").equalTo(Location);
+
+        }
+
 
 
         FirebaseRecyclerAdapter<AvaiableGuides,GuideViewHolder> adapter = new FirebaseRecyclerAdapter<AvaiableGuides, GuideViewHolder>(
@@ -169,5 +193,76 @@ public class TestActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.orderby, menu);
+        return true;
+    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.action_price_low: populateRecyclerView("PriceLow");
+//                return true;
+//            case R.id.action_price_high: populateRecyclerView("PriceHigh");
+//                return true;
+//            case R.id.action_name: populateRecyclerView("Name");
+//                return true;
+//            case R.id.action_rating: populateRecyclerView("Rating");
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
+//
+//
+//    public void populateRecyclerView(String OrderBy){
+//
+//        String Order = OrderBy;
+//
+//        mDatabaseReference = mDatabaseReference.child("avaiableGuides").getRef();
+//        Query queryRef = mDatabaseReference.orderByChild("location").equalTo(Location);
+//
+//        switch (Order){
+//            case "PriceLow": queryRef = mDatabaseReference.orderByChild("location").equalTo(Location);
+//        }
+//
+//
+//
+//
+//        FirebaseRecyclerAdapter<AvaiableGuides,GuideViewHolder> adapter = new FirebaseRecyclerAdapter<AvaiableGuides, GuideViewHolder>(
+//                AvaiableGuides.class,
+//                R.layout.row_list,
+//                GuideViewHolder.class,
+//                //referencing the node where we want the database to store the data from our Object
+//                queryRef
+//        ) {
+//            @Override
+//            protected void populateViewHolder(GuideViewHolder viewHolder, AvaiableGuides model, int position) {
+//                if(noGuides.getVisibility()== View.VISIBLE){
+//                    noGuides.setVisibility(View.GONE);
+//                }
+//
+//
+//                viewHolder.textViewNaam.setText(model.getName());
+//                viewHolder.textViewCity.setText(model.getLocation());
+//                viewHolder.textViewCountry.setText(model.getCountry());
+//                viewHolder.textViewPrice.setText("€ "+model.getPrice()+"/h");
+//
+//
+//
+//
+//                viewHolder.textViewNaam.setTag(R.id.guideId,model.getUserId());
+//
+//
+//
+//
+//
+//            }
+//        };
+//
+//        mRecyclerView.setAdapter(adapter);
+//    }
 
 }

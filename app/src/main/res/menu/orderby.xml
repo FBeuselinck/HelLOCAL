@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_rating"
+        android:orderInCategory="100"
+        android:title="Order by Rating"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_name"
+        android:orderInCategory="100"
+        android:title="Order by Name"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_price_low"
+        android:orderInCategory="100"
+        android:title="Order by Price "
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_price_high"
+        android:orderInCategory="100"
+        android:title="Order by Price"
+        app:showAsAction="never" />
+</menu>
