@@ -24,6 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,18 +83,38 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.btnSave:
-                if(!isEmpty(EditTextLocation) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)){
+                if(!isEmpty(EditTextLocation) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)&& !isEmpty(EditTextPrice)){
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
 
                         String uid = user.getUid();
                         String Naam = user.getDisplayName();
+
+                        ArrayList<String> type = new ArrayList<String>();
+                        if(chkActive.isChecked()){
+                            type.add("Active");
+                        }
+                        if(chkCity.isChecked()){
+                            type.add("City");
+                        }
+                        if(chkCulture.isChecked()){
+                            type.add("Culture");
+                        }
+                        if(chkElse.isChecked()){
+                            type.add("Else");
+                        }
+
+
+
                         newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
                                 EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
-                                "Active",spinnerTransport.getSelectedItem().toString(),"Dutch",uid);
+                                type,spinnerTransport.getSelectedItem().toString(),"Dutch",uid);
 
                     }
+
+                    Toast.makeText(getContext(),"The booking is added!", Toast.LENGTH_SHORT).show();
+                    break;
 
 
                 }else{
@@ -105,12 +127,11 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
                     }
                 }
                 //to remove current fragment
-               Toast.makeText(getContext(),"The booking is added!", Toast.LENGTH_SHORT).show();
-                break;
+
         }
     }
 
-    private void newBooking( String name,String country, String location, String dateFrom, String dateTill, String maxPeople,String price, String type, String transport, String language, String userId) {
+    private void newBooking(String name, String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, String language, String userId) {
         //Creating a movie object with user defined variables
         AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,language,userId);
         //referring to movies node and setting the values from movie object to that location

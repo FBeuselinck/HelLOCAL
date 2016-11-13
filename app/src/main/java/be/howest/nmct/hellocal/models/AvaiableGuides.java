@@ -2,6 +2,7 @@ package be.howest.nmct.hellocal.models;
 
 import com.google.firebase.database.GenericTypeIndicator;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ public class AvaiableGuides {
     public String dateTill;
     public String maxPeople;
     public String price;
-    public String type;
+    public ArrayList<String> type;
     public String transport;
     public String language;
     public String userId;
@@ -27,7 +28,7 @@ public class AvaiableGuides {
 
     }
 
-    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, String type, String transport, String language, String userId){
+    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, String language, String userId){
         this.name=name;
         this.country = country;
         this.location=location;
@@ -44,6 +45,7 @@ public class AvaiableGuides {
     public String getName(){
         return name;
     }
+
 
     public void setName(String name) {
         this.name = name;
@@ -77,7 +79,7 @@ public class AvaiableGuides {
         return transport;
     }
 
-    public String getType() {
+    public ArrayList<String> getType() {
         return type;
     }
 
@@ -109,7 +111,7 @@ public class AvaiableGuides {
         this.transport = transport;
     }
 
-    public void setType(String type) {
+    public void setType(ArrayList<String> type) {
         this.type = type;
     }
 
@@ -128,6 +130,14 @@ public class AvaiableGuides {
     public void setCountry(String country) {
         this.country = country;
     }
+
+//    public String getLocationByLocation(String Location){
+//        if(location.equals(Location)){
+//            return location;
+//        }
+//        return "false";
+//    }
+
 }
 
 

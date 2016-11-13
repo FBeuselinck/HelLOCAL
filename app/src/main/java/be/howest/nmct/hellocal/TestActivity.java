@@ -16,9 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
@@ -36,6 +38,7 @@ public class TestActivity extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabaseReference = database.getReference();
+
 
 
 
@@ -80,12 +83,16 @@ public class TestActivity extends AppCompatActivity {
         mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        mDatabaseReference = mDatabaseReference.child("avaiableGuides").getRef();
+        Query queryRef = mDatabaseReference.orderByChild("location").equalTo(Location);
+
+
         FirebaseRecyclerAdapter<AvaiableGuides,GuideViewHolder> adapter = new FirebaseRecyclerAdapter<AvaiableGuides, GuideViewHolder>(
                 AvaiableGuides.class,
                 R.layout.row_list,
                 GuideViewHolder.class,
                 //referencing the node where we want the database to store the data from our Object
-                mDatabaseReference.child("avaiableGuides").getRef()
+                queryRef
         ) {
             @Override
             protected void populateViewHolder(GuideViewHolder viewHolder, AvaiableGuides model, int position) {
@@ -97,7 +104,7 @@ public class TestActivity extends AppCompatActivity {
                     viewHolder.textViewNaam.setText(model.getName());
                     viewHolder.textViewCity.setText(model.getLocation());
                     viewHolder.textViewCountry.setText(model.getCountry());
-                    viewHolder.textViewPrice.setText(model.getPrice());
+                    viewHolder.textViewPrice.setText("€ "+model.getPrice()+"/h");
 
 
 

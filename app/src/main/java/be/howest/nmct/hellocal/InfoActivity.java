@@ -58,14 +58,14 @@ public class InfoActivity extends AppCompatActivity {
         btnContact = (Button) findViewById(R.id.btnContact);
 
 
-        Toast.makeText(getApplicationContext(), UserId,
-                Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), UserId,
+//                Toast.LENGTH_LONG).show();
 
 
         textViewName.setText(Name);
         textViewCity.setText(City);
         textViewCountry.setText(Country);
-        textViewPrice.setText("€ "+ Price + "/h");
+        textViewPrice.setText(Price);
         btnBook.setText("BOOK " + Name.toUpperCase());
         btnContact.setText("CONTACT " + Name.toUpperCase());
 
