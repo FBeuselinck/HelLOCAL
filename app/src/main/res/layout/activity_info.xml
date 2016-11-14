@@ -105,6 +105,7 @@
 <HorizontalScrollView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
     >
 
     <LinearLayout
@@ -112,7 +113,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="20dp"
+        android:paddingLeft="80dp"
         android:layout_marginTop="10dp"
         android:layout_gravity="center"
 
@@ -122,19 +123,22 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/ic_menu_camera"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginRight="20dp"
+        android:contentDescription="Testje"/>
     <ImageView
         android:id="@+id/imageIcon2"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/ic_menu_camera"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginRight="20dp"
+        android:contentDescription="Testje"/>
     <ImageView
         android:id="@+id/imageIcon3"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/ic_menu_camera"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginRight="20dp"
+        android:contentDescription="Testje"/>
     <ImageView
         android:id="@+id/imageIcon4"
         android:layout_width="40dp"

@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -73,7 +74,7 @@ public class InfoActivity extends AppCompatActivity {
 
         Transport = intent.getStringExtra("Transport");
         Active = intent.getStringExtra("Active");
-        City = intent.getStringExtra("City");
+        CityIcon = intent.getStringExtra("City2");
         Culture = intent.getStringExtra("Culture");
         SmthElse = intent.getStringExtra("SmthElse");
 
@@ -108,21 +109,83 @@ public class InfoActivity extends AppCompatActivity {
         btnBook.setText("BOOK " + Name.toUpperCase());
         btnContact.setText("CONTACT " + Name.toUpperCase());
 
-        if(Active.equals("True")){
+        if(Active.equals("True")&&CityIcon.equals("false")&&Culture.equals("false")&&SmthElse.equals("false")){
             ImageView1.setImageResource(R.drawable.active);
-        }
-
-        if(City.equals("True")){
+            ImageView2.setVisibility(View.GONE);
+            ImageView3.setVisibility(View.GONE);
+            ImageView4.setVisibility(View.GONE);
+        }else if(Active.equals("True")&&CityIcon.equals("True")&&Culture.equals("false")&&SmthElse.equals("false")){
+            ImageView1.setImageResource(R.drawable.active);
             ImageView2.setImageResource(R.drawable.city);
-        }
-
-        if(Culture.equals("True")){
+            ImageView3.setVisibility(View.GONE);
+            ImageView4.setVisibility(View.GONE);
+        }else if(Active.equals("True")&&CityIcon.equals("True")&&Culture.equals("True")&&SmthElse.equals("false")){
+            ImageView1.setImageResource(R.drawable.active);
+            ImageView2.setImageResource(R.drawable.city);
             ImageView3.setImageResource(R.drawable.culture);
-        }
-
-        if(SmthElse.equals("True")){
+            ImageView4.setVisibility(View.GONE);
+        }else if(Active.equals("True")&&CityIcon.equals("false")&&Culture.equals("True")&&SmthElse.equals("false")){
+            ImageView2.setImageResource(R.drawable.city);
+            ImageView1.setVisibility(View.GONE);
+            ImageView3.setVisibility(View.GONE);
+            ImageView4.setVisibility(View.GONE);
+        }else if(Active.equals("True")&&CityIcon.equals("false")&&Culture.equals("false")&&SmthElse.equals("True")){
+            ImageView2.setImageResource(R.drawable.city);
+            ImageView1.setVisibility(View.GONE);
+            ImageView3.setVisibility(View.GONE);
+            ImageView4.setVisibility(View.GONE);
+        }else if(CityIcon.equals("True")&&Active.equals("false")&&Culture.equals("false")&&SmthElse.equals("false")){
+            ImageView2.setImageResource(R.drawable.city);
+            ImageView1.setVisibility(View.GONE);
+            ImageView3.setVisibility(View.GONE);
+            ImageView4.setVisibility(View.GONE);
+        }else if(CityIcon.equals("True")&&Active.equals("false")&&Culture.equals("True")&&SmthElse.equals("false")){
+            ImageView2.setImageResource(R.drawable.city);
+            ImageView1.setVisibility(View.GONE);
+            ImageView3.setImageResource(R.drawable.culture);
+            ImageView4.setVisibility(View.GONE);
+        }else if(CityIcon.equals("True")&&Active.equals("false")&&Culture.equals("True")&&SmthElse.equals("True")){
+            ImageView2.setImageResource(R.drawable.city);
+            ImageView1.setVisibility(View.GONE);
+            ImageView3.setImageResource(R.drawable.culture);
+            ImageView4.setImageResource(R.drawable.smthelse);
+        }else if(Culture.equals("True")&&Active.equals("false")&&CityIcon.equals("false")&&SmthElse.equals("false")){
+            ImageView3.setImageResource(R.drawable.culture);
+            ImageView2.setVisibility(View.GONE);
+            ImageView1.setVisibility(View.GONE);
+            ImageView4.setVisibility(View.GONE);
+        }else if(Culture.equals("True")&&Active.equals("false")&&CityIcon.equals("false")&&SmthElse.equals("True")){
+            ImageView3.setImageResource(R.drawable.culture);
+            ImageView2.setVisibility(View.GONE);
+            ImageView1.setVisibility(View.GONE);
+            ImageView4.setImageResource(R.drawable.smthelse);
+        }else if(SmthElse.equals("True")&&Active.equals("false")&&Culture.equals("false")&&CityIcon.equals("false")){
+            ImageView4.setImageResource(R.drawable.smthelse);
+            ImageView2.setVisibility(View.GONE);
+            ImageView3.setVisibility(View.GONE);
+            ImageView1.setVisibility(View.GONE);
+        }else{
+            ImageView1.setImageResource(R.drawable.active);
+            ImageView2.setImageResource(R.drawable.city);
+            ImageView3.setImageResource(R.drawable.culture);
             ImageView4.setImageResource(R.drawable.smthelse);
         }
+
+
+//
+//        if(Culture.equals("True")&&Active.equals("false")&&City.equals("false")&&SmthElse.equals("false")){
+//            ImageView3.setImageResource(R.drawable.culture);
+//            ImageView2.setVisibility(View.GONE);
+//            ImageView1.setVisibility(View.GONE);
+//            ImageView4.setVisibility(View.GONE);
+//        }
+//
+//        if(SmthElse.equals("True")&&Active.equals("false")&&Culture.equals("false")&&City.equals("false")){
+//            ImageView4.setImageResource(R.drawable.smthelse);
+//            ImageView2.setVisibility(View.GONE);
+//            ImageView3.setVisibility(View.GONE);
+//            ImageView1.setVisibility(View.GONE);
+//        }
 
         if(Transport.equals("Guides transport")){
             ImageView5.setImageResource(R.drawable.guidetransport);

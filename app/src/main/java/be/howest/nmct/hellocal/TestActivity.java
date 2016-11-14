@@ -244,7 +244,7 @@ public class TestActivity extends AppCompatActivity {
                     intent.putExtra("UserId",Name.getTag(R.id.guideId).toString());
                     intent.putExtra("Transport",Name.getTag(R.id.transport).toString());
                     intent.putExtra("Active",Name.getTag(R.id.active).toString());
-                    intent.putExtra("City",Name.getTag(R.id.city).toString());
+                    intent.putExtra("City2",Name.getTag(R.id.city).toString());
                     intent.putExtra("Culture",Name.getTag(R.id.culture).toString());
                     intent.putExtra("SmthElse",Name.getTag(R.id.smthElse).toString());
 
