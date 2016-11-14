@@ -4,7 +4,6 @@ package be.howest.nmct.hellocal;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class SearchFragment extends Fragment {
@@ -95,7 +93,7 @@ public class SearchFragment extends Fragment {
 //        ft.commit();
 
 
-        Intent intent = new Intent(getActivity(), TestActivity.class);
+        Intent intent = new Intent(getActivity(), ListActivity.class);
         intent.putExtra("Location",editTextLocation.getText().toString().trim());
         intent.putExtra("Country",spinnerCountry.getSelectedItem().toString());
         intent.putExtra("Date",editTextDate.getText().toString().trim());

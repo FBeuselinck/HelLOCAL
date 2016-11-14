@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 
-public class TestActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity {
 
     ScaleAnimation shrinkAnim;
     private static RecyclerView mRecyclerView;
