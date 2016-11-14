@@ -23,10 +23,11 @@
 
 
             <ImageView
-                android:id="@+id/imagePhoto"
+                android:id="@+id/image_profile"
                 android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:src="@drawable/ic_menu_camera" />
+                android:layout_height="100dp"
+                android:src="@drawable/ic_menu_camera"
+                android:scaleType="centerCrop"/>
 
             <LinearLayout
                 android:id="@+id/LinearLayoutsz3"
