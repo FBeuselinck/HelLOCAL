@@ -12,11 +12,14 @@
     android:gravity="center">
 
 
-    <ImageView
+    <TextView
+        android:id="@+id/appTitle"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:srcCompat="@drawable/title_blue"
-        android:id="@+id/imageView2" />
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="#fff"
+        android:textSize="80sp"
+        android:gravity="center" />
 
     <ImageView
         android:id="@+id/imageView"
