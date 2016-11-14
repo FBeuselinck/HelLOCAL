@@ -99,43 +99,74 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/LinearLayoutsz5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"
 
-            >
 
-            <ImageView
-                android:id="@+id/imageIcon1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_menu_camera"
-                android:layout_marginRight="20dp"/>
-            <ImageView
-                android:id="@+id/imageIcon2"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_menu_camera"
-                android:layout_marginRight="20dp"/>
-            <ImageView
-                android:id="@+id/imageIcon3"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_menu_camera"
-                android:layout_marginRight="20dp"/>
-            <ImageView
-                android:id="@+id/imageIcon4"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_menu_camera"
-                android:layout_marginRight="20dp"/>
 
-        </LinearLayout>
+<HorizontalScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutsz5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+
+        >
+    <ImageView
+        android:id="@+id/imageIcon1"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_menu_camera"
+        android:layout_marginRight="20dp"/>
+    <ImageView
+        android:id="@+id/imageIcon2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_menu_camera"
+        android:layout_marginRight="20dp"/>
+    <ImageView
+        android:id="@+id/imageIcon3"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_menu_camera"
+        android:layout_marginRight="20dp"/>
+    <ImageView
+        android:id="@+id/imageIcon4"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_menu_camera"
+        android:layout_marginRight="20dp"/>
+    <ImageView
+        android:id="@+id/imageIcon5"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_menu_camera"
+        android:layout_marginRight="20dp"/>
+    <ImageView
+        android:id="@+id/imageIcon6"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_menu_camera"
+        android:layout_marginRight="20dp"/>
+        <ImageView
+            android:id="@+id/imageIcon7"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_menu_camera"
+            android:layout_marginRight="20dp"/>
+
+    </LinearLayout>
+
+</HorizontalScrollView>
+
+
+
+
 
         <TextView
             android:id="@+id/textViewBioLabel"

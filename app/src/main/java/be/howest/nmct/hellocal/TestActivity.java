@@ -1,8 +1,13 @@
 package be.howest.nmct.hellocal;
 
 import android.app.Activity;
+import android.app.Application;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Handler;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +33,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 
 public class TestActivity extends AppCompatActivity {
@@ -45,6 +52,11 @@ public class TestActivity extends AppCompatActivity {
     private String Type;
     private String Language;
     private String Price;
+
+    private String blActive = "false";
+    private String blCulture = "false";
+    private String blCity = "false";
+    private String blElse = "false";
 
 //    private String Combined;
 
@@ -74,12 +86,27 @@ public class TestActivity extends AppCompatActivity {
         Price = intent.getStringExtra("Price");
 
 
+        noGuides = (TextView) findViewById(R.id.noGuides);
+        noGuides.setVisibility(View.INVISIBLE);
+
 
         final ProgressDialog progress = new ProgressDialog(thisActivity);
         progress.setTitle("Loading guides");
         progress.setMessage("Hold on, we are finding your guides!");
         progress.setCancelable(false);
         progress.show();
+
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 5s = 5000ms
+//                noGuides.setVisibility(View.VISIBLE);
+
+                progress.dismiss();
+            }
+        }, 5000);
 
 
         // Get a support ActionBar corresponding to this toolbar
@@ -90,8 +117,7 @@ public class TestActivity extends AppCompatActivity {
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewList);
-        noGuides = (TextView) findViewById(R.id.noGuides);
-        noGuides.setVisibility(View.INVISIBLE);
+
 
         //scale animation to shrink floating actionbar
         shrinkAnim = new ScaleAnimation(1.15f, 0f, 1.15f, 0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -116,8 +142,6 @@ public class TestActivity extends AppCompatActivity {
 
         }
 
-
-
         FirebaseRecyclerAdapter<AvaiableGuides,GuideViewHolder> adapter = new FirebaseRecyclerAdapter<AvaiableGuides, GuideViewHolder>(
                 AvaiableGuides.class,
                 R.layout.row_list,
@@ -133,16 +157,45 @@ public class TestActivity extends AppCompatActivity {
 //                    noGuides.setVisibility(View.GONE);
 //                }
 
+                blActive = "false";
+                blCity = "false";
+                blCulture = "false";
+                blElse = "false";
 
-                    viewHolder.textViewNaam.setText(model.getName());
+
+                viewHolder.textViewNaam.setText(model.getName());
                     viewHolder.textViewCity.setText(model.getLocation());
                     viewHolder.textViewCountry.setText(model.getCountry());
                     viewHolder.textViewPrice.setText("€ "+model.getPrice()+"/h");
 
-
-
-
                     viewHolder.textViewNaam.setTag(R.id.guideId,model.getUserId());
+                    viewHolder.textViewNaam.setTag(R.id.transport, model.getTransport());
+
+
+                ArrayList list = model.getType();
+                for(int i = 0; i< list.size(); i++){
+                    if(list.get(i).toString().equals("Active")){
+
+                        blActive = "True";
+                    }
+                    else if(list.get(i).toString().equals("City")){
+
+                        blCity= "True";
+                    }
+                    else if(list.get(i).toString().equals("Culture")){
+
+                        blCulture = "True";
+                    }
+                    else if(list.get(i).toString().equals("Else")){
+
+                        blElse = "True";
+                    }
+                }
+
+                viewHolder.textViewNaam.setTag(R.id.active, blActive);
+                viewHolder.textViewNaam.setTag(R.id.city, blCity);
+                viewHolder.textViewNaam.setTag(R.id.culture, blCulture);
+                viewHolder.textViewNaam.setTag(R.id.smthElse, blElse);
 
 
 
@@ -154,7 +207,6 @@ public class TestActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(adapter);
 
     }
-
 
 
     public static class GuideViewHolder extends RecyclerView.ViewHolder{
@@ -175,7 +227,6 @@ public class TestActivity extends AppCompatActivity {
             textViewCountry = (TextView) v.findViewById(R.id.textViewCountry);
             textViewPrice = (TextView) v.findViewById(R.id.textViewPrice);
 
-
             ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                 @Override
                 public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -185,17 +236,32 @@ public class TestActivity extends AppCompatActivity {
                     TextView Country = (TextView) v.findViewById(R.id.textViewCountry);
                     TextView Price = (TextView) v.findViewById(R.id.textViewPrice);
 
-
-
-
                     Intent intent = new Intent(thisActivity, InfoActivity.class);
                     intent.putExtra("Name",Name.getText().toString());
                     intent.putExtra("City",City.getText().toString());
                     intent.putExtra("Country",Country.getText().toString());
                     intent.putExtra("Price",Price.getText().toString());
                     intent.putExtra("UserId",Name.getTag(R.id.guideId).toString());
+                    intent.putExtra("Transport",Name.getTag(R.id.transport).toString());
+                    intent.putExtra("Active",Name.getTag(R.id.active).toString());
+                    intent.putExtra("City",Name.getTag(R.id.city).toString());
+                    intent.putExtra("Culture",Name.getTag(R.id.culture).toString());
+                    intent.putExtra("SmthElse",Name.getTag(R.id.smthElse).toString());
+
+
 
                     thisActivity.startActivity(intent);
+
+//                    PendingIntent pendingIntent =
+//                            TaskStackBuilder.create(thisActivity)
+//                                    // add all of DetailsActivity's parents to the stack,
+//                                    // followed by DetailsActivity itself
+//                                    .addNextIntentWithParentStack()
+//                                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//                    NotificationCompat.Builder builder = new NotificationCompat.Builder(thisActivity);
+//                    builder.setContentIntent(pendingIntent);
+
                 }
             });
 
@@ -207,6 +273,17 @@ public class TestActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.orderby, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return(super.onOptionsItemSelected(item));
     }
 
 //    @Override
