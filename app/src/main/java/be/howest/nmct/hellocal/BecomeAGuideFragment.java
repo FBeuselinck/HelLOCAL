@@ -1,6 +1,7 @@
 package be.howest.nmct.hellocal;
 
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 
@@ -117,16 +119,24 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 //                                + EditTextPrice.getText().toString().trim();
 
 
+                        String photoUri = user.getPhotoUrl().toString();
 
+                        if(!photoUri.isEmpty()){
 
-                        newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
-                                EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
-                                type,spinnerTransport.getSelectedItem().toString(),"Dutch",uid);
+                            newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
+                                    EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
+                                    type,spinnerTransport.getSelectedItem().toString(),"Dutch",uid,photoUri);
+
+                            Toast.makeText(getContext(),"The booking is added!", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        }else{
+                            Toast.makeText(getContext(),"Please update your profile first!", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+
 
                     }
-
-                    Toast.makeText(getContext(),"The booking is added!", Toast.LENGTH_SHORT).show();
-                    break;
 
 
                 }else{
@@ -143,9 +153,9 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void newBooking(String name, String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, String language, String userId) {
+    private void newBooking(String name, String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, String language, String userId, String photoUri) {
         //Creating a movie object with user defined variables
-        AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,language,userId);
+        AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,language,userId, photoUri);
         //referring to movies node and setting the values from movie object to that location
         mDatabaseReference.child("avaiableGuides").push().setValue(guide);
     }

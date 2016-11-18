@@ -12,6 +12,18 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.squareup.picasso.Picasso;
+
+import be.howest.nmct.hellocal.models.User;
+
 public class InfoActivity extends AppCompatActivity {
 
     private String Name;
@@ -24,6 +36,7 @@ public class InfoActivity extends AppCompatActivity {
     private String Culture;
     private String CityIcon;
     private String SmthElse;
+    private String PhotoUri;
 
 
     private TextView textViewName;
@@ -32,6 +45,7 @@ public class InfoActivity extends AppCompatActivity {
     private RatingBar ratingBar;
     private TextView textViewReviews;
     private TextView textViewPrice;
+    private ImageView imagePhoto;
 
     private Button btnBook;
     private Button btnContact;
@@ -50,6 +64,8 @@ public class InfoActivity extends AppCompatActivity {
     private ImageView ImageView6;
     private ImageView ImageView7;
 
+    private DatabaseReference mDatabase;
+
 
 
 
@@ -58,6 +74,7 @@ public class InfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+
 
         ActionBar ab = getSupportActionBar();
 
@@ -77,6 +94,7 @@ public class InfoActivity extends AppCompatActivity {
         CityIcon = intent.getStringExtra("City2");
         Culture = intent.getStringExtra("Culture");
         SmthElse = intent.getStringExtra("SmthElse");
+        PhotoUri = intent.getStringExtra("PhotoUri");
 
 
         textViewName = (TextView) findViewById(R.id.textViewName);
@@ -85,6 +103,7 @@ public class InfoActivity extends AppCompatActivity {
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         textViewReviews = (TextView) findViewById(R.id.textViewReviews);
         textViewPrice = (TextView) findViewById(R.id.textViewPrice);
+        imagePhoto = (ImageView) findViewById(R.id.imagePhoto);
 
         btnBook = (Button) findViewById(R.id.btnBook);
         btnContact = (Button) findViewById(R.id.btnContact);
@@ -108,6 +127,8 @@ public class InfoActivity extends AppCompatActivity {
         textViewPrice.setText(Price);
         btnBook.setText("BOOK " + Name.toUpperCase());
         btnContact.setText("CONTACT " + Name.toUpperCase());
+
+        Picasso.with(this.getApplicationContext()).load(PhotoUri.toString()).into(imagePhoto);
 
         if(Active.equals("True")&&CityIcon.equals("false")&&Culture.equals("false")&&SmthElse.equals("false")){
             ImageView1.setImageResource(R.drawable.active);
@@ -194,6 +215,10 @@ public class InfoActivity extends AppCompatActivity {
         }else if(Transport.equals("No transport")){
             ImageView5.setImageResource(R.drawable.notransport);
         }
+
+
+
+
 
 
 

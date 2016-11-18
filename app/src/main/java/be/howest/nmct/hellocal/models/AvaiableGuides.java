@@ -1,5 +1,7 @@
 package be.howest.nmct.hellocal.models;
 
+import android.net.Uri;
+
 import com.google.firebase.database.GenericTypeIndicator;
 
 import java.lang.reflect.Array;
@@ -22,6 +24,7 @@ public class AvaiableGuides {
     public String transport;
     public String language;
     public String userId;
+    public String photoUri;
 //    public String combined;
 
 
@@ -29,7 +32,7 @@ public class AvaiableGuides {
 
     }
 
-    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, String language, String userId){
+    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, String language, String userId, String photoUri){
         this.name=name;
         this.country = country;
         this.location=location;
@@ -41,6 +44,7 @@ public class AvaiableGuides {
         this.transport=transport;
         this.language=language;
         this.userId = userId;
+        this.photoUri = photoUri;
 //        this.combined=combined;
     }
 
@@ -133,7 +137,15 @@ public class AvaiableGuides {
         this.country = country;
     }
 
-//    public String getLocationByLocation(String Location){
+    public String getPhotoUri() {
+        return photoUri;
+    }
+
+    public void setPhotoUri(String photoUri) {
+        this.photoUri = photoUri;
+    }
+
+    //    public String getLocationByLocation(String Location){
 //        if(location.equals(Location)){
 //            return location;
 //        }

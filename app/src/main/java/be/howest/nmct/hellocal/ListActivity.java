@@ -170,6 +170,7 @@ public class ListActivity extends AppCompatActivity {
 
                     viewHolder.textViewNaam.setTag(R.id.guideId,model.getUserId());
                     viewHolder.textViewNaam.setTag(R.id.transport, model.getTransport());
+                    viewHolder.textViewNaam.setTag(R.id.photoUri, model.getPhotoUri());
 
 
                 ArrayList list = model.getType();
@@ -247,6 +248,7 @@ public class ListActivity extends AppCompatActivity {
                     intent.putExtra("City2",Name.getTag(R.id.city).toString());
                     intent.putExtra("Culture",Name.getTag(R.id.culture).toString());
                     intent.putExtra("SmthElse",Name.getTag(R.id.smthElse).toString());
+                    intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
 
 
 

@@ -7,4 +7,5 @@
     <item name="city" type="id" />
     <item name="smthElse" type="id" />
     <item name="transport" type="id" />
+    <item name="photoUri" type="id" />
 </resources>
