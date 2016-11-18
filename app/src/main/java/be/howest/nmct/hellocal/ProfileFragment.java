@@ -128,10 +128,15 @@ public class ProfileFragment extends Fragment {
 
                     ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
 
+                    Language UserLanguage = null;
+                    Gender gender = null;
+                    mPhoneNumber = "";
 
-                    Language UserLanguage = profileDetails.getLanguage();
-                    Gender gender = profileDetails.getGender();
-                    mPhoneNumber = profileDetails.getPhoneNumber();
+                    if(profileDetails != null){
+                        UserLanguage = profileDetails.getLanguage();
+                        gender = profileDetails.getGender();
+                        mPhoneNumber = profileDetails.getPhoneNumber();
+                    }
 
                     if(UserLanguage == Language.English){
                     spinnerLanguages.setSelection(0);
@@ -177,7 +182,7 @@ public class ProfileFragment extends Fragment {
                         intSpinnerGenderStartValue = 0;
                     }
 
-                    editTextPhoneNumber.setText(profileDetails.getPhoneNumber());
+                    editTextPhoneNumber.setText(mPhoneNumber);
 
                 }
 
