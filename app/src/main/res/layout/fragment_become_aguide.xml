@@ -32,11 +32,11 @@
             android:layout_height="wrap_content"
             android:entries="@array/countries_array"/>
 
-        <EditText
-            android:id="@+id/EditTextLocation"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:hint="City"
+        <fragment
+            android:id="@+id/place_autocomplete_fragment2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
             />
 
 
@@ -44,6 +44,20 @@
 
 
         </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutsz18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutsz19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
         <TextView
             android:id="@+id/textViewFrom"
@@ -54,24 +68,38 @@
 
         <EditText
             android:id="@+id/EditTextFrom"
-            android:layout_width="300dp"
+            android:layout_width="150dp"
             android:layout_height="50dp"
             android:focusable="false"
             />
-
-        <TextView
-            android:id="@+id/textViewTill"
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/LinearLayoutsz20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Till"
-           />
+            android:orientation="vertical"
+            >
 
-        <EditText
-            android:id="@+id/EditTextTill"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:focusable="false"
-            />
+
+            <TextView
+                android:id="@+id/textViewTill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Till"
+                />
+
+            <EditText
+                android:id="@+id/EditTextTill"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:focusable="false"
+                />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+
 
         <LinearLayout
             android:id="@+id/LinearLayoutsz2"

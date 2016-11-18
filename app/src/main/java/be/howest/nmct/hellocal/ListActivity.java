@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -173,6 +175,9 @@ public class ListActivity extends AppCompatActivity {
                     viewHolder.textViewNaam.setTag(R.id.photoUri, model.getPhotoUri());
 
 
+                Picasso.with(getApplicationContext()).load(model.getPhotoUri()).into(viewHolder.imageViewPhoto);
+
+
                 ArrayList list = model.getType();
                 for(int i = 0; i< list.size(); i++){
                     if(list.get(i).toString().equals("Active")){
@@ -216,6 +221,7 @@ public class ListActivity extends AppCompatActivity {
         TextView textViewCity;
         TextView textViewCountry;
         TextView textViewPrice;
+        ImageView imageViewPhoto;
 
         String transport;
 
@@ -227,6 +233,7 @@ public class ListActivity extends AppCompatActivity {
             textViewCity = (TextView) v.findViewById(R.id.textViewCity);
             textViewCountry = (TextView) v.findViewById(R.id.textViewCountry);
             textViewPrice = (TextView) v.findViewById(R.id.textViewPrice);
+            imageViewPhoto = (ImageView) v.findViewById(R.id.imagePhoto);
 
             ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                 @Override

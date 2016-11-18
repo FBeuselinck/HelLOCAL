@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,12 @@ import android.widget.Toast;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 import be.howest.nmct.hellocal.R;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -41,7 +48,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
 
     private DatabaseReference mDatabaseReference;
-    private EditText EditTextLocation;
+//    private EditText EditTextLocation;
     private Spinner SpinnerCountry;
     private EditText EditTextFrom;
     private EditText EditTextTill;
@@ -54,8 +61,11 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     private EditText EditTextPrice;
     private Button btnSave;
 
+    private String Location;
+
     Calendar myCalendar = Calendar.getInstance();
 
+    private GoogleApiClient mGoogleApiClient;
 
 
     public BecomeAGuideFragment() {
@@ -69,7 +79,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_become_aguide, container, false);
 
-        EditTextLocation = (EditText) v.findViewById(R.id.EditTextLocation);
+//        EditTextLocation = (EditText) v.findViewById(R.id.EditTextLocation);
         SpinnerCountry = (Spinner) v.findViewById(R.id.SpinnerCountry);
         EditTextFrom = (EditText) v.findViewById(R.id.EditTextFrom);
         EditTextTill = (EditText) v.findViewById(R.id.EditTextTill);
@@ -144,6 +154,35 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
             }
         });
 
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
+
+
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment2);
+
+        autocompleteFragment.setHint("City");
+
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Location= place.getName().toString();
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i("test 2.0", "An error occurred: " + status);
+            }
+        });
+
         return v;
     }
 
@@ -151,7 +190,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.btnSave:
-                if(!isEmpty(EditTextLocation) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)&& !isEmpty(EditTextPrice)){
+                if((!Location.isEmpty()) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)&& !isEmpty(EditTextPrice)){
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
@@ -189,7 +228,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
                         if(!photoUri.isEmpty()){
 
-                            newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString().trim(),EditTextFrom.getText().toString(),
+                            newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), Location,EditTextFrom.getText().toString(),
                                     EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
                                     type,spinnerTransport.getSelectedItem().toString(),"Dutch",uid,photoUri);
 
@@ -206,7 +245,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
 
                 }else{
-                    if(isEmpty(EditTextLocation)){
+                    if(Location.isEmpty()){
                         Toast.makeText(getContext(), "Please enter a valid location!", Toast.LENGTH_SHORT).show();
                     }else if(isEmpty(EditTextFrom)){
                         Toast.makeText(getContext(), "Please enter a valid startdate", Toast.LENGTH_SHORT).show();

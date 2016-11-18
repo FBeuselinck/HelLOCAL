@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +16,24 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment  {
 
     private TextView textViewseekbar;
 
     private Spinner spinnerCountry;
-    private EditText editTextLocation;
+//    private EditText editTextLocation;
     private EditText editTextDate;
     private Spinner spinnerPeople;
     private Spinner spinnerTransport;
@@ -34,11 +42,14 @@ public class SearchFragment extends Fragment {
     private SeekBar rangeSeekbar;
     private String seekbarValue;
 
+    private String Location = "";
+
 
     private Button buttonSearch;
 
     Calendar myCalendar = Calendar.getInstance();
 
+    private GoogleApiClient mGoogleApiClient;
 
 
     public SearchFragment() {
@@ -53,7 +64,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         spinnerCountry = (Spinner) view.findViewById(R.id.SpinnerCountry);
-        editTextLocation = (EditText) view.findViewById(R.id.EditTextLocation);
+//        editTextLocation = (EditText) view.findViewById(R.id.EditTextLocation);
         editTextDate = (EditText) view.findViewById(R.id.editTextDate);
         spinnerPeople = (Spinner) view.findViewById(R.id.spinnerPeople);
         spinnerTransport = (Spinner) view.findViewById(R.id.spinnerTransport);
@@ -62,6 +73,8 @@ public class SearchFragment extends Fragment {
         rangeSeekbar = (SeekBar) view.findViewById(R.id.rangeSeekbar);
 
         textViewseekbar = (TextView) view.findViewById(R.id.textViewseekbar) ;
+
+
 
 
         buttonSearch = (Button) view.findViewById(R.id.btnSearch);
@@ -117,13 +130,55 @@ public class SearchFragment extends Fragment {
             }
         });
 
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
+
+
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setHint("City");
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Location = place.getName().toString();
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i("test 2.0", "An error occurred: " + status);
+            }
+        });
+
+
+
+
+
+
         // Inflate the layout for this fragment
         return  view;
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
 
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
 
     private void updateLabel() {
 
@@ -142,8 +197,9 @@ public class SearchFragment extends Fragment {
 //        ft.commit();
 
 
+
         Intent intent = new Intent(getActivity(), ListActivity.class);
-        intent.putExtra("Location",editTextLocation.getText().toString().trim());
+        intent.putExtra("Location",Location);
         intent.putExtra("Country",spinnerCountry.getSelectedItem().toString());
         intent.putExtra("Date",editTextDate.getText().toString().trim());
         intent.putExtra("People",spinnerPeople.getSelectedItem().toString());

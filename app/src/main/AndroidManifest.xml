@@ -71,6 +71,12 @@
                 android:resource="@xml/account_authenticator" />
         </service>
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBnp5Q6RCTjQAQGXtlZRKqwnjLWntMUQ6Q"/>
+
+
+
     </application>
 
 </manifest>
