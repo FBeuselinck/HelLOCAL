@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import be.howest.nmct.hellocal.models.Gender;
 import be.howest.nmct.hellocal.models.Language;
 import be.howest.nmct.hellocal.models.ProfileDetails;
 
@@ -36,15 +37,15 @@ import be.howest.nmct.hellocal.models.ProfileDetails;
  */
 public class ProfileFragment extends Fragment {
 
-    EditText editTextMail, editTextName;
+    EditText editTextMail, editTextName, editTextPhoneNumber;
     Button buttonSave;
     ImageView imageViewProfilePic;
-    Spinner spinnerLanguages;
+    Spinner spinnerLanguages, spinnerGender;
     String stringChangeName = "Change full name here";
-    String stringUserId;
+    String stringUserId, mPhoneNumber;
     FirebaseUser mUser;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    int intSpinnerStartValue;
+    int intSpinnerLanguageStartValue, intSpinnerGenderStartValue;
 
 
 
@@ -64,7 +65,9 @@ public class ProfileFragment extends Fragment {
 
         editTextMail = (EditText) view.findViewById(R.id.editText_Profile_mail);
         editTextName = (EditText) view.findViewById(R.id.editText_Profile_Name);
+        editTextPhoneNumber = (EditText) view.findViewById(R.id.EditText_Profile_PhoneNumber);
         spinnerLanguages = (Spinner) view.findViewById(R.id.spinnerLanguage);
+        spinnerGender = (Spinner) view.findViewById(R.id.spinnerGender);
 
         imageViewProfilePic = (ImageView) view.findViewById(R.id.image_profile);
 
@@ -123,31 +126,58 @@ public class ProfileFragment extends Fragment {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     // Get Post object and use the values to update the UI
 
-                    String sUserLanguage = dataSnapshot.getValue(String.class);
+                    ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
 
-                    String sTest = Language.English.toString();
-                    if(sUserLanguage.equals(Language.English.toString())){
+
+                    Language UserLanguage = profileDetails.getLanguage();
+                    Gender gender = profileDetails.getGender();
+                    mPhoneNumber = profileDetails.getPhoneNumber();
+
+                    if(UserLanguage == Language.English){
                     spinnerLanguages.setSelection(0);
-                        intSpinnerStartValue = 0;
+                        intSpinnerLanguageStartValue = 0;
                     }
-                    if(sUserLanguage.equals(Language.Dutch.toString())){
+                    if(UserLanguage == Language.Dutch){
                         spinnerLanguages.setSelection(1);
-                        intSpinnerStartValue = 1;
+                        intSpinnerLanguageStartValue = 1;
                     }
-                    if(sUserLanguage.equals(Language.French.toString())){
+                    if(UserLanguage == Language.French){
                         spinnerLanguages.setSelection(2);
-                        intSpinnerStartValue = 2;
+                        intSpinnerLanguageStartValue = 2;
                     }
-                    if(sUserLanguage.equals(Language.German.toString())){
+                    if(UserLanguage == Language.German){
                         spinnerLanguages.setSelection(3);
-                        intSpinnerStartValue = 3;
+                        intSpinnerLanguageStartValue = 3;
                     }
-                    else if(sUserLanguage == null)
+                    else if(UserLanguage == null)
                     {
                         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                        ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Language.English);
-                        mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
+                        ProfileDetails profileDetailsnew = new ProfileDetails(mUser.getUid(), Language.English);
+                        mDatabase.child("profileDetails").child(mUser.getUid()).setValue(profileDetailsnew);
+                        intSpinnerLanguageStartValue = 0;
                     }
+
+                    if(gender == Gender.Male){
+                        spinnerGender.setSelection(0);
+                        intSpinnerGenderStartValue = 0;
+                    }
+                    else if(gender == Gender.Female){
+                        spinnerGender.setSelection(1);
+                        intSpinnerGenderStartValue = 1;
+                    }
+                    else  if(gender == Gender.Undefined){
+                        spinnerGender.setSelection(2);
+                        intSpinnerGenderStartValue = 2;
+                    }
+                    else if(gender == null)
+                    {
+                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                        ProfileDetails profileDetailsnew = new ProfileDetails(mUser.getUid(), Gender.Undefined);
+                        mDatabase.child("profileDetails").child(mUser.getUid()).setValue(profileDetailsnew);
+                        intSpinnerGenderStartValue = 0;
+                    }
+
+                    editTextPhoneNumber.setText(profileDetails.getPhoneNumber());
 
                 }
 
@@ -159,7 +189,8 @@ public class ProfileFragment extends Fragment {
                 }
             };
 
-            DatabaseReference myRef = database.getReference("profileDetails").child(mUser.getUid()).child("language");
+
+            DatabaseReference myRef = database.getReference("profileDetails").child(mUser.getUid());
             myRef.addListenerForSingleValueEvent(postListener);
 
         }
@@ -184,6 +215,10 @@ public class ProfileFragment extends Fragment {
     {
         Boolean booleanChangeFound = false;
         String name = editTextName.getText().toString();
+        Language language = Language.English;
+        Gender gender = Gender.Male;
+        String phoneNumber = editTextPhoneNumber.getText().toString();
+
 
         if(name.length() != 0 && ! name.equals(mUser.getDisplayName()))
         {
@@ -203,34 +238,57 @@ public class ProfileFragment extends Fragment {
                         });
             }
         }
-        if(spinnerLanguages.getSelectedItemPosition() != intSpinnerStartValue)
+        if(phoneNumber.length() == 0)
         {
-            booleanChangeFound = true;
-            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-            ProfileDetails profileDetails = null;
-
-            if(spinnerLanguages.getSelectedItemPosition() == 0)
-            {
-                profileDetails = new ProfileDetails(FirebaseAuth.getInstance().getCurrentUser().getUid(), Language.English);
-            }
-            else if(spinnerLanguages.getSelectedItemPosition() == 1)
-            {
-                profileDetails = new ProfileDetails(FirebaseAuth.getInstance().getCurrentUser().getUid(), Language.Dutch);
-            }
-            else if(spinnerLanguages.getSelectedItemPosition() == 2)
-            {
-                profileDetails = new ProfileDetails(FirebaseAuth.getInstance().getCurrentUser().getUid(), Language.French);
-            }
-            else if(spinnerLanguages.getSelectedItemPosition() == 3)
-            {
-                profileDetails = new ProfileDetails(FirebaseAuth.getInstance().getCurrentUser().getUid(), Language.German);
-            }
-            mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
-
+            phoneNumber = "";
         }
+
+        if(spinnerLanguages.getSelectedItemPosition() != intSpinnerLanguageStartValue) booleanChangeFound = true;
+
+        if(intSpinnerGenderStartValue == spinnerGender.getSelectedItemPosition()) booleanChangeFound = true;
+
+
+
+        //Language update
+        if(spinnerLanguages.getSelectedItemPosition() == 0)
+        {
+            language = Language.English;
+        }
+        else if(spinnerLanguages.getSelectedItemPosition() == 1)
+        {
+            language = Language.Dutch;
+        }
+        else if(spinnerLanguages.getSelectedItemPosition() == 2)
+        {
+            language = Language.French;
+        }
+        else if(spinnerLanguages.getSelectedItemPosition() == 3)
+        {
+            language = Language.German;
+        }
+
+        //GenderUpdate
+        if(spinnerGender.getSelectedItemPosition() == 0)
+        {
+            gender = Gender.Male;
+        }
+        if(spinnerGender.getSelectedItemPosition() == 1)
+        {
+            gender = Gender.Female;
+        }
+        if(spinnerGender.getSelectedItemPosition() == 2)
+        {
+            gender = Gender.Undefined;
+        }
+
 
         if(booleanChangeFound)
         {
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), language, gender, phoneNumber);
+            mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
+
+
             Toast.makeText(getContext(), "Changes made", Toast.LENGTH_SHORT).show();
         }
 

@@ -57,12 +57,11 @@
                         android:text="25/09/1990"
                         />
 
-                    <TextView
-                        android:id="@+id/textViewSex"
+                    <Spinner
+                        android:id="@+id/spinnerGender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Male"
-                        android:layout_marginLeft="20dp"
+                        android:entries="@array/gender_array"
 
                         />
 
@@ -160,10 +159,10 @@
 
 
                 <EditText
-                    android:id="@+id/EditText2"
+                    android:id="@+id/EditText_Profile_PhoneNumber"
                     android:layout_width="300dp"
                     android:layout_height="50dp"
-                    android:text="0479780923"
+                    android:hint="Phone number"
                     />
 
 
