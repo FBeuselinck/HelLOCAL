@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="George Georgeson"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -98,7 +98,7 @@
                     android:text="Languages"/>
 
                 <Spinner
-                    android:id="@+id/spinner1"
+                    android:id="@+id/spinnerLanguage"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:entries="@array/language_array"

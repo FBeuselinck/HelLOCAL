@@ -16,6 +16,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import be.howest.nmct.hellocal.models.Language;
+import be.howest.nmct.hellocal.models.ProfileDetails;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -122,8 +127,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Toast.makeText(LoginActivity.this, "MY MESSAGE LOGIN FAILED",
                                     Toast.LENGTH_SHORT).show();
                         }
+                        else CreateDefaultProfileValues();
                     }
                 });
+    }
+    private void CreateDefaultProfileValues()
+    {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        ProfileDetails profileDetails = new ProfileDetails(FirebaseAuth.getInstance().getCurrentUser().getUid(), Language.English);
+        mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
     }
 
 }

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     FirebaseUser mUser;
     FirebaseStorage storage = FirebaseStorage.getInstance();
+    private ProfileFragment mprofileFramgnet;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
         setTitle("Search");
 
+        mprofileFramgnet = new ProfileFragment();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -175,9 +177,8 @@ public class MainActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_Profile) {
-            ProfileFragment fragment = new ProfileFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragmentContainer, fragment);
+            fragmentTransaction.replace(R.id.fragmentContainer, mprofileFramgnet);
             fragmentTransaction.commit();
             setTitle("Profile");
 
@@ -239,16 +240,11 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-
-                            ProfileFragment fragment = new ProfileFragment();
-                            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction.replace(R.id.fragmentContainer, fragment);
-                            fragmentTransaction.commit();
-                            setTitle("Profile");
+                            mAuthListener.onAuthStateChanged(mAuth);
+                            mprofileFramgnet.showDetails();
                         }
                     }
                 });
-
     }
         });
     }
