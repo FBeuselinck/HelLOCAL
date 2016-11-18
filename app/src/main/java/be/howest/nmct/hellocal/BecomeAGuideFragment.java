@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -187,6 +189,43 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+
+
+        mGoogleApiClient.disconnect();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGoogleApiClient.disconnect();
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mGoogleApiClient.disconnect();
+    }
+
+
+
+    @Override
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.btnSave:
@@ -289,4 +328,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         EditTextTill.setText(sdf.format(myCalendar.getTime()));
 
     }
+
+
+
 }

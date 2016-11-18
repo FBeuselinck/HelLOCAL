@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,7 +142,7 @@ public class SearchFragment extends Fragment  {
 
 
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment3);
 
         autocompleteFragment.setHint("City");
 
@@ -177,6 +179,29 @@ public class SearchFragment extends Fragment  {
     @Override
     public void onStop() {
         super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+       
+
+        mGoogleApiClient.disconnect();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGoogleApiClient.disconnect();
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
         mGoogleApiClient.disconnect();
     }
 
