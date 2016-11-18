@@ -1,6 +1,7 @@
 package be.howest.nmct.hellocal;
 
 
+import android.app.DatePickerDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -26,7 +28,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 
 /**
@@ -48,6 +53,9 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     private CheckBox chkElse;
     private EditText EditTextPrice;
     private Button btnSave;
+
+    Calendar myCalendar = Calendar.getInstance();
+
 
 
     public BecomeAGuideFragment() {
@@ -77,6 +85,64 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         btnSave.setOnClickListener(this);
+
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+
+
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+
+
+
+        };
+
+
+
+        final DatePickerDialog.OnDateSetListener date2 = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel2();
+            }
+
+        };
+
+        EditTextFrom.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(getContext(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        EditTextTill.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(getContext(), date2, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
 
         return v;
     }
@@ -165,5 +231,23 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         if (textInputEditText.getText().toString().trim().length() > 0)
             return false;
         return true;
+    }
+
+    private void updateLabel() {
+
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+
+        EditTextFrom.setText(sdf.format(myCalendar.getTime()));
+
+    }
+
+    private void updateLabel2() {
+
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+
+        EditTextTill.setText(sdf.format(myCalendar.getTime()));
+
     }
 }
