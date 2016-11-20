@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -22,12 +24,16 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
+import be.howest.nmct.hellocal.adapters.PlacesAutoCompleteAdapter;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 import be.howest.nmct.hellocal.R;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -68,6 +74,10 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     Calendar myCalendar = Calendar.getInstance();
 
     private GoogleApiClient mGoogleApiClient;
+
+
+    private PlacesAutoCompleteAdapter mPlacesAdapter;
+    private AutoCompleteTextView myLocation;
 
 
     public BecomeAGuideFragment() {
@@ -165,28 +175,41 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
 
 
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment2);
-
-        autocompleteFragment.setHint("City");
-
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                Location= place.getName().toString();
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                Log.i("test 2.0", "An error occurred: " + status);
-            }
-        });
+        myLocation = (AutoCompleteTextView) v.findViewById(R.id.myLocation2);
+        mPlacesAdapter = new PlacesAutoCompleteAdapter(getContext(), android.R.layout.simple_list_item_1,
+                mGoogleApiClient,null, null);
+        myLocation.setOnItemClickListener(mAutocompleteClickListener);
+        myLocation.setAdapter(mPlacesAdapter);
 
         return v;
     }
+
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final PlacesAutoCompleteAdapter.PlaceAutocomplete item = mPlacesAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+        }
+    };
+
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                Log.e("place", "Place query did not complete. Error: " +
+                        places.getStatus().toString());
+                return;
+            }
+            // Selecting the first object buffer.
+            final Place place = places.get(0);
+            Location = place.getName().toString();
+        }
+    };
 
     @Override
     public void onStart() {

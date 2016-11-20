@@ -35,26 +35,23 @@
                 android:layout_height="wrap_content"
                 android:entries="@array/countries_array"/>
 
-            <!--<EditText-->
-                <!--android:id="@+id/EditTextLocation"-->
-                <!--android:layout_width="150dp"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:hint="City"-->
-                <!--/>-->
 
 
-
+            <AutoCompleteTextView
+                android:id="@+id/myLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Location..."
+                />
 
 
 
 
         </LinearLayout>
-        <fragment
-            android:id="@+id/place_autocomplete_fragment3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-            />
+
+
+
+
 
         <TextView
             android:id="@+id/textViewDate"
