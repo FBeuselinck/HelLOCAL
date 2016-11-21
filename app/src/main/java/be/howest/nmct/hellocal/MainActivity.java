@@ -13,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,6 +27,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, InfoFragment.OnFragmentInteractionListener {
@@ -36,6 +40,10 @@ public class MainActivity extends AppCompatActivity
     FirebaseUser mUser;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     private ProfileFragment mprofileFramgnet;
+
+    private ImageView imageViewNavHead;
+    private TextView textViewNavName;
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,9 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View hView =  navigationView.getHeaderView(0);
+        imageViewNavHead = (ImageView) hView.findViewById(R.id.imageView_Nav);
+        textViewNavName = (TextView) hView.findViewById(R.id.textview_Nav_Name);
 
         //code to check if signin
         mAuth = FirebaseAuth.getInstance();
@@ -84,7 +95,12 @@ public class MainActivity extends AppCompatActivity
                 if (user == null) {
                     GotoLogin();
                 }
-                else mUser = user;
+                else{
+                    mUser = user;
+                    Uri photoUrl = mUser.getPhotoUrl();
+                    Picasso.with(getBaseContext()).load(photoUrl.toString()).into(imageViewNavHead);
+                    textViewNavName.setText(mUser.getDisplayName());
+                }
             }
         };
 
@@ -135,8 +151,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_Sign_Out) {
+            SignOut();
         }
 
         return super.onOptionsItemSelected(item);

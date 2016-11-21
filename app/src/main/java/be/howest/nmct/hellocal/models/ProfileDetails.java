@@ -8,10 +8,19 @@ import java.util.List;
 
 public class ProfileDetails {
 
+<<<<<<< HEAD
     public String profileId;
     public List<String> language;
     public Gender gender;
     public String phoneNumber;
+=======
+    private String profileId;
+    public Language language;
+    private Gender gender;
+    private String phoneNumber;
+    private String birthDate;
+    private String description;
+>>>>>>> origin/develop
 
 
 
@@ -48,6 +57,23 @@ public class ProfileDetails {
         this.gender = gender;
         this.phoneNumber = phoneNumber;
     }
+    public ProfileDetails (String profileId, Language language, Gender gender, String phoneNumber, String birthDate){
+        this.profileId = profileId;
+        this.language = language;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+    }
+
+    public ProfileDetails (String profileId, Language language, Gender gender, String phoneNumber, String birthDate, String description){
+        this.profileId = profileId;
+        this.language = language;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+        this.description = description;
+    }
+
 
 
     public String getProfileId() {
@@ -73,5 +99,22 @@ public class ProfileDetails {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getdescription() {
+        return description;
+    }
+
+    public void setdescription(String description) {
+        description = description;
+    }
+
 }
 
