@@ -29,14 +29,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-<<<<<<< HEAD
+
 import java.util.ArrayList;
 import java.util.List;
-=======
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
->>>>>>> origin/develop
+
 
 import be.howest.nmct.hellocal.models.Gender;
 import be.howest.nmct.hellocal.models.Language;
@@ -47,11 +47,9 @@ import be.howest.nmct.hellocal.multiSelectionSpinner.MultiSelectionSpinner;
 /**
  * A simple {@link Fragment} subclass.
  */
-<<<<<<< HEAD
-public class ProfileFragment extends Fragment implements MultiSelectionSpinner.OnMultipleItemsSelectedListener {
-=======
-public class ProfileFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
->>>>>>> origin/develop
+
+public class ProfileFragment extends Fragment implements MultiSelectionSpinner.OnMultipleItemsSelectedListener, DatePickerDialog.OnDateSetListener {
+
 
     EditText editTextMail, editTextName, editTextPhoneNumber, editTextBirthDate, editTextDescription;
     Button buttonSave;
@@ -106,12 +104,11 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         showDetails();
 
 
-<<<<<<< HEAD
 
 
 
 
-=======
+
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -131,7 +128,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
->>>>>>> origin/develop
+
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,15 +145,12 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         });
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/develop
         // Inflate the layout for this fragment
         return view;
     }
 
-<<<<<<< HEAD
+
     @Override
     public void selectedIndices(List<Integer> indices) {
 
@@ -166,13 +160,13 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     public void selectedStrings(List<String> strings) {
 
         Languages = strings;
-=======
+    }
     private void updateLabel() {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
         editTextBirthDate.setText(sdf.format(myCalendar.getTime()));
         saveDetails();
->>>>>>> origin/develop
+
     }
 
     public void showDetails()
@@ -415,11 +409,9 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         if(booleanChangeFound)
         {
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-<<<<<<< HEAD
-            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Languages, gender, phoneNumber);
-=======
-            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), language, gender, phoneNumber, birthDate, description);
->>>>>>> origin/develop
+
+            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Languages, gender, phoneNumber, birthDate, description);
+
             mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
 
             Toast.makeText(getContext(), "Changes made", Toast.LENGTH_SHORT).show();
