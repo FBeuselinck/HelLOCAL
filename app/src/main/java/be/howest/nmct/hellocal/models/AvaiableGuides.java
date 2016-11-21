@@ -7,6 +7,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Simon on 7/11/2016.
@@ -22,7 +23,7 @@ public class AvaiableGuides {
     public String price;
     public ArrayList<String> type;
     public String transport;
-    public String language;
+    public List<String> language;
     public String userId;
     public String photoUri;
 //    public String combined;
@@ -32,7 +33,7 @@ public class AvaiableGuides {
 
     }
 
-    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, String language, String userId, String photoUri){
+    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, List<String> language, String userId, String photoUri){
         this.name=name;
         this.country = country;
         this.location=location;
@@ -65,7 +66,7 @@ public class AvaiableGuides {
         return dateTill;
     }
 
-    public String getLanguage() {
+    public List<String> getLanguage() {
         return language;
     }
 
@@ -97,7 +98,7 @@ public class AvaiableGuides {
         this.dateTill = dateTill;
     }
 
-    public void setLanguage(String language) {
+    public void setLanguage(List<String> language) {
         this.language = language;
     }
 

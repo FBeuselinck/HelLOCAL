@@ -27,15 +27,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import be.howest.nmct.hellocal.models.Gender;
 import be.howest.nmct.hellocal.models.Language;
 import be.howest.nmct.hellocal.models.ProfileDetails;
+import be.howest.nmct.hellocal.multiSelectionSpinner.MultiSelectionSpinner;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements MultiSelectionSpinner.OnMultipleItemsSelectedListener {
 
     EditText editTextMail, editTextName, editTextPhoneNumber;
     Button buttonSave;
@@ -47,9 +51,13 @@ public class ProfileFragment extends Fragment {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     int intSpinnerLanguageStartValue, intSpinnerGenderStartValue;
 
+    private List<String> Languages;
+
+    private List<String> LanguagesIds;
 
 
 
+    private  MultiSelectionSpinner multiSelectionSpinner;
 
 
 
@@ -75,7 +83,15 @@ public class ProfileFragment extends Fragment {
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        multiSelectionSpinner = (MultiSelectionSpinner) view.findViewById(R.id.spinnerLanguage);
+
+
         showDetails();
+
+
+
+
+
 
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -92,8 +108,21 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
+
         // Inflate the layout for this fragment
         return view;
+    }
+
+    @Override
+    public void selectedIndices(List<Integer> indices) {
+
+    }
+
+    @Override
+    public void selectedStrings(List<String> strings) {
+
+        Languages = strings;
     }
 
     public void showDetails()
@@ -128,7 +157,9 @@ public class ProfileFragment extends Fragment {
 
                     ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
 
-                    Language UserLanguage = null;
+                    List<String> UserLanguage = null;
+                    List<String> DefaultLang = new ArrayList<String>();
+                    DefaultLang.add("English");
                     Gender gender = null;
                     mPhoneNumber = "";
 
@@ -138,29 +169,47 @@ public class ProfileFragment extends Fragment {
                         mPhoneNumber = profileDetails.getPhoneNumber();
                     }
 
-                    if(UserLanguage == Language.English){
-                    spinnerLanguages.setSelection(0);
-                        intSpinnerLanguageStartValue = 0;
+
+                    LanguagesIds = new ArrayList<String>();
+
+                    if(UserLanguage.size() == 0)
+                   {
+                       DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                       ProfileDetails profileDetailsnew = new ProfileDetails(mUser.getUid(), DefaultLang);
+                       mDatabase.child("profileDetails").child(mUser.getUid()).setValue(profileDetailsnew);
+                       intSpinnerLanguageStartValue = 0;
+                   }else{
+                        LanguagesIds = UserLanguage;
                     }
-                    if(UserLanguage == Language.Dutch){
-                        spinnerLanguages.setSelection(1);
-                        intSpinnerLanguageStartValue = 1;
-                    }
-                    if(UserLanguage == Language.French){
-                        spinnerLanguages.setSelection(2);
-                        intSpinnerLanguageStartValue = 2;
-                    }
-                    if(UserLanguage == Language.German){
-                        spinnerLanguages.setSelection(3);
-                        intSpinnerLanguageStartValue = 3;
-                    }
-                    else if(UserLanguage == null)
-                    {
-                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                        ProfileDetails profileDetailsnew = new ProfileDetails(mUser.getUid(), Language.English);
-                        mDatabase.child("profileDetails").child(mUser.getUid()).setValue(profileDetailsnew);
-                        intSpinnerLanguageStartValue = 0;
-                    }
+
+
+                    PopulateLanguages();
+
+
+
+//                    if(UserLanguage == Language.English){
+//                    spinnerLanguages.setSelection(0);
+//                        intSpinnerLanguageStartValue = 0;
+//                    }
+//                    if(UserLanguage == Language.Dutch){
+//                        spinnerLanguages.setSelection(1);
+//                        intSpinnerLanguageStartValue = 1;
+//                    }
+//                    if(UserLanguage == Language.French){
+//                        spinnerLanguages.setSelection(2);
+//                        intSpinnerLanguageStartValue = 2;
+//                    }
+//                    if(UserLanguage == Language.German){
+//                        spinnerLanguages.setSelection(3);
+//                        intSpinnerLanguageStartValue = 3;
+//                    }
+//                    else if(UserLanguage == null)
+//                    {
+//                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+//                        ProfileDetails profileDetailsnew = new ProfileDetails(mUser.getUid(), Language.English);
+//                        mDatabase.child("profileDetails").child(mUser.getUid()).setValue(profileDetailsnew);
+//                        intSpinnerLanguageStartValue = 0;
+//                    }
 
                     if(gender == Gender.Male){
                         spinnerGender.setSelection(0);
@@ -202,6 +251,13 @@ public class ProfileFragment extends Fragment {
 
     }
 
+
+    private void PopulateLanguages(){
+        String[] array = {"English", "Dutch", "German", "Spanish", "Portuguese", "Russian"};
+        multiSelectionSpinner.setItems(array);
+        multiSelectionSpinner.setSelection(LanguagesIds);
+        multiSelectionSpinner.setListener(this);
+    }
 
     private void UploadProfilePic()
     {
@@ -290,7 +346,7 @@ public class ProfileFragment extends Fragment {
         if(booleanChangeFound)
         {
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), language, gender, phoneNumber);
+            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Languages, gender, phoneNumber);
             mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
 
 

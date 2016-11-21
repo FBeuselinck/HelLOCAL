@@ -97,13 +97,12 @@
                     android:layout_height="wrap_content"
                     android:text="Languages"/>
 
-                <Spinner
+
+                
+                <be.howest.nmct.hellocal.multiSelectionSpinner.MultiSelectionSpinner
                     android:id="@+id/spinnerLanguage"
                     android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/language_array"
-                    android:layout_marginTop="5dp"
-                    />
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 

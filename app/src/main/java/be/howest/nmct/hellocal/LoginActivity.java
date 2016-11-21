@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import be.howest.nmct.hellocal.models.Language;
 import be.howest.nmct.hellocal.models.ProfileDetails;
 
@@ -133,8 +136,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
     private void CreateDefaultProfileValues()
     {
+        List<String> Test =  new ArrayList<String>();
+        Test.add("English");
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        ProfileDetails profileDetails = new ProfileDetails(FirebaseAuth.getInstance().getCurrentUser().getUid(), Language.English);
+        ProfileDetails profileDetails = new ProfileDetails(FirebaseAuth.getInstance().getCurrentUser().getUid(),Test);
         mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
     }
 

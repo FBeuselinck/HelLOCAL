@@ -158,7 +158,7 @@
             android:id="@+id/textViewPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Max price"
+            android:text="Max price per hour"
             android:layout_marginTop="20dp"
             />
 

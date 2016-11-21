@@ -1,13 +1,18 @@
 package be.howest.nmct.hellocal;
 
 
+import android.*;
+import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +32,7 @@ import android.widget.Toast;
 import be.howest.nmct.hellocal.adapters.PlacesAutoCompleteAdapter;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 import be.howest.nmct.hellocal.R;
+import be.howest.nmct.hellocal.models.ProfileDetails;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -34,18 +40,24 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -56,6 +68,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
 
     private DatabaseReference mDatabaseReference;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
 //    private EditText EditTextLocation;
     private Spinner SpinnerCountry;
     private EditText EditTextFrom;
@@ -68,6 +81,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     private CheckBox chkElse;
     private EditText EditTextPrice;
     private Button btnSave;
+    private List LanguagesIds;
 
     private String Location;
 
@@ -181,6 +195,8 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         myLocation.setOnItemClickListener(mAutocompleteClickListener);
         myLocation.setAdapter(mPlacesAdapter);
 
+
+
         return v;
     }
 
@@ -257,10 +273,10 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
 
-                        String uid = user.getUid();
-                        String Naam = user.getDisplayName();
+                        final String uid = user.getUid();
+                        final String Naam = user.getDisplayName();
 
-                        ArrayList<String> type = new ArrayList<String>();
+                        final ArrayList<String> type = new ArrayList<String>();
                         if(chkActive.isChecked()){
                             type.add("Active");
                         }
@@ -274,33 +290,64 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
                             type.add("Else");
                         }
 
+                        final String photoUri = user.getPhotoUrl().toString();
+                        LanguagesIds = new ArrayList<String>();
 
-//                        String Combined = SpinnerCountry.getSelectedItem().toString() + "_"
-//                                + EditTextLocation.getText().toString().trim() + "_"
-//                                + EditTextFrom.getText().toString().trim() + "_"
-//                                + EditTextTill.getText().toString().trim() + "_"
-//                                + spinnerPeople.getSelectedItem().toString() + "_"
-//                                + type.toString() + "_"
-//                                + spinnerTransport.getSelectedItem().toString() + "_"
-//                                + "Dutch" + "_"
-//                                + EditTextPrice.getText().toString().trim();
+                        ValueEventListener postListener = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // Get Post object and use the values to update the UI
+
+                                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+                                List<String> UserLanguage = null;
+
+                                if(profileDetails != null){
+                                    UserLanguage = profileDetails.getLanguage();
+
+                                }
+                                if(UserLanguage.size() == 0)
+                                {
+                                    LanguagesIds.add("English");
+                                }else{
+                                    LanguagesIds = UserLanguage;
+                                }
 
 
-                        String photoUri = user.getPhotoUrl().toString();
 
-                        if(!photoUri.isEmpty()){
 
-                            newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), Location,EditTextFrom.getText().toString(),
-                                    EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
-                                    type,spinnerTransport.getSelectedItem().toString(),"Dutch",uid,photoUri);
+                                if(!photoUri.isEmpty()){
 
-                            Toast.makeText(getContext(),"The booking is added!", Toast.LENGTH_SHORT).show();
-                            break;
+                                    newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), Location,EditTextFrom.getText().toString(),
+                                            EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
+                                            type,spinnerTransport.getSelectedItem().toString(),LanguagesIds,uid,photoUri);
 
-                        }else{
-                            Toast.makeText(getContext(),"Please update your profile first!", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
+                                    Toast.makeText(getContext(),"The booking is added!", Toast.LENGTH_SHORT).show();
+
+                                }else{
+                                    Toast.makeText(getContext(),"Please update your profile first!", Toast.LENGTH_SHORT).show();
+                                }
+
+
+
+
+                            }
+
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Getting Post failed, log a message
+
+                                // ...
+                            }
+                        };
+                        DatabaseReference myRef = database.getReference("profileDetails").child(user.getUid());
+                        myRef.addListenerForSingleValueEvent(postListener);
+
+
+
+
+
+
 
 
                     }
@@ -320,7 +367,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void newBooking(String name, String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, String language, String userId, String photoUri) {
+    private void newBooking(String name, String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, List<String> language, String userId, String photoUri) {
         //Creating a movie object with user defined variables
         AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,language,userId, photoUri);
         //referring to movies node and setting the values from movie object to that location
@@ -351,6 +398,8 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         EditTextTill.setText(sdf.format(myCalendar.getTime()));
 
     }
+
+
 
 
 

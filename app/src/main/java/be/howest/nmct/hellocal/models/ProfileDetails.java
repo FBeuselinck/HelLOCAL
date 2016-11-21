@@ -1,5 +1,7 @@
 package be.howest.nmct.hellocal.models;
 
+import java.util.List;
+
 /**
  * Created by Arno on 14/11/2016.
  */
@@ -7,7 +9,7 @@ package be.howest.nmct.hellocal.models;
 public class ProfileDetails {
 
     public String profileId;
-    public Language language;
+    public List<String> language;
     public Gender gender;
     public String phoneNumber;
 
@@ -20,11 +22,11 @@ public class ProfileDetails {
     public void setGender(Gender gender) {
         this.gender = gender;
     }
-    public ProfileDetails(String profileId, Language language) {
+    public ProfileDetails(String profileId, List<String> language) {
         this.profileId = profileId;
         this.language = language;
     }
-    public ProfileDetails (String profileId, Language language, Gender gender)
+    public ProfileDetails (String profileId, List<String> language, Gender gender)
     {
         this.profileId = profileId;
         this.language = language;
@@ -39,7 +41,7 @@ public class ProfileDetails {
     {
 
     }
-    public ProfileDetails (String profileId, Language language, Gender gender, String phoneNumber)
+    public ProfileDetails (String profileId, List<String> language, Gender gender, String phoneNumber)
     {
         this.profileId = profileId;
         this.language = language;
@@ -56,11 +58,11 @@ public class ProfileDetails {
         this.profileId = profileId;
     }
 
-    public Language getLanguage() {
+    public List getLanguage() {
         return language;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(List<String> language) {
         this.language = language;
     }
 
