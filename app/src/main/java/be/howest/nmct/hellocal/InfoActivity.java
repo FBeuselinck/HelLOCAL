@@ -2,9 +2,9 @@ package be.howest.nmct.hellocal;
 
 import android.content.Intent;
 import android.media.Image;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -12,17 +12,16 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
-import be.howest.nmct.hellocal.models.User;
+import java.util.List;
+
+import be.howest.nmct.hellocal.models.ProfileDetails;
 
 public class InfoActivity extends AppCompatActivity {
 
@@ -64,7 +63,7 @@ public class InfoActivity extends AppCompatActivity {
     private ImageView ImageView6;
     private ImageView ImageView7;
 
-    private DatabaseReference mDatabase;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
 
@@ -216,20 +215,28 @@ public class InfoActivity extends AppCompatActivity {
             ImageView5.setImageResource(R.drawable.notransport);
         }
 
-
-
-
-
-
-
-
-
-
-
-
+        getLanguages();
 
     }
 
+    private void getLanguages()
+    {
+        ValueEventListener postEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+                ShowLanguages(profileDetails.getLanguage());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        DatabaseReference myRef = database.getReference("profileDetails").child(UserId);
+        myRef.addListenerForSingleValueEvent(postEventListener);
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -240,10 +247,11 @@ public class InfoActivity extends AppCompatActivity {
         }
 
         return(super.onOptionsItemSelected(item));
+
     }
 
-
-
-
-
+    private void ShowLanguages(List<String> listLanguages)
+    {
+        //SIMON TYPE CODE HERE
+    }
 }
