@@ -6,10 +6,12 @@ package be.howest.nmct.hellocal.models;
 
 public class ProfileDetails {
 
-    public String profileId;
+    private String profileId;
     public Language language;
-    public Gender gender;
-    public String phoneNumber;
+    private Gender gender;
+    private String phoneNumber;
+    private String birthDate;
+    private String description;
 
 
 
@@ -46,6 +48,23 @@ public class ProfileDetails {
         this.gender = gender;
         this.phoneNumber = phoneNumber;
     }
+    public ProfileDetails (String profileId, Language language, Gender gender, String phoneNumber, String birthDate){
+        this.profileId = profileId;
+        this.language = language;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+    }
+
+    public ProfileDetails (String profileId, Language language, Gender gender, String phoneNumber, String birthDate, String description){
+        this.profileId = profileId;
+        this.language = language;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+        this.description = description;
+    }
+
 
 
     public String getProfileId() {
@@ -71,5 +90,22 @@ public class ProfileDetails {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getdescription() {
+        return description;
+    }
+
+    public void setdescription(String description) {
+        description = description;
+    }
+
 }
 

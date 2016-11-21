@@ -1,6 +1,7 @@
 package be.howest.nmct.hellocal;
 
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -27,6 +29,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import be.howest.nmct.hellocal.models.Gender;
 import be.howest.nmct.hellocal.models.Language;
 import be.howest.nmct.hellocal.models.ProfileDetails;
@@ -35,17 +41,19 @@ import be.howest.nmct.hellocal.models.ProfileDetails;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
-    EditText editTextMail, editTextName, editTextPhoneNumber;
+    EditText editTextMail, editTextName, editTextPhoneNumber, editTextBirthDate, editTextDescription;
     Button buttonSave;
     ImageView imageViewProfilePic;
     Spinner spinnerLanguages, spinnerGender;
     String stringChangeName = "Change full name here";
-    String stringUserId, mPhoneNumber;
+    String stringUserId, mPhoneNumber, mBirthDate, mDescription;
     FirebaseUser mUser;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     int intSpinnerLanguageStartValue, intSpinnerGenderStartValue;
+    Calendar myCalendar = Calendar.getInstance();
+    static final int DATE_DIALOG_ID = 999;
 
 
 
@@ -66,6 +74,9 @@ public class ProfileFragment extends Fragment {
         editTextMail = (EditText) view.findViewById(R.id.editText_Profile_mail);
         editTextName = (EditText) view.findViewById(R.id.editText_Profile_Name);
         editTextPhoneNumber = (EditText) view.findViewById(R.id.EditText_Profile_PhoneNumber);
+        editTextBirthDate = (EditText) view.findViewById(R.id.editText_Profile_BirthDate);
+        editTextDescription = (EditText) view.findViewById(R.id.editText_Profile_Description) ;
+
         spinnerLanguages = (Spinner) view.findViewById(R.id.spinnerLanguage);
         spinnerGender = (Spinner) view.findViewById(R.id.spinnerGender);
 
@@ -77,6 +88,26 @@ public class ProfileFragment extends Fragment {
 
         showDetails();
 
+
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+        };
+
+        editTextBirthDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(getContext(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +123,16 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void updateLabel() {
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+        editTextBirthDate.setText(sdf.format(myCalendar.getTime()));
+        saveDetails();
     }
 
     public void showDetails()
@@ -131,11 +170,15 @@ public class ProfileFragment extends Fragment {
                     Language UserLanguage = null;
                     Gender gender = null;
                     mPhoneNumber = "";
+                    mBirthDate = "";
+                    mDescription = "";
 
                     if(profileDetails != null){
                         UserLanguage = profileDetails.getLanguage();
                         gender = profileDetails.getGender();
                         mPhoneNumber = profileDetails.getPhoneNumber();
+                        mBirthDate = profileDetails.getBirthDate();
+                        mDescription = profileDetails.getdescription();
                     }
 
                     if(UserLanguage == Language.English){
@@ -183,6 +226,14 @@ public class ProfileFragment extends Fragment {
                     }
 
                     editTextPhoneNumber.setText(mPhoneNumber);
+                    editTextBirthDate.setText(mBirthDate);
+                    if(mBirthDate != null && !mBirthDate.equals("")) {
+
+                        myCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(mBirthDate.substring(0,2)));
+                        myCalendar.set(Calendar.MONTH, Integer.parseInt(mBirthDate.substring(3,5)) -1);
+                        myCalendar.set(Calendar.YEAR, Integer.parseInt(mBirthDate.substring(6,10)));
+                    }
+                    editTextDescription.setText(mDescription);
 
                 }
 
@@ -223,7 +274,8 @@ public class ProfileFragment extends Fragment {
         Language language = Language.English;
         Gender gender = Gender.Male;
         String phoneNumber = editTextPhoneNumber.getText().toString();
-
+        String birthDate = editTextBirthDate.getText().toString();
+        String description = editTextDescription.getText().toString();
 
         if(name.length() != 0 && ! name.equals(mUser.getDisplayName()))
         {
@@ -247,6 +299,12 @@ public class ProfileFragment extends Fragment {
         {
             phoneNumber = "";
         }
+        else booleanChangeFound = true;
+
+        if(birthDate.length() == 0){
+           birthDate = "";
+        } else  booleanChangeFound = true;
+        if(description.length() == 0) description = "";else booleanChangeFound= true;
 
         if(spinnerLanguages.getSelectedItemPosition() != intSpinnerLanguageStartValue) booleanChangeFound = true;
 
@@ -290,9 +348,8 @@ public class ProfileFragment extends Fragment {
         if(booleanChangeFound)
         {
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), language, gender, phoneNumber);
+            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), language, gender, phoneNumber, birthDate, description);
             mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
-
 
             Toast.makeText(getContext(), "Changes made", Toast.LENGTH_SHORT).show();
         }
@@ -300,4 +357,8 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        editTextBirthDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
+    }
 }
