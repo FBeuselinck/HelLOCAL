@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         });
         */
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -85,6 +85,17 @@ public class MainActivity extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         imageViewNavHead = (ImageView) hView.findViewById(R.id.imageView_Nav);
         textViewNavName = (TextView) hView.findViewById(R.id.textview_Nav_Name);
+
+        textViewNavName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragmentContainer, mprofileFramgnet);
+                fragmentTransaction.commit();
+                setTitle("Profile");
+                drawer.closeDrawers();
+            }
+        });
 
         //code to check if signin
         mAuth = FirebaseAuth.getInstance();
