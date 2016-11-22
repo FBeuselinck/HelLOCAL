@@ -153,17 +153,48 @@
         android:src="@drawable/ic_menu_camera"
         android:layout_marginRight="20dp"/>
     <ImageView
-        android:id="@+id/imageIcon6"
+        android:id="@+id/imageIconLang1"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/ic_menu_camera"
         android:layout_marginRight="20dp"/>
         <ImageView
-            android:id="@+id/imageIcon7"
+        android:id="@+id/imageIconLang2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_menu_camera"
+        android:layout_marginRight="20dp"/>
+        <ImageView
+            android:id="@+id/imageIconLang3"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_menu_camera"
             android:layout_marginRight="20dp"/>
+        <ImageView
+            android:id="@+id/imageIconLang4"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_menu_camera"
+            android:layout_marginRight="20dp"/>
+        <ImageView
+            android:id="@+id/imageIconLang5"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_menu_camera"
+            android:layout_marginRight="20dp"/>
+        <ImageView
+            android:id="@+id/imageIconLang6"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_menu_camera"
+            android:layout_marginRight="20dp"/>
+        <ImageView
+            android:id="@+id/imageIconLang7"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_menu_camera"
+            android:layout_marginRight="20dp"/>
+
 
     </LinearLayout>
 
@@ -190,7 +221,7 @@
             android:id="@+id/textViewBio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut venenatis justo, sed posuere eros. Suspendisse facilisis felis nec libero consequat fringilla. Ut lacus enim, ultricies sit amet lectus sed, eleifend vestibulum lorem."
+            android:text="This user has no bio yet."
             />
 
         <Button

@@ -81,7 +81,6 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     private CheckBox chkElse;
     private EditText EditTextPrice;
     private Button btnSave;
-    private List LanguagesIds;
 
     private String Location;
 
@@ -291,63 +290,19 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
                         }
 
                         final String photoUri = user.getPhotoUrl().toString();
-                        LanguagesIds = new ArrayList<String>();
-
-                        ValueEventListener postListener = new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                // Get Post object and use the values to update the UI
-
-                                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
-                                List<String> UserLanguage = null;
-
-                                if(profileDetails != null){
-                                    UserLanguage = profileDetails.getLanguage();
-
-                                }
-                                if(UserLanguage.size() == 0)
-                                {
-                                    LanguagesIds.add("English");
-                                }else{
-                                    LanguagesIds = UserLanguage;
-                                }
 
 
+                if(!photoUri.isEmpty()){
 
+                    newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), Location,EditTextFrom.getText().toString(),
+                            EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
+                            type,spinnerTransport.getSelectedItem().toString(),uid,photoUri);
 
-                                if(!photoUri.isEmpty()){
+                    Toast.makeText(getContext(),"The booking is added!", Toast.LENGTH_SHORT).show();
 
-                                    newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), Location,EditTextFrom.getText().toString(),
-                                            EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
-                                            type,spinnerTransport.getSelectedItem().toString(),LanguagesIds,uid,photoUri);
-
-                                    Toast.makeText(getContext(),"The booking is added!", Toast.LENGTH_SHORT).show();
-
-                                }else{
-                                    Toast.makeText(getContext(),"Please update your profile first!", Toast.LENGTH_SHORT).show();
-                                }
-
-
-
-
-                            }
-
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                // Getting Post failed, log a message
-
-                                // ...
-                            }
-                        };
-                        DatabaseReference myRef = database.getReference("profileDetails").child(user.getUid());
-                        myRef.addListenerForSingleValueEvent(postListener);
-
-
-
-
-
-
+                }else{
+                    Toast.makeText(getContext(),"Please update your profile first!", Toast.LENGTH_SHORT).show();
+                }
 
 
                     }
@@ -367,9 +322,9 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void newBooking(String name, String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, List<String> language, String userId, String photoUri) {
+    private void newBooking(String name, String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport,  String userId, String photoUri) {
         //Creating a movie object with user defined variables
-        AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,language,userId, photoUri);
+        AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,userId, photoUri);
         //referring to movies node and setting the values from movie object to that location
         mDatabaseReference.child("avaiableGuides").push().setValue(guide);
     }

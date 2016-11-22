@@ -23,7 +23,6 @@ public class AvaiableGuides {
     public String price;
     public ArrayList<String> type;
     public String transport;
-    public List<String> language;
     public String userId;
     public String photoUri;
 //    public String combined;
@@ -33,7 +32,7 @@ public class AvaiableGuides {
 
     }
 
-    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, List<String> language, String userId, String photoUri){
+    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport,  String userId, String photoUri){
         this.name=name;
         this.country = country;
         this.location=location;
@@ -43,7 +42,6 @@ public class AvaiableGuides {
         this.price=price;
         this.type=type;
         this.transport=transport;
-        this.language=language;
         this.userId = userId;
         this.photoUri = photoUri;
 //        this.combined=combined;
@@ -66,9 +64,6 @@ public class AvaiableGuides {
         return dateTill;
     }
 
-    public List<String> getLanguage() {
-        return language;
-    }
 
     public String getLocation() {
         return location;
@@ -98,9 +93,6 @@ public class AvaiableGuides {
         this.dateTill = dateTill;
     }
 
-    public void setLanguage(List<String> language) {
-        this.language = language;
-    }
 
     public void setLocation(String location) {
         this.location = location;

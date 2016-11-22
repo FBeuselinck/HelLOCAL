@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import be.howest.nmct.hellocal.models.ProfileDetails;
@@ -62,6 +63,15 @@ public class InfoActivity extends AppCompatActivity {
     private ImageView ImageView5;
     private ImageView ImageView6;
     private ImageView ImageView7;
+    private ImageView ImageView8;
+    private ImageView ImageView9;
+    private ImageView ImageView10;
+    private ImageView ImageView11;
+    private ImageView ImageView12;
+
+
+    private TextView Bio;
+
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -107,13 +117,33 @@ public class InfoActivity extends AppCompatActivity {
         btnBook = (Button) findViewById(R.id.btnBook);
         btnContact = (Button) findViewById(R.id.btnContact);
 
+        Bio = (TextView) findViewById(R.id.textViewBio);
+
         ImageView1 = (ImageView) findViewById(R.id.imageIcon1);
         ImageView2 = (ImageView) findViewById(R.id.imageIcon2);
         ImageView3 = (ImageView) findViewById(R.id.imageIcon3);
         ImageView4 = (ImageView) findViewById(R.id.imageIcon4);
         ImageView5 = (ImageView) findViewById(R.id.imageIcon5);
-        ImageView6 = (ImageView) findViewById(R.id.imageIcon6);
-        ImageView7 = (ImageView) findViewById(R.id.imageIcon7);
+
+        ImageView6 = (ImageView) findViewById(R.id.imageIconLang1);
+        ImageView7 = (ImageView) findViewById(R.id.imageIconLang2);
+        ImageView8 = (ImageView) findViewById(R.id.imageIconLang3);
+        ImageView9 = (ImageView) findViewById(R.id.imageIconLang4);
+        ImageView10 = (ImageView) findViewById(R.id.imageIconLang5);
+        ImageView11 = (ImageView) findViewById(R.id.imageIconLang6);
+        ImageView12 = (ImageView) findViewById(R.id.imageIconLang7);
+
+        ImageView6.setVisibility(View.GONE);
+        ImageView7.setVisibility(View.GONE);
+        ImageView8.setVisibility(View.GONE);
+        ImageView9.setVisibility(View.GONE);
+        ImageView10.setVisibility(View.GONE);
+        ImageView11.setVisibility(View.GONE);
+        ImageView12.setVisibility(View.GONE);
+
+
+
+
 
 
 //        Toast.makeText(getApplicationContext(), UserId,
@@ -217,6 +247,7 @@ public class InfoActivity extends AppCompatActivity {
 
         getLanguages();
 
+
     }
 
     private void getLanguages()
@@ -226,6 +257,8 @@ public class InfoActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
                 ShowLanguages(profileDetails.getLanguage());
+                Bio.setText(profileDetails.getDescription());
+
             }
 
             @Override
@@ -237,6 +270,8 @@ public class InfoActivity extends AppCompatActivity {
         myRef.addListenerForSingleValueEvent(postEventListener);
 
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -252,6 +287,34 @@ public class InfoActivity extends AppCompatActivity {
 
     private void ShowLanguages(List<String> listLanguages)
     {
-        //SIMON TYPE CODE HERE
+
+
+        for(int i = 0; i < listLanguages.size(); i++){
+            if(listLanguages.get(i).equals("English") ){
+                ImageView6.setVisibility(View.VISIBLE);
+                ImageView6.setImageResource(R.drawable.english);
+            }else if(listLanguages.get(i).equals("Dutch") ){
+                ImageView7.setVisibility(View.VISIBLE);
+                ImageView7.setImageResource(R.drawable.dutch);
+            }else if(listLanguages.get(i).equals("French") ){
+                ImageView8.setVisibility(View.VISIBLE);
+                ImageView8.setImageResource(R.drawable.french);
+            }else if(listLanguages.get(i).equals("German") ){
+                ImageView9.setVisibility(View.VISIBLE);
+                ImageView9.setImageResource(R.drawable.german);
+            }else if(listLanguages.get(i).equals("Spanish") ){
+                ImageView10.setVisibility(View.VISIBLE);
+                ImageView10.setImageResource(R.drawable.spanish);
+            }else if(listLanguages.get(i).equals("Portuguese") ){
+                ImageView11.setVisibility(View.VISIBLE);
+                ImageView11.setImageResource(R.drawable.portuguese);
+            }else if(listLanguages.get(i).equals("Russian") ){
+                ImageView12.setVisibility(View.VISIBLE);
+                ImageView12.setImageResource(R.drawable.russian);
+            }
+        }
+
     }
+
+
 }

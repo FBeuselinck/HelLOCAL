@@ -103,13 +103,12 @@ public class ProfileDetails {
         this.birthDate = birthDate;
     }
 
-    public String getdescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setdescription(String description) {
-        description = description;
+    public void setDescription(String description) {
+        this.description = description;
     }
-
 }
 

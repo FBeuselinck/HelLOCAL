@@ -214,7 +214,7 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                         gender = profileDetails.getGender();
                         mPhoneNumber = profileDetails.getPhoneNumber();
                         mBirthDate = profileDetails.getBirthDate();
-                        mDescription = profileDetails.getdescription();
+                        mDescription = profileDetails.getDescription();
                     }
 
 
@@ -309,7 +309,7 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
 
 
     private void PopulateLanguages(){
-        String[] array = {"English", "Dutch", "German", "Spanish", "Portuguese", "Russian"};
+        String[] array = {"English", "Dutch","French", "German", "Spanish", "Portuguese", "Russian"};
         multiSelectionSpinner.setItems(array);
         multiSelectionSpinner.setSelection(LanguagesIds);
         multiSelectionSpinner.setListener(this);
