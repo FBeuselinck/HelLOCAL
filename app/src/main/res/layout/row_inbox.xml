@@ -37,7 +37,7 @@
 
             <LinearLayout
                 android:id="@+id/LinearLayout1"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
@@ -45,7 +45,7 @@
 
                 <LinearLayout
                     android:id="@+id/LinearLayout5"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
@@ -53,7 +53,7 @@
                 <TextView
                     android:id="@+id/textViewNaam"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:text="Naam"
                     android:textSize="20sp"
@@ -61,20 +61,21 @@
 
                     <TextView
                         android:id="@+id/textViewReceived"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginRight="10dp"
                         android:text="3 days ago"
                         android:textSize="10sp"
                         android:textStyle="bold"
-                        android:layout_marginLeft="10dp"/>
+                        android:layout_marginLeft="10dp"
+                        android:gravity="right"/>
 
-                    </LinearLayout>
+                </LinearLayout>
 
 
                 <TextView
-                    android:id="@+id/textViewTime"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textViewPreview"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="I would like to talk about ..."
                     android:textSize="12sp"
@@ -84,16 +85,6 @@
 
 
             </LinearLayout>
-            <TextView
-                android:id="@+id/textViewContact"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=">"
-                android:textSize="25sp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginLeft="130dp"
-
-                />
         </LinearLayout>
     </LinearLayout>
 

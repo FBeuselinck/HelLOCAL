@@ -109,7 +109,8 @@ public class MainActivity extends AppCompatActivity
                 else{
                     mUser = user;
                     Uri photoUrl = mUser.getPhotoUrl();
-                    Picasso.with(getBaseContext()).load(photoUrl.toString()).into(imageViewNavHead);
+                    if(photoUrl != null)
+                        Picasso.with(getBaseContext()).load(photoUrl.toString()).into(imageViewNavHead);
                     textViewNavName.setText(mUser.getDisplayName());
                 }
             }

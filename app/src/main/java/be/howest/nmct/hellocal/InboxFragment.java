@@ -1,20 +1,25 @@
 package be.howest.nmct.hellocal;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,31 +41,35 @@ import be.howest.nmct.hellocal.models.Const;
 public class InboxFragment extends Fragment {
 
     DatabaseReference database;
-    private ArrayList<ChatUser> uList;
-    public static ChatUser user;
+    private static RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private TextView noMessages;
 
-    /*
-    public InboxFragment() {
-        // Required empty public constructor
-    }
-    */
-
+    static Activity thisActivity = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = FirebaseDatabase.getInstance().getReference();
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_inbox, container, false);
-    }
 
-    /*
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
+        View v =inflater.inflate(R.layout.fragment_inbox, container, false);
+        database = FirebaseDatabase.getInstance().getReference();
+
+        //noMessages = (TextView) getActivity().findViewById(R.id.noMessages);
+        //noMessages.setVisibility(View.INVISIBLE);
+
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewInbox);
+        mRecyclerView.setHasFixedSize(true);
+        if (mRecyclerView != null) {
+            //to enable optimization of recyclerview
+            mRecyclerView.setHasFixedSize(true);
+        }
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // Inflate the layout for this fragment
+        return v;
     }
-    */
 
     @Override
     public void onDestroy()
@@ -77,91 +86,53 @@ public class InboxFragment extends Fragment {
     private void loadUserList(){
         final ProgressDialog dia = ProgressDialog.show(getActivity(), null, getString(R.string.alert_loading));
 
-        database.child("chatTest").child("users").addListenerForSingleValueEvent(new ValueEventListener(){
+        DatabaseReference queryRef = database.child("chatTest").child("users").getRef();
+
+        Log.i("------------------->", queryRef.toString());
+        FirebaseRecyclerAdapter<ChatUser,MessageViewHolder> adapter = new FirebaseRecyclerAdapter<ChatUser, MessageViewHolder>(
+                ChatUser.class,
+                R.layout.row_inbox,
+                MessageViewHolder.class,
+                //referencing the node where we want the database to store the data from our Object
+                queryRef
+        ){
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot){
+            protected void populateViewHolder(MessageViewHolder viewHolder, ChatUser model, int position) {
                 dia.dismiss();
 
-                long size = dataSnapshot.getChildrenCount();
-                if(size == 0){
-                    Toast.makeText(getActivity(),
-                            R.string.msg_no_user_found,
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                viewHolder.textViewNaam.setText(model.getName());
+                Log.i("------------------->", viewHolder.textViewNaam.getText().toString());
 
-                uList = new ArrayList<ChatUser>();
-                for(DataSnapshot ds : dataSnapshot.getChildren()){
-                    ChatUser user = ds.getValue(ChatUser.class);
-                    Logger.getLogger(InboxFragment.class.getName()).log(Level.ALL, user.getUsername());
-                    if(!user.getId().contentEquals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
-                        uList.add(user);
-                }
-
-                Log.i("test", uList.toString());
-
-                ListView list = (ListView) getActivity().findViewById(R.id.list);
-                list.setAdapter(new UserAdapter());
-                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> arg0,
-                                            View arg1, int pos, long arg3)
-                    {
-                        startActivity(new Intent(getActivity(),
-                                ChatActivity.class).putExtra(
-                                Const.EXTRA_DATA,  uList.get(pos)));
-                    }
-                });
+                //Picasso.with(getApplicationContext()).load(model.getPhotoUri()).into(viewHolder.imageViewPhoto);
             }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        };
+        mRecyclerView.setAdapter(adapter);
     }
 
-    private class UserAdapter extends BaseAdapter
-    {
-        @Override
-        public int getCount()
-        {
-            return uList.size();
+    public static class MessageViewHolder extends RecyclerView.ViewHolder{
+
+        TextView textViewNaam;
+        ImageView imageViewPhoto;
+        public ChatUser chatUser;
+
+        public MessageViewHolder(View v) {
+            super(v);
+            textViewNaam = (TextView) v.findViewById(R.id.textViewNaam);
+            imageViewPhoto = (ImageView) v.findViewById(R.id.imagePhoto);
+
+            ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                @Override
+                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                    TextView Name = (TextView) v.findViewById(R.id.textViewNaam);
+
+                    Intent intent = new Intent(thisActivity, ChatActivity.class);
+                    intent.putExtra("Name",Name.getText().toString());
+                    //intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
+
+                    thisActivity.startActivity(intent);
+                }
+            });
         }
-
-        @Override
-        public ChatUser getItem(int arg0)
-        {
-            return uList.get(arg0);
-        }
-
-        @Override
-        public long getItemId(int arg0)
-        {
-            return arg0;
-        }
-
-        @Override
-        public View getView(int pos, View v, ViewGroup arg2)
-        {
-            if (v == null)
-                v = getActivity().getLayoutInflater().inflate(R.layout.chat_item, null);
-
-            ChatUser c = getItem(pos);
-            TextView lbl = (TextView) v;
-            Log.i("test",c.getUsername());
-            lbl.setText(c.getUsername());
-            /*
-            lbl.setCompoundDrawablesWithIntrinsicBounds(
-                    c.isOnline() ? R.drawable.ic_online
-                            : R.drawable.ic_offline, 0, R.drawable.arrow, 0);
-                            */
-
-
-            Log.i("test",v.toString());
-
-            return v;
-        }
-
     }
 }

@@ -5,14 +5,11 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * The Class ChatUse is a Java Bean class that represents a single user.
- */
 @IgnoreExtraProperties
 public class ChatUser implements Serializable {
 
     public String id;
-    public String username;
+    public String name;
     public String email;
     public Boolean online;
     public ArrayList<String> room;
@@ -21,16 +18,16 @@ public class ChatUser implements Serializable {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public ChatUser(String id, String username, String email, Boolean online, ArrayList<String> room) {
+    public ChatUser(String id, String name, String email, Boolean online, ArrayList<String> room) {
         this.id = id;
-        this.username = username;
+        this.name = name;
         this.email = email;
         this.online = online;
         this.room = room;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
     public String getId() {
@@ -53,8 +50,8 @@ public class ChatUser implements Serializable {
         this.id = id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setEmail(String email) {
