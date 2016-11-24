@@ -3,8 +3,10 @@ package be.howest.nmct.hellocal;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.text.format.DateUtils;
 import android.view.MenuItem;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,39 +33,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import be.howest.nmct.hellocal.models.ChatUser;
+import be.howest.nmct.hellocal.models.Const;
+import be.howest.nmct.hellocal.models.Conversation;
 
-/**
- * The Class ChatActivity is the Activity class that holds main chat screen. It shows
- * all the conversation messages between two users and also allows the user to
- * send and receive messages.
- */
-public class ChatActivity{ /*extends CustomActivity {
-/*
+public class ChatActivity extends FragmentActivity implements View.OnClickListener{
+
     private ArrayList<Conversation> convList;
-
-
     private ChatAdapter adp;
-
-
     private EditText txt;
-
-    *//**
-     * The user name of buddy.
-     *//*
     private ChatUser buddy;
-
-    *//**
-     * The date of last message in conversation.
-     *//*
     private Date lastMsgDate;
+    private Button btnSend;
 
-    *//* (non-Javadoc)
-     * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
-     *//*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chat);
+        setContentView(R.layout.activity_chat);
 
         convList = new ArrayList<Conversation>();
         ListView list = (ListView) findViewById(R.id.list);
@@ -75,50 +62,40 @@ public class ChatActivity{ /*extends CustomActivity {
         txt.setInputType(InputType.TYPE_CLASS_TEXT
                 | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 
-        setTouchNClick(R.id.btnSend);
+        btnSend = (Button) findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessage();
+            }
+        });
 
         buddy = (ChatUser) getIntent().getSerializableExtra(Const.EXTRA_DATA);
 
         ActionBar actionBar = getActionBar();
         if(actionBar != null)
-            actionBar.setTitle(buddy.getUsername());
+            actionBar.setTitle(buddy.getName());
 
     }
 
-    *//* (non-Javadoc)
-     * @see android.support.v4.app.FragmentActivity#onResume()
-     *//*
     @Override
     protected void onResume() {
         super.onResume();
         loadConversationList();
     }
 
-    *//* (non-Javadoc)
-     * @see android.support.v4.app.FragmentActivity#onPause()
-     *//*
     @Override
     protected void onPause() {
         super.onPause();
     }
 
-    *//* (non-Javadoc)
-     * @see com.socialshare.custom.CustomFragment#onClick(android.view.View)
-     *//*
     @Override
     public void onClick(View v) {
-        super.onClick(v);
         if (v.getId() == R.id.btnSend) {
             sendMessage();
         }
-
     }
 
-    *//**
-     * Call this method to Send message to opponent. It does nothing if the text
-     * is empty otherwise it creates a Parse object for ChatActivity message and send it
-     * to Parse server.
-     *//*
     private void sendMessage() {
         if (txt.length() == 0)
             return;
@@ -169,10 +146,6 @@ public class ChatActivity{ /*extends CustomActivity {
         txt.setText(null);
     }
 
-    *//**
-     * Load the conversation list from Parse server and save the date of last
-     * message that will be used to load only recent new messages
-     *//*
     private void loadConversationList() {
 
         FirebaseDatabase.getInstance().getReference("messages").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -203,47 +176,31 @@ public class ChatActivity{ /*extends CustomActivity {
 
     }
 
-    *//**
-     * The Class ChatAdapter is the adapter class for ChatActivity ListView. This
-     * adapter shows the Sent or Receieved ChatActivity message in each list item.
-     *//*
     private class ChatAdapter extends BaseAdapter {
 
-        *//* (non-Javadoc)
-         * @see android.widget.Adapter#getCount()
-         *//*
         @Override
         public int getCount() {
             return convList.size();
         }
 
-        *//* (non-Javadoc)
-         * @see android.widget.Adapter#getItem(int)
-         *//*
         @Override
         public Conversation getItem(int arg0) {
             return convList.get(arg0);
         }
 
-        *//* (non-Javadoc)
-         * @see android.widget.Adapter#getItemId(int)
-         *//*
         @Override
         public long getItemId(int arg0) {
             return arg0;
         }
 
-        *//* (non-Javadoc)
-         * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
-         *//*
         @SuppressLint("InflateParams")
         @Override
         public View getView(int pos, View v, ViewGroup arg2) {
             Conversation c = getItem(pos);
             if (c.isSent())
-                v = getLayoutInflater().inflate(R.layout.chat_item_sent, null);
+                v = getLayoutInflater().inflate(R.layout.row_chat_sent, null);
             else
-                v = getLayoutInflater().inflate(R.layout.chat_item_rcv, null);
+                v = getLayoutInflater().inflate(R.layout.row_chat_rcv, null);
 
             TextView lbl = (TextView) v.findViewById(R.id.lbl1);
             lbl.setText(DateUtils.getRelativeDateTimeString(ChatActivity.this, c
@@ -272,14 +229,11 @@ public class ChatActivity{ /*extends CustomActivity {
 
     }
 
-    *//* (non-Javadoc)
-     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-     *//*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 }

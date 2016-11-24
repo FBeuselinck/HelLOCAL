@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,6 +47,11 @@ public class InboxFragment extends Fragment {
     private TextView noMessages;
 
     static Activity thisActivity = null;
+
+    private static ArrayList<String> defaultRoom = new ArrayList<String>(Arrays.asList(new String[]{"home"} ));
+    public static ChatUser user = new ChatUser("P4hJs5t9BaN6QsFYcGLRw6B5a7P2", "Joe Soap", "demo@myapptemplates.com", true, defaultRoom);
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,7 +94,6 @@ public class InboxFragment extends Fragment {
 
         DatabaseReference queryRef = database.child("chatTest").child("users").getRef();
 
-        Log.i("------------------->", queryRef.toString());
         FirebaseRecyclerAdapter<ChatUser,MessageViewHolder> adapter = new FirebaseRecyclerAdapter<ChatUser, MessageViewHolder>(
                 ChatUser.class,
                 R.layout.row_inbox,
@@ -101,7 +106,6 @@ public class InboxFragment extends Fragment {
                 dia.dismiss();
 
                 viewHolder.textViewNaam.setText(model.getName());
-                Log.i("------------------->", viewHolder.textViewNaam.getText().toString());
 
                 //Picasso.with(getApplicationContext()).load(model.getPhotoUri()).into(viewHolder.imageViewPhoto);
             }
