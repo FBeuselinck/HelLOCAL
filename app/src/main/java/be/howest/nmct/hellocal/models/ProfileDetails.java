@@ -15,7 +15,7 @@ public class ProfileDetails {
     private String phoneNumber;
     private String birthDate;
     private String description;
-
+    private Boolean available;
 
 
 
@@ -69,6 +69,16 @@ public class ProfileDetails {
         this.description = description;
     }
 
+    public ProfileDetails (String profileId, List<String> language, Gender gender, String phoneNumber, String birthDate, String description, Boolean available){
+        this.profileId = profileId;
+        this.language = language;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+        this.description = description;
+        this.available = available;
+    }
+
 
 
     public String getProfileId() {
@@ -79,7 +89,7 @@ public class ProfileDetails {
         this.profileId = profileId;
     }
 
-    public List getLanguage() {
+    public List<String> getLanguage() {
         return language;
     }
 
@@ -109,6 +119,14 @@ public class ProfileDetails {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 }
 

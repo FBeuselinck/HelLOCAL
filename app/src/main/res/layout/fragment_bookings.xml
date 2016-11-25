@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginTop="70dp"
     >
 
     <TextView
@@ -12,10 +13,20 @@
         android:text="No bookings avaiable. Please make a booking first!"
         android:textAlignment="center"
         android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/availableBookings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Your available bookings"
+       />
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+
 
 <android.support.v7.widget.RecyclerView
     xmlns:app="http://schemas.android.com/apk/res-auto"

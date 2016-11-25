@@ -66,9 +66,11 @@ public class ListActivity extends AppCompatActivity {
     DatabaseReference mDatabaseReference = database.getReference();
 
 
-
-
     static Activity thisActivity = null;
+
+    // TODO -> 1. Get all profiledetails | 2. Get all user IDs where 'available' = false |
+    // TODO -> 3. for each availableBooking, check if user id equals user ID from (2)
+    // TODO -> 4. if 3 -> do not show in list
 
 
     @Override

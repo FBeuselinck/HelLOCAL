@@ -219,6 +219,16 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Can be booked?"/>
+
+        <ToggleButton
+            android:id="@+id/tglAvailable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
 
         <Button
             android:layout_marginTop="30dp"

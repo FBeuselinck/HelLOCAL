@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -67,6 +68,8 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
 
     private List<String> LanguagesIds;
 
+    ToggleButton tglAvailable;
+    Boolean blAvailable;
 
 
     private  MultiSelectionSpinner multiSelectionSpinner;
@@ -99,6 +102,12 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         multiSelectionSpinner = (MultiSelectionSpinner) view.findViewById(R.id.spinnerLanguage);
+
+        tglAvailable = (ToggleButton) view.findViewById(R.id.tglAvailable);
+        tglAvailable.setTextOff("No");
+        tglAvailable.setTextOn("Yes");
+
+
 
 
         showDetails();
@@ -209,12 +218,14 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                     mBirthDate = "";
                     mDescription = "";
 
+
                     if(profileDetails != null){
                         UserLanguage = profileDetails.getLanguage();
                         gender = profileDetails.getGender();
                         mPhoneNumber = profileDetails.getPhoneNumber();
                         mBirthDate = profileDetails.getBirthDate();
                         mDescription = profileDetails.getDescription();
+                        blAvailable = profileDetails.getAvailable();
                     }
 
 
@@ -234,6 +245,11 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                     PopulateLanguages();
 
 
+                    if(blAvailable=true){
+                        tglAvailable.setChecked(true);
+                    }else{
+                        tglAvailable.setChecked(false);
+                    }
 
 //                    if(UserLanguage == Language.English){
 //                    spinnerLanguages.setSelection(0);
@@ -405,12 +421,20 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
             gender = Gender.Undefined;
         }
 
+        final boolean available;
+
+        if(tglAvailable.isChecked()){
+            available = true;
+        }else{
+            available = false;
+        }
+
 
         if(booleanChangeFound)
         {
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Languages, gender, phoneNumber, birthDate, description);
+            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Languages, gender, phoneNumber, birthDate, description, available);
 
             mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
 

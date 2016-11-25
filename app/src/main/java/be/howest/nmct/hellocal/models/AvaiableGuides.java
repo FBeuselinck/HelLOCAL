@@ -25,6 +25,7 @@ public class AvaiableGuides {
     public String transport;
     public String userId;
     public String photoUri;
+
 //    public String combined;
 
 
