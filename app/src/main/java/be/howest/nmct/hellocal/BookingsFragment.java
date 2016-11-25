@@ -57,7 +57,6 @@ public class BookingsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO -> Get current user ID | Get all available bookings | Check if current user id equals available bookings id | Display in recyclerview
 
 
     @Override
