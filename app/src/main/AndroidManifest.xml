@@ -58,6 +58,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ListActivity" />
         </activity>
+        <activity
+            android:name=".ChatActivity"
+            android:label="Chat"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
         <service
             android:name=".auth.AuthenticatorService"

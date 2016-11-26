@@ -61,6 +61,8 @@ public class InboxFragment extends Fragment {
         View v =inflater.inflate(R.layout.fragment_inbox, container, false);
         database = FirebaseDatabase.getInstance().getReference();
 
+        thisActivity = getActivity();
+
         //noMessages = (TextView) getActivity().findViewById(R.id.noMessages);
         //noMessages.setVisibility(View.INVISIBLE);
 
