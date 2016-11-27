@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +29,6 @@ import be.howest.nmct.hellocal.adapters.AvailabeGuidesAdapter;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class BookingsFragment extends Fragment {
 
     FirebaseUser mUser;
@@ -110,6 +104,7 @@ public class BookingsFragment extends Fragment {
 
                 List<Object> values = new ArrayList<>(td.values());
 
+
                 for (int i=0; i<values.size(); i++){
 
                     Map<String, Object> ts = (HashMap<String,Object>) values.get(i);
@@ -130,18 +125,12 @@ public class BookingsFragment extends Fragment {
                         String userId = list.get(5).toString();
                         String photoUri = list.get(3).toString();
 
-
-                        // TODO -> get rid of static types
-
-                        // Code hieronder marcheert niet
-
-//                        Map<String, Object> tq = (HashMap<String,Object>) list.get(9);
-//                        List<Object> list2 = new ArrayList<>(tq.values());
-//
+                        ArrayList<String> list2 = (ArrayList<String>) list.get(9);
                         ArrayList<String> type = new ArrayList<>();
-//                        for (int o = 0; o<list2.size();o++){
-//                            type.add(list2.get(o).toString());
-//                        }
+
+                         for (int o = 0; o<list2.size();o++){
+                             type.add(list2.get(o).toString());
+                           }
 
 
 
@@ -156,11 +145,7 @@ public class BookingsFragment extends Fragment {
                     }
 
                 }
-
-
                 displayInList();
-
-
 
             }
 
@@ -170,8 +155,6 @@ public class BookingsFragment extends Fragment {
             }
 
         };
-
-
         DatabaseReference myRef = database.getReference("avaiableGuides");
         myRef.addListenerForSingleValueEvent(postListener);
 
