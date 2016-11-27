@@ -5,11 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 
-
+import be.howest.nmct.hellocal.ItemClickSupport;
 import be.howest.nmct.hellocal.R;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 
@@ -21,6 +22,8 @@ public class AvailabeGuidesAdapter extends RecyclerView.Adapter<AvailabeGuidesAd
 
     private List<AvaiableGuides> guidesList;
 
+
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, date;
 
@@ -28,6 +31,7 @@ public class AvailabeGuidesAdapter extends RecyclerView.Adapter<AvailabeGuidesAd
             super(view);
             name = (TextView) view.findViewById(R.id.textViewNaam);
             date = (TextView) view.findViewById(R.id.textViewTime);
+
         }
     }
 
@@ -43,6 +47,7 @@ public class AvailabeGuidesAdapter extends RecyclerView.Adapter<AvailabeGuidesAd
 
         return new MyViewHolder(itemView);
     }
+
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {

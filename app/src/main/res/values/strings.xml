@@ -52,13 +52,16 @@
         <item>Undefined</item>
     </string-array>
     <string-array name="type_array">
+        <item>No preference</item>
         <item>Active</item>
         <item>Culture</item>
-        <item>Special</item>
+        <item>City</item>
+        <item>Else</item>
 
     </string-array>
 
     <string-array name="transport_array">
+        <item>No preference</item>
         <item>Own transport</item>
         <item>Guides transport</item>
         <item>No transport</item>
@@ -66,6 +69,7 @@
     </string-array>
 
     <string-array name="language_array">
+        <item>No preference</item>
         <item>English</item>
         <item>Dutch</item>
         <item>French</item>

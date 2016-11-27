@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -131,23 +132,15 @@ public class BookingsFragment extends Fragment {
                         String photoUri = list.get(3).toString();
 
 
-                        // TODO -> get rid of static types
 
-                        // Code hieronder marcheert niet
-
-//                        Map<String, Object> tq = (HashMap<String,Object>) list.get(9);
-//                        List<Object> list2 = new ArrayList<>(tq.values());
-//
+                        ArrayList<String> list2 = (ArrayList<String>) list.get(9);
                         ArrayList<String> type = new ArrayList<>();
-//                        for (int o = 0; o<list2.size();o++){
-//                            type.add(list2.get(o).toString());
-//                        }
+
+                        for (int o = 0; o<list2.size();o++){
+                            type.add(list2.get(o).toString());
+                        }
 
 
-
-
-                        type.add("Active");
-                        type.add("Culture");
 
                         AvaiableGuides guide = new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri);
 
@@ -190,6 +183,19 @@ public class BookingsFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                TextView date = (TextView) v.findViewById(R.id.textViewTime);
+
+
+                Toast.makeText(getActivity(), date.getText().toString(),
+                        Toast.LENGTH_LONG).show();
+
+            }
+        });
 
 
     }

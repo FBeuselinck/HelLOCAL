@@ -11,6 +11,8 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -35,20 +38,29 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
+import be.howest.nmct.hellocal.adapters.AllGuidesAdapter;
+import be.howest.nmct.hellocal.adapters.AvailabeGuidesAdapter;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
+import be.howest.nmct.hellocal.models.ProfileDetails;
 
 public class ListActivity extends AppCompatActivity {
 
     ScaleAnimation shrinkAnim;
-    private static RecyclerView mRecyclerView;
     private StaggeredGridLayoutManager mLayoutManager;
     private TextView noGuides;
 
     private String Location;
     private String Country;
-    private String Date;
+    private String DateWant;
     private String People;
     private String Transport;
     private String Type;
@@ -60,10 +72,28 @@ public class ListActivity extends AppCompatActivity {
     private String blCity = "false";
     private String blElse = "false";
 
+    private ProgressDialog progress;
+
+    private static final String NO_PREF = "No preference";
+
+
 //    private String Combined;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabaseReference = database.getReference();
+
+    private AllGuidesAdapter mAdapter;
+    private RecyclerView recyclerView;
+
+
+    private List<AvaiableGuides> ListAllGuides = new ArrayList<>();
+
+    private List<String> Languages = new ArrayList<>();
+
+    private Boolean lang = false;
+    private Boolean typeTrue = false;
+    boolean blDate = false;
+
 
 
     static Activity thisActivity = null;
@@ -82,7 +112,7 @@ public class ListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Location = intent.getStringExtra("Location");
         Country = intent.getStringExtra("Country");
-        Date = intent.getStringExtra("Date");
+        DateWant = intent.getStringExtra("Date");
         People = intent.getStringExtra("People");
         Transport = intent.getStringExtra("Transport");
         Type = intent.getStringExtra("Type");
@@ -93,8 +123,11 @@ public class ListActivity extends AppCompatActivity {
         noGuides = (TextView) findViewById(R.id.noGuides);
         noGuides.setVisibility(View.INVISIBLE);
 
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewList);
 
-        final ProgressDialog progress = new ProgressDialog(thisActivity);
+
+
+        progress = new ProgressDialog(this);
         progress.setTitle("Loading guides");
         progress.setMessage("Hold on, we are finding your guides!");
         progress.setCancelable(false);
@@ -112,172 +145,242 @@ public class ListActivity extends AppCompatActivity {
             }
         }, 5000);
 
-
         // Get a support ActionBar corresponding to this toolbar
         ActionBar ab = getSupportActionBar();
 
         // Enable the Up button
         ab.setDisplayHomeAsUpEnabled(true);
 
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewList);
-
-
         //scale animation to shrink floating actionbar
         shrinkAnim = new ScaleAnimation(1.15f, 0f, 1.15f, 0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
-        if (mRecyclerView != null) {
-            //to enable optimization of recyclerview
-            mRecyclerView.setHasFixedSize(true);
-        }
 
-        //using staggered grid pattern in recyclerview
-        mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        getAllAvailableBookings();
 
-        mDatabaseReference = mDatabaseReference.child("avaiableGuides").getRef();
 
-        Query queryRef;
 
-        if (Location.isEmpty()) {
-            queryRef = mDatabaseReference;
-        }else{
-            queryRef = mDatabaseReference.orderByChild("location").equalTo(Location);
+    }
 
-        }
 
-        FirebaseRecyclerAdapter<AvaiableGuides,GuideViewHolder> adapter = new FirebaseRecyclerAdapter<AvaiableGuides, GuideViewHolder>(
-                AvaiableGuides.class,
-                R.layout.row_list,
-                GuideViewHolder.class,
-                //referencing the node where we want the database to store the data from our Object
-                queryRef
-        ) {
+
+
+    public void getAllAvailableBookings(){
+
+
+        ValueEventListener postListener = new ValueEventListener() {
             @Override
-            protected void populateViewHolder(GuideViewHolder viewHolder, AvaiableGuides model, int position) {
-//                if(noGuides.getVisibility()== View.VISIBLE){
-                    progress.dismiss();
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-//                    noGuides.setVisibility(View.GONE);
-//                }
+                Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
 
-                blActive = "false";
-                blCity = "false";
-                blCulture = "false";
-                blElse = "false";
+                List<Object> values = new ArrayList<>(td.values());
 
 
-                viewHolder.textViewNaam.setText(model.getName());
-                    viewHolder.textViewCity.setText(model.getLocation());
-                    viewHolder.textViewCountry.setText(model.getCountry());
-                    viewHolder.textViewPrice.setText("€ "+model.getPrice()+"/h");
-
-                    viewHolder.textViewNaam.setTag(R.id.guideId,model.getUserId());
-                    viewHolder.textViewNaam.setTag(R.id.transport, model.getTransport());
-                    viewHolder.textViewNaam.setTag(R.id.photoUri, model.getPhotoUri());
 
 
-                Picasso.with(getApplicationContext()).load(model.getPhotoUri()).into(viewHolder.imageViewPhoto);
+                for (int i=0; i<values.size(); i++){
+
+                    Map<String, Object> ts = (HashMap<String,Object>) values.get(i);
+                    List<Object> list = new ArrayList<>(ts.values());
 
 
-                ArrayList list = model.getType();
-                for(int i = 0; i< list.size(); i++){
-                    if(list.get(i).toString().equals("Active")){
 
-                        blActive = "True";
+
+
+
+                       final String name = list.get(8).toString();
+                       final String country = list.get(2).toString();
+                       final String location = list.get(4).toString();
+                       final String dateFrom = list.get(7).toString();
+                       final String dateTill = list.get(1).toString();
+                       final String maxPeople = list.get(6).toString();
+                       final String price = list.get(0).toString();
+                       final String transport = list.get(10).toString();
+                       final String userId = list.get(5).toString();
+                       final String photoUri = list.get(3).toString();
+
+                    ArrayList<String> list2 = (ArrayList<String>) list.get(9);
+                    final ArrayList<String> type = new ArrayList<>();
+
+
+
+
+                    for (int o = 0; o<list2.size();o++){
+                        type.add(list2.get(o).toString());
+                        if(list2.get(o).equals(Type)){
+                            typeTrue = true;
+                        }
                     }
-                    else if(list.get(i).toString().equals("City")){
 
-                        blCity= "True";
+                    if(Type.equals(NO_PREF)){
+                        typeTrue = true;
                     }
-                    else if(list.get(i).toString().equals("Culture")){
 
-                        blCulture = "True";
-                    }
-                    else if(list.get(i).toString().equals("Else")){
 
-                        blElse = "True";
+
+                    try{
+                        String myFormat = "dd/MM/yyyy";
+                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+                        Date DateFrom = sdf.parse(dateFrom);
+                        Date DateTill = sdf.parse(dateTill);
+                        Date DateWanted = sdf.parse(DateWant);
+
+                        blDate =  DateWanted.compareTo(DateFrom) >=0  && DateWanted.compareTo(DateTill) <=0;
+
+                    }catch(java.text.ParseException e){
+                        e.printStackTrace();
                     }
+
+
+
+
+//                        ValueEventListener postEventListener = new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+//
+//                                Languages.add(profileDetails.getLanguage().toString());
+//
+//
+//
+//                                for (int o = 0; o<Languages.size();o++){
+//                                    if(Languages.get(o).equals(Language) ){
+//                                        lang = true;
+//                                    }
+//                                }
+//
+//
+//
+//
+//
+//
+//
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//
+//                            }
+//
+//
+//
+//
+//
+//                        };
+//                        DatabaseReference myRef = database.getReference("profileDetails").child(userId);
+//                        myRef.addListenerForSingleValueEvent(postEventListener);
+
+
+
+                    if (Price == null){
+                        Price = "0";
+                    }
+
+
+                    if(Country.equals(country)){
+                        if(Integer.parseInt(People) <= Integer.parseInt(maxPeople) ){
+                            if(typeTrue){
+                                if(Transport.equals(transport)||Transport.equals(NO_PREF)){
+                                    if(Integer.parseInt(Price) >= Integer.parseInt(price) || Price.equals("0")){
+                                        if(blDate){
+                                            if(lang){
+                                                AvaiableGuides guide = new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri);
+                                                ListAllGuides.add(guide);
+                                            }else{
+                                                AvaiableGuides guide = new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri);
+                                                ListAllGuides.add(guide);
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    displayInList();
+
+
+
                 }
 
-                viewHolder.textViewNaam.setTag(R.id.active, blActive);
-                viewHolder.textViewNaam.setTag(R.id.city, blCity);
-                viewHolder.textViewNaam.setTag(R.id.culture, blCulture);
-                viewHolder.textViewNaam.setTag(R.id.smthElse, blElse);
 
 
 
 
 
             }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
         };
 
-        mRecyclerView.setAdapter(adapter);
 
-    }
+        DatabaseReference myRef = database.getReference("avaiableGuides");
 
-
-    public static class GuideViewHolder extends RecyclerView.ViewHolder{
-
-        TextView textViewNaam;
-        TextView textViewCity;
-        TextView textViewCountry;
-        TextView textViewPrice;
-        ImageView imageViewPhoto;
-
-        String transport;
-
-        public AvaiableGuides avaiableGuides;
-
-        public GuideViewHolder(View v) {
-            super(v);
-            textViewNaam = (TextView) v.findViewById(R.id.textViewNaam);
-            textViewCity = (TextView) v.findViewById(R.id.textViewCity);
-            textViewCountry = (TextView) v.findViewById(R.id.textViewCountry);
-            textViewPrice = (TextView) v.findViewById(R.id.textViewPrice);
-            imageViewPhoto = (ImageView) v.findViewById(R.id.imagePhoto);
-
-            ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                @Override
-                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-
-                    TextView Name = (TextView) v.findViewById(R.id.textViewNaam);
-                    TextView City = (TextView) v.findViewById(R.id.textViewCity);
-                    TextView Country = (TextView) v.findViewById(R.id.textViewCountry);
-                    TextView Price = (TextView) v.findViewById(R.id.textViewPrice);
-
-                    Intent intent = new Intent(thisActivity, InfoActivity.class);
-                    intent.putExtra("Name",Name.getText().toString());
-                    intent.putExtra("City",City.getText().toString());
-                    intent.putExtra("Country",Country.getText().toString());
-                    intent.putExtra("Price",Price.getText().toString());
-                    intent.putExtra("UserId",Name.getTag(R.id.guideId).toString());
-                    intent.putExtra("Transport",Name.getTag(R.id.transport).toString());
-                    intent.putExtra("Active",Name.getTag(R.id.active).toString());
-                    intent.putExtra("City2",Name.getTag(R.id.city).toString());
-                    intent.putExtra("Culture",Name.getTag(R.id.culture).toString());
-                    intent.putExtra("SmthElse",Name.getTag(R.id.smthElse).toString());
-                    intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
-
-
-
-                    thisActivity.startActivity(intent);
-
-//                    PendingIntent pendingIntent =
-//                            TaskStackBuilder.create(thisActivity)
-//                                    // add all of DetailsActivity's parents to the stack,
-//                                    // followed by DetailsActivity itself
-//                                    .addNextIntentWithParentStack()
-//                                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//                    NotificationCompat.Builder builder = new NotificationCompat.Builder(thisActivity);
-//                    builder.setContentIntent(pendingIntent);
-
-                }
-            });
+        Query queryRef;
+        if (Location.isEmpty()) {
+            queryRef = myRef;
+        }else{
+            queryRef = myRef.orderByChild("location").equalTo(Location);
 
         }
+
+        queryRef.addListenerForSingleValueEvent(postListener);
+
     }
+
+
+
+    public void displayInList(){
+
+
+        progress.dismiss();
+
+        mAdapter = new AllGuidesAdapter(ListAllGuides,thisActivity);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                TextView Name = (TextView) v.findViewById(R.id.textViewNaam);
+                TextView City = (TextView) v.findViewById(R.id.textViewCity);
+                TextView Country = (TextView) v.findViewById(R.id.textViewCountry);
+                TextView Price = (TextView) v.findViewById(R.id.textViewPrice);
+
+                Intent intent = new Intent(thisActivity, InfoActivity.class);
+                intent.putExtra("Name",Name.getText().toString());
+                intent.putExtra("City",City.getText().toString());
+                intent.putExtra("Country",Country.getText().toString());
+                intent.putExtra("Price",Price.getText().toString());
+                intent.putExtra("UserId",Name.getTag(R.id.guideId).toString());
+                intent.putExtra("Transport",Name.getTag(R.id.transport).toString());
+                intent.putExtra("Active",Name.getTag(R.id.active).toString());
+                intent.putExtra("City2",Name.getTag(R.id.city).toString());
+                intent.putExtra("Culture",Name.getTag(R.id.culture).toString());
+                intent.putExtra("SmthElse",Name.getTag(R.id.smthElse).toString());
+                intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
+
+
+
+                thisActivity.startActivity(intent);
+
+            }
+        });
+
+
+    }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -297,69 +400,6 @@ public class ListActivity extends AppCompatActivity {
         return(super.onOptionsItemSelected(item));
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_price_low: populateRecyclerView("PriceLow");
-//                return true;
-//            case R.id.action_price_high: populateRecyclerView("PriceHigh");
-//                return true;
-//            case R.id.action_name: populateRecyclerView("Name");
-//                return true;
-//            case R.id.action_rating: populateRecyclerView("Rating");
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-//
-//
-//    public void populateRecyclerView(String OrderBy){
-//
-//        String Order = OrderBy;
-//
-//        mDatabaseReference = mDatabaseReference.child("avaiableGuides").getRef();
-//        Query queryRef = mDatabaseReference.orderByChild("location").equalTo(Location);
-//
-//        switch (Order){
-//            case "PriceLow": queryRef = mDatabaseReference.orderByChild("location").equalTo(Location);
-//        }
-//
-//
-//
-//
-//        FirebaseRecyclerAdapter<AvaiableGuides,GuideViewHolder> adapter = new FirebaseRecyclerAdapter<AvaiableGuides, GuideViewHolder>(
-//                AvaiableGuides.class,
-//                R.layout.row_list,
-//                GuideViewHolder.class,
-//                //referencing the node where we want the database to store the data from our Object
-//                queryRef
-//        ) {
-//            @Override
-//            protected void populateViewHolder(GuideViewHolder viewHolder, AvaiableGuides model, int position) {
-//                if(noGuides.getVisibility()== View.VISIBLE){
-//                    noGuides.setVisibility(View.GONE);
-//                }
-//
-//
-//                viewHolder.textViewNaam.setText(model.getName());
-//                viewHolder.textViewCity.setText(model.getLocation());
-//                viewHolder.textViewCountry.setText(model.getCountry());
-//                viewHolder.textViewPrice.setText("€ "+model.getPrice()+"/h");
-//
-//
-//
-//
-//                viewHolder.textViewNaam.setTag(R.id.guideId,model.getUserId());
-//
-//
-//
-//
-//
-//            }
-//        };
-//
-//        mRecyclerView.setAdapter(adapter);
-//    }
+
 
 }

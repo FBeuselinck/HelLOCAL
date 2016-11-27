@@ -244,10 +244,6 @@ public class SearchFragment extends Fragment  {
 
 
     private void Search(){
-//        final FragmentTransaction ft = getFragmentManager().beginTransaction();
-//        Fragment fragment = new InfoFragment();
-//        ft.replace(R.id.fragmentContainer, fragment, "NewFragmentTag");
-//        ft.commit();
 
 
 
