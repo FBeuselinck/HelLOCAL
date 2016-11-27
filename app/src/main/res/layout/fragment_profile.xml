@@ -3,11 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:padding="10dp">
+    android:padding="5dp">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/LinearLayoutsz"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="5dp"
@@ -15,7 +20,7 @@
 
         <LinearLayout
             android:id="@+id/LinearLayoutsz2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:focusableInTouchMode="true"
@@ -27,21 +32,21 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/ic_menu_camera"
-                android:layout_marginRight="10dp"
                 android:scaleType="centerCrop"/>
 
             <LinearLayout
                 android:id="@+id/LinearLayoutsz3"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/editText_Profile_Name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:hint="Change full name here"/>
 
                 <LinearLayout
                     android:id="@+id/LinearLayoutsz4"
@@ -234,14 +239,12 @@
             android:layout_marginTop="30dp"
             android:text="SAVE"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
             android:id="@+id/btnSave"
-
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="#02D31C"/>
 
     </LinearLayout>
-
+</RelativeLayout>
 </ScrollView>
