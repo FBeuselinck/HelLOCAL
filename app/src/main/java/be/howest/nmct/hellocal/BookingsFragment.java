@@ -126,24 +126,13 @@ public class BookingsFragment extends Fragment {
                         String userId = list.get(5).toString();
                         String photoUri = list.get(3).toString();
 
-<<<<<<< HEAD
 
-
-                        ArrayList<String> list2 = (ArrayList<String>) list.get(9);
-                        ArrayList<String> type = new ArrayList<>();
-=======
                         ArrayList<String> list2 = (ArrayList<String>) list.get(9);
                         ArrayList<String> type = new ArrayList<>();
 
                          for (int o = 0; o<list2.size();o++){
                              type.add(list2.get(o).toString());
                            }
-
->>>>>>> origin/develop
-
-                        for (int o = 0; o<list2.size();o++){
-                            type.add(list2.get(o).toString());
-                        }
 
 
 
