@@ -16,6 +16,7 @@ public class ProfileDetails {
     private String birthDate;
     private String description;
     private Boolean available;
+    private String homeTown;
 
 
 
@@ -69,7 +70,7 @@ public class ProfileDetails {
         this.description = description;
     }
 
-    public ProfileDetails (String profileId, List<String> language, Gender gender, String phoneNumber, String birthDate, String description, Boolean available){
+    public ProfileDetails (String profileId, List<String> language, Gender gender, String phoneNumber, String birthDate, String description, Boolean available, String homeTown){
         this.profileId = profileId;
         this.language = language;
         this.gender = gender;
@@ -77,6 +78,7 @@ public class ProfileDetails {
         this.birthDate = birthDate;
         this.description = description;
         this.available = available;
+        this.homeTown=homeTown;
     }
 
 
@@ -127,6 +129,14 @@ public class ProfileDetails {
 
     public void setAvailable(Boolean available) {
         this.available = available;
+    }
+
+    public String getHomeTown() {
+        return homeTown;
+    }
+
+    public void setHomeTown(String homeTown) {
+        this.homeTown = homeTown;
     }
 }
 

@@ -124,14 +124,13 @@
                     android:layout_height="wrap_content"
                     android:text="Hometown"/>
 
-                <EditText
-                    android:id="@+id/spinner2"
-                    android:layout_width="150dp"
+
+                <AutoCompleteTextView
+                    android:id="@+id/homeTown"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ghent"/>
-
-
-
+                    android:hint="Enter hometown..."
+                    />
 
             </LinearLayout>
 

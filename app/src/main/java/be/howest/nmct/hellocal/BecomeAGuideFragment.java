@@ -32,6 +32,7 @@ import android.widget.Toast;
 import be.howest.nmct.hellocal.adapters.PlacesAutoCompleteAdapter;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 import be.howest.nmct.hellocal.R;
+import be.howest.nmct.hellocal.models.Gender;
 import be.howest.nmct.hellocal.models.ProfileDetails;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -52,6 +53,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
@@ -84,6 +86,10 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
     private String Location;
 
+    String stringUserId, mHomeTown;
+
+
+
     Calendar myCalendar = Calendar.getInstance();
 
     private GoogleApiClient mGoogleApiClient;
@@ -91,6 +97,10 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
     private PlacesAutoCompleteAdapter mPlacesAdapter;
     private AutoCompleteTextView myLocation;
+
+    FirebaseUser mUser;
+
+
 
 
     public BecomeAGuideFragment() {
@@ -195,6 +205,9 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         myLocation.setAdapter(mPlacesAdapter);
 
 
+        showHomeTown();
+
+
 
         return v;
     }
@@ -259,6 +272,43 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     public void onDetach() {
         super.onDetach();
         mGoogleApiClient.disconnect();
+    }
+
+
+    public void showHomeTown(){
+
+            mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+            if(mUser != null) {
+
+                stringUserId = mUser.getUid();
+
+                ValueEventListener postListener = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+
+                        if(profileDetails != null){
+
+                            mHomeTown = "";
+
+                            mHomeTown = profileDetails.getHomeTown();
+                            myLocation.setText(mHomeTown);
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                };
+
+                DatabaseReference myRef = database.getReference("profileDetails").child(stringUserId);
+                myRef.addListenerForSingleValueEvent(postListener);
+            }
+
     }
 
 

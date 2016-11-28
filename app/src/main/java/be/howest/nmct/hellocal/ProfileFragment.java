@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -16,6 +19,12 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +40,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import be.howest.nmct.hellocal.adapters.PlacesAutoCompleteAdapter;
 import be.howest.nmct.hellocal.models.Gender;
 import be.howest.nmct.hellocal.models.ProfileDetails;
 import be.howest.nmct.hellocal.multiSelectionSpinner.MultiSelectionSpinner;
@@ -46,12 +56,18 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
     private  MultiSelectionSpinner multiSelectionSpinner;
     ToggleButton tglAvailable;
 
-    String stringUserId, mPhoneNumber, mBirthDate, mDescription;
+    String stringUserId, mPhoneNumber, mBirthDate, mDescription, mHomeTown, HomeTown = "";
     private List<String> Languages;
     private List<String> LanguagesIds;
     Boolean blAvailable;
     Boolean mBooleanLanguageChanged;
     Gender mGender;
+
+    private GoogleApiClient mGoogleApiClient;
+    private PlacesAutoCompleteAdapter mPlacesAdapter;
+
+    private AutoCompleteTextView homeTown;
+
 
     FirebaseUser mUser;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -87,6 +103,20 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
 
         tglAvailable.setTextOff("No");
         tglAvailable.setTextOn("Yes");
+
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
+
+
+        homeTown = (AutoCompleteTextView) view.findViewById(R.id.homeTown);
+        mPlacesAdapter = new PlacesAutoCompleteAdapter(getContext(), android.R.layout.simple_list_item_1,
+                mGoogleApiClient,null, null);
+        homeTown.setOnItemClickListener(mAutocompleteClickListener);
+        homeTown.setAdapter(mPlacesAdapter);
 
         showDetails();
 
@@ -127,6 +157,60 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
         return view;
     }
 
+
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final PlacesAutoCompleteAdapter.PlaceAutocomplete item = mPlacesAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+        }
+    };
+
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                Log.e("place", "Place query did not complete. Error: " +
+                        places.getStatus().toString());
+                return;
+            }
+            // Selecting the first object buffer.
+            final Place place = places.get(0);
+            HomeTown = place.getName().toString();
+        }
+    };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGoogleApiClient.disconnect();
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mGoogleApiClient.disconnect();
+    }
 
     @Override
     public void selectedIndices(List<Integer> indices) {
@@ -180,6 +264,7 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                         mBirthDate = "";
                         mDescription = "";
                         mGender = Gender.Undefined;
+                        mHomeTown = "";
 
                         UserLanguage = profileDetails.getLanguage();
                         mGender = profileDetails.getGender();
@@ -187,6 +272,7 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                         mBirthDate = profileDetails.getBirthDate();
                         mDescription = profileDetails.getDescription();
                         blAvailable = profileDetails.getAvailable();
+                        mHomeTown = profileDetails.getHomeTown();
 
                         LanguagesIds = new ArrayList<>();
 
@@ -206,6 +292,8 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                         editTextPhoneNumber.setText(mPhoneNumber);
                         editTextBirthDate.setText(mBirthDate);
 
+                        homeTown.setText(mHomeTown);
+
                         if(mBirthDate != null && !mBirthDate.equals("")) {
                             myCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(mBirthDate.substring(0,2)));
                             myCalendar.set(Calendar.MONTH, Integer.parseInt(mBirthDate.substring(3,5)) -1);
@@ -221,7 +309,7 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                 }
             };
 
-            DatabaseReference myRef = database.getReference("profileDetails").child(mUser.getUid());
+            DatabaseReference myRef = database.getReference("profileDetails").child(stringUserId);
             myRef.addListenerForSingleValueEvent(postListener);
         }
     }
@@ -232,6 +320,7 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
         multiSelectionSpinner.setItems(array);
         if(LanguagesIds.size() != 0) multiSelectionSpinner.setSelection(LanguagesIds);
         multiSelectionSpinner.setListener(this);
+        Languages = multiSelectionSpinner.getSelectedStrings();
     }
 
     private void UploadProfilePic()
@@ -245,6 +334,8 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mGoogleApiClient.disconnect();
+
     }
 
     private void saveDetails()
@@ -268,10 +359,12 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
         if(available == blAvailable) booleanChangeFound = true;
 
 
+
+
         if(booleanChangeFound || mBooleanLanguageChanged)
         {
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Languages, selectedGender, phoneNumber, birthDate, description, available);
+            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Languages, selectedGender, phoneNumber, birthDate, description, available, HomeTown);
             mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
             Toast.makeText(getContext(), "Changes made", Toast.LENGTH_SHORT).show();
         }
