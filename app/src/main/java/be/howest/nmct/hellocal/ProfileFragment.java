@@ -194,7 +194,10 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                         PopulateLanguages();
 
                         if(blAvailable != null) tglAvailable.setChecked(blAvailable);
-                        else tglAvailable.setChecked(false);
+                        else {
+                            tglAvailable.setChecked(true);
+                            blAvailable = false;
+                        }
 
                         if(mGender == Gender.Male) spinnerGender.setSelection(0);
                         else if(mGender == Gender.Female) spinnerGender.setSelection(1);
