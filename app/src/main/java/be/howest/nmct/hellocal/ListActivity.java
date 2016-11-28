@@ -1,44 +1,31 @@
 package be.howest.nmct.hellocal;
 
 import android.app.Activity;
-import android.app.Application;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,7 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import be.howest.nmct.hellocal.adapters.AllGuidesAdapter;
-import be.howest.nmct.hellocal.adapters.AvailabeGuidesAdapter;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 import be.howest.nmct.hellocal.models.ProfileDetails;
 
@@ -58,6 +44,8 @@ public class ListActivity extends AppCompatActivity {
     private StaggeredGridLayoutManager mLayoutManager;
     private TextView noGuides;
 
+    private String filterCountry, filterMaxPeople, filterTransport, filterPrice, filterName,filterLocation,filterDateFrom,filterDateTill,filterUserId,filterPhotoUri;
+    private ArrayList<String> filterType;
     private String Location;
     private String Country;
     private String DateWant;
@@ -174,23 +162,23 @@ public class ListActivity extends AppCompatActivity {
                     List<Object> list = new ArrayList<>(ts.values());
 
 
-                       final String name = list.get(8).toString();
-                       final String country = list.get(2).toString();
-                       final String location = list.get(4).toString();
-                       final String dateFrom = list.get(7).toString();
-                       final String dateTill = list.get(1).toString();
-                       final String maxPeople = list.get(6).toString();
-                       final String price = list.get(0).toString();
-                       final String transport = list.get(10).toString();
-                       final String userId = list.get(5).toString();
-                       final String photoUri = list.get(3).toString();
+                       filterName = list.get(8).toString();
+                       filterCountry = list.get(2).toString();
+                       filterLocation = list.get(4).toString();
+                       filterDateFrom = list.get(7).toString();
+                       filterDateTill = list.get(1).toString();
+                       filterMaxPeople = list.get(6).toString();
+                       filterPrice = list.get(0).toString();
+                       filterTransport = list.get(10).toString();
+                       filterUserId = list.get(5).toString();
+                       filterPhotoUri = list.get(3).toString();
 
                     ArrayList<String> list2 = (ArrayList<String>) list.get(9);
-                    final ArrayList<String> type = new ArrayList<>();
+                    filterType = new ArrayList<>();
 
 
                     for (int o = 0; o<list2.size();o++){
-                        type.add(list2.get(o).toString());
+                        filterType.add(list2.get(o).toString());
                         if(list2.get(o).equals(Type)){
                             typeTrue = true;
                         }
@@ -203,8 +191,8 @@ public class ListActivity extends AppCompatActivity {
                     try{
                         String myFormat = "dd/MM/yyyy";
                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
-                        Date DateFrom = sdf.parse(dateFrom);
-                        Date DateTill = sdf.parse(dateTill);
+                        Date DateFrom = sdf.parse(filterDateFrom);
+                        Date DateTill = sdf.parse(filterDateTill);
                         Date DateWanted = sdf.parse(DateWant);
 
                         blDate =  DateWanted.compareTo(DateFrom) >=0  && DateWanted.compareTo(DateTill) <=0;
@@ -217,35 +205,7 @@ public class ListActivity extends AppCompatActivity {
                         Price = "0";
                     }
 
-
-                    getLang(userId);
-
-
-                    if(UserAvailable){
-                        if(Country.equals(country)){
-                            if(Integer.parseInt(People) <= Integer.parseInt(maxPeople) ){
-                                if(typeTrue){
-                                    if(Transport.equals(transport)||Transport.equals(NO_PREF)){
-                                        if(Integer.parseInt(Price) >= Integer.parseInt(price) || Price.equals("0")){
-                                            if(blDate){
-                                                if(lang){
-                                                    AvaiableGuides guide = new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri);
-                                                    ListAllGuides.add(guide);
-                                                }else{
-                                                    Toast.makeText(getApplicationContext(), "nuuuuuup",
-                                                            Toast.LENGTH_LONG).show();
-                                                }
-
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    displayInList();
-
+                    getLang(filterUserId);
                 }
 
 
@@ -273,24 +233,51 @@ public class ListActivity extends AppCompatActivity {
 
     }
 
+    public void filterList()
+    {
+        if(UserAvailable){
+            if(Country.equals(filterCountry)){
+                if(Integer.parseInt(People) <= Integer.parseInt(filterMaxPeople) ){
+                    if(typeTrue){
+                        if(Transport.equals(filterTransport)||Transport.equals(NO_PREF)){
+                            if(Integer.parseInt(Price) >= Integer.parseInt(filterPrice) || Price.equals("0")){
+                                if(blDate){
+                                    if(lang){
+                                        AvaiableGuides guide = new AvaiableGuides(filterName,filterCountry,filterLocation,filterDateFrom,filterDateTill,filterMaxPeople,filterPrice,filterType,filterTransport,filterUserId,filterPhotoUri);
+                                        ListAllGuides.add(guide);
+                                    }else{
+                                        Toast.makeText(getApplicationContext(), "nuuuuuup",
+                                                Toast.LENGTH_LONG).show();
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        displayInList();
+    }
 
     public void getLang(String userId){
-
 
         ValueEventListener postEventListenerLang = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
 
-                Languages.add(profileDetails.getLanguage().toString());
+                Languages = profileDetails.getLanguage();
                 UserAvailable = profileDetails.getAvailable();
-
-                for (int o = 0; o<Languages.size();o++){
-                    if(Languages.get(o).equals(Language) ){
-                        lang = true;
+                if(Languages != null) {
+                    for (int o = 0; o < Languages.size(); o++) {
+                        if (Languages.get(o).equals(Language)) {
+                            lang = true;
+                        }
                     }
                 }
-
+                filterList();
             }
 
             @Override
