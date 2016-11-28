@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +39,9 @@ import be.howest.nmct.hellocal.models.ProfileDetails;
 
 public class ListActivity extends AppCompatActivity {
 
+    private List<AvaiableGuides> mAvailibleGuides;
+    private ArrayList<String> mUserids;
+    private ArrayList<ProfileDetails> mProfileDetails;
     ScaleAnimation shrinkAnim;
     private StaggeredGridLayoutManager mLayoutManager;
     private TextView noGuides;
@@ -145,77 +147,43 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void getAllAvailableBookings(){
-
-
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
+                mAvailibleGuides = new ArrayList<>();
+                List<Object> lst = new ArrayList<>(td.values());
+                mUserids = new ArrayList<>();
+                for(int i = 0; i<lst.size(); i++){
+                    AvaiableGuides ag = new AvaiableGuides();
+                    Map<String, Object> ts = (HashMap<String,Object>) lst.get(i);
+                    List<Object> gd = new ArrayList<>(ts.values());
 
-                List<Object> values = new ArrayList<>(td.values());
-                
-                for (int i=0; i<values.size(); i++){
+                    ag.country = (String) gd.get(2);
+                    ag.dateFrom = (String) gd.get(7);
+                    ag.dateTill = (String) gd.get(1);
+                    ag.location = (String) gd.get(4);
+                    ag.maxPeople = (String) gd.get(6);
+                    ag.name = (String) gd.get(8);
+                    ag.photoUri = (String) gd.get(3);
+                    ag.price = (String) gd.get(0);
+                    ag.transport = (String) gd.get(10);
+                    ag.userId = (String) gd.get(5);
+                    ag.type = (ArrayList<String>) gd.get(9);
 
-                    Map<String, Object> ts = (HashMap<String,Object>) values.get(i);
-                    List<Object> list = new ArrayList<>(ts.values());
-
-                       filterName = list.get(8).toString();
-                       filterCountry = list.get(2).toString();
-                       filterLocation = list.get(4).toString();
-                       filterDateFrom = list.get(7).toString();
-                       filterDateTill = list.get(1).toString();
-                       filterMaxPeople = list.get(6).toString();
-                       filterPrice = list.get(0).toString();
-                       filterTransport = list.get(10).toString();
-                       filterUserId = list.get(5).toString();
-                       filterPhotoUri = list.get(3).toString();
-
-                    ArrayList<String> list2 = (ArrayList<String>) list.get(9);
-                    filterType = new ArrayList<>();
-
-
-                    for (int o = 0; o<list2.size();o++){
-                        filterType.add(list2.get(o).toString());
-                        if(list2.get(o).equals(Type)){
-                            typeTrue = true;
-                        }
-                    }
-
-                    if(Type.equals(NO_PREF)){
-                        typeTrue = true;
-                    }
-
-                    try{
-                        String myFormat = "dd/MM/yyyy";
-                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
-                        Date DateFrom = sdf.parse(filterDateFrom);
-                        Date DateTill = sdf.parse(filterDateTill);
-                        Date DateWanted = sdf.parse(DateWant);
-
-                        blDate =  DateWanted.compareTo(DateFrom) >=0  && DateWanted.compareTo(DateTill) <=0;
-
-                    }catch(java.text.ParseException e){
-                        e.printStackTrace();
-                    }
-
-                    if (Price == null){
-                        Price = "0";
-                    }
-
-                    getLang(filterUserId);
+                    mUserids.add(ag.userId);
+                    mAvailibleGuides.add(ag);
                 }
 
+                getUsersInfo();
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
-
         };
-
 
         DatabaseReference myRef = database.getReference("avaiableGuides");
 
@@ -230,21 +198,84 @@ public class ListActivity extends AppCompatActivity {
         queryRef.addListenerForSingleValueEvent(postListener);
 
     }
+    private ProfileDetails getProfileDetail (String userid){
+        ProfileDetails pd = new ProfileDetails();
+        for(int i = 0 ; i < mProfileDetails.size(); i++){
+            if(mProfileDetails.get(i).getProfileId().equals(userid)){
+                pd = mProfileDetails.get(i);
+                i = mProfileDetails.size();
+            }
+        }
+        return pd;
+    }
+
+    private boolean getTypesFilter(ArrayList<String> types){
+        boolean bReturn = false;
+        if(Type.equals(NO_PREF)){
+            bReturn = true;
+            return true;
+        }
+        for(int i = 0 ; i<types.size(); i++)
+        {
+            if(types.get(i).equals(Type)){
+                bReturn = true;
+                i= types.size();
+            }
+        }
+
+        return  bReturn;
+    }
+
+    private boolean getDateFilter (String startDate, String tillDate){
+        boolean bReturn = false;
+
+        try{
+            String myFormat = "dd/MM/yyyy";
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+            Date DateFrom = sdf.parse(startDate);
+            Date DateTill = sdf.parse(tillDate);
+            Date DateWanted = sdf.parse(DateWant);
+            bReturn =  DateWanted.compareTo(DateFrom) >=0  && DateWanted.compareTo(DateTill) <=0;
+        }catch (java.text.ParseException e){
+            e.printStackTrace();
+            e.printStackTrace();
+        }
+
+        return bReturn;
+    }
+
+    private boolean getLanguageFilter(List<String> languages) {
+        boolean bReturn = false;
+        if(Language.equals(NO_PREF)) bReturn = true;
+        for(int i = 0 ; i<languages.size(); i++){
+            if(languages.get(i).equals(Language)){
+                bReturn = true;
+                i= languages.size();
+            }
+        }
+
+        return bReturn;
+    }
 
     public void filterList()
     {
-        if(UserAvailable){
-            if(Country.equals(filterCountry)){
-                if(Integer.parseInt(People) <= Integer.parseInt(filterMaxPeople) ){
-                    if(typeTrue){
-                        if(Transport.equals(filterTransport)||Transport.equals(NO_PREF)){
-                            if(Integer.parseInt(Price) >= Integer.parseInt(filterPrice) || Price.equals("0")){
-                                if(blDate){
-                                    if(lang){
-                                        AvaiableGuides guide = new AvaiableGuides(filterName,filterCountry,filterLocation,filterDateFrom,filterDateTill,filterMaxPeople,filterPrice,filterType,filterTransport,filterUserId,filterPhotoUri);
-                                        ListAllGuides.add(guide);
+        for(int i = 0 ;i < mAvailibleGuides.size(); i++)
+        {
+            ProfileDetails pd = getProfileDetail(mAvailibleGuides.get(i).userId);
+            AvaiableGuides av = mAvailibleGuides.get(i);
+            if(pd.getAvailable() == null) pd.setAvailable(true);
+            if(Price == null) Price ="0";
+            if(pd.getAvailable()){
+                if(av.country.equals(Country)){
+                    if(Integer.parseInt(av.maxPeople) >= Integer.parseInt(People)){
+                        if(getTypesFilter(av.getType())){
+                            if(Transport.equals(av.transport) || Transport.equals(NO_PREF)){
+                                if(Integer.parseInt(Price) >= Integer.parseInt(av.price) || Price.equals("0")){
+                                    if(getDateFilter(av.dateFrom, av.dateTill)) {
+                                        if(getLanguageFilter(pd.getLanguage())){
+                                            ListAllGuides.add(av);
+                                        }
                                     }
-
                                 }
                             }
                         }
@@ -252,44 +283,45 @@ public class ListActivity extends AppCompatActivity {
                 }
             }
         }
-
         displayInList();
     }
+    private void  getUsersInfo(){
+        if(mUserids.size() != 0){
+            ValueEventListener postEventListenerLang = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
+                    List<Object> lst = new ArrayList<>(td.values());
 
-    public void getLang(String userId){
+                    mProfileDetails = new ArrayList<ProfileDetails>();
+                    for(int i = 0; i< lst.size(); i++)
+                    {
 
-        ValueEventListener postEventListenerLang = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
-
-                Languages = profileDetails.getLanguage();
-
-                if(profileDetails.getAvailable()!= null){
-                    UserAvailable = profileDetails.getAvailable();
-                }else{
-                    UserAvailable = true;
-                }
-
-
-                if(Languages != null) {
-                    for (int o = 0; o < Languages.size(); o++) {
-                        if (Languages.get(o).equals(Language)|| Language.equals(NO_PREF) ) {
-                            lang = true;
+                        ProfileDetails pd = new ProfileDetails();
+                        Map<String, Object> ts = (HashMap<String,Object>) lst.get(i);
+                        for(int j = 0; j<mAvailibleGuides.size(); j++)
+                        {
+                            if(mAvailibleGuides.get(j).userId.equals((String) ts.get("profileId")))
+                            {
+                                pd.setAvailable((Boolean) ts.get("available"));
+                                pd.setProfileId((String) ts.get("profileId"));
+                                pd.setLanguage((ArrayList<String>) ts.get("language"));
+                                mProfileDetails.add(pd);
+                                j = mAvailibleGuides.size();
+                            }
                         }
                     }
+                    filterList();
                 }
-                filterList();
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-
-        };
-        DatabaseReference myRef = database.getReference("profileDetails").child(userId);
-        myRef.addListenerForSingleValueEvent(postEventListenerLang);
+                }
+            };
+            DatabaseReference myRef = database.getReference("profileDetails");
+            myRef.addListenerForSingleValueEvent(postEventListenerLang);
+        }
 
     }
 
