@@ -155,7 +155,14 @@ public class InfoActivity extends AppCompatActivity {
         textViewCountry.setText(Country);
         textViewPrice.setText(Price);
         btnBook.setText("BOOK " + Name.toUpperCase());
+
         btnContact.setText("CONTACT " + Name.toUpperCase());
+        btnContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Contact();
+            }
+        });
 
         Picasso.with(this.getApplicationContext()).load(PhotoUri.toString()).into(imagePhoto);
 
@@ -316,5 +323,9 @@ public class InfoActivity extends AppCompatActivity {
 
     }
 
-
+    private void Contact(){
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("Name", Name);
+        startActivity(intent);
+    }
 }
