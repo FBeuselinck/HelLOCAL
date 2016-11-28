@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 
 import be.howest.nmct.hellocal.models.ChatUser;
 import be.howest.nmct.hellocal.models.Const;
+import be.howest.nmct.hellocal.models.ProfileDetails;
 
 
 /**
@@ -91,6 +92,7 @@ public class InboxFragment extends Fragment {
         loadUserList();
     }
 
+    /*
     private void loadUserList(){
         final ProgressDialog dia = ProgressDialog.show(getActivity(), null, getString(R.string.alert_loading));
 
@@ -108,6 +110,33 @@ public class InboxFragment extends Fragment {
                 dia.dismiss();
 
                 viewHolder.textViewNaam.setText(model.getName());
+
+                //Picasso.with(getApplicationContext()).load(model.getPhotoUri()).into(viewHolder.imageViewPhoto);
+            }
+        };
+        mRecyclerView.setAdapter(adapter);
+    }
+    */
+
+    private void loadUserList(){
+        final ProgressDialog dia = ProgressDialog.show(getActivity(), null, getString(R.string.alert_loading));
+
+
+
+        DatabaseReference queryRef = database.child("profileDetails").getRef();
+
+        FirebaseRecyclerAdapter<ProfileDetails,MessageViewHolder> adapter = new FirebaseRecyclerAdapter<ProfileDetails, MessageViewHolder>(
+                ProfileDetails.class,
+                R.layout.row_inbox,
+                MessageViewHolder.class,
+                //referencing the node where we want the database to store the data from our Object
+                queryRef
+        ){
+            @Override
+            protected void populateViewHolder(MessageViewHolder viewHolder, ProfileDetails model, int position) {
+                dia.dismiss();
+
+                viewHolder.textViewNaam.setText(model.getProfileId());
 
                 //Picasso.with(getApplicationContext()).load(model.getPhotoUri()).into(viewHolder.imageViewPhoto);
             }

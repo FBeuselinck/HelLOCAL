@@ -36,13 +36,14 @@ import java.util.Date;
 import be.howest.nmct.hellocal.models.ChatUser;
 import be.howest.nmct.hellocal.models.Const;
 import be.howest.nmct.hellocal.models.Conversation;
+import be.howest.nmct.hellocal.models.ProfileDetails;
 
 public class ChatActivity extends FragmentActivity implements View.OnClickListener{
 
     private ArrayList<Conversation> convList;
     private ChatAdapter adp;
     private EditText txt;
-    private ChatUser buddy;
+    private ProfileDetails buddy;
     private Date lastMsgDate;
     private Button btnSend;
 
@@ -70,11 +71,11 @@ public class ChatActivity extends FragmentActivity implements View.OnClickListen
             }
         });
 
-        buddy = (ChatUser) getIntent().getSerializableExtra(Const.EXTRA_DATA);
+        buddy = (ProfileDetails) getIntent().getSerializableExtra(Const.EXTRA_DATA);
 
         ActionBar actionBar = getActionBar();
         if(actionBar != null)
-            actionBar.setTitle(buddy.getName());
+            actionBar.setTitle(buddy.getProfileId());
 
     }
 
@@ -110,7 +111,7 @@ public class ChatActivity extends FragmentActivity implements View.OnClickListen
             final Conversation conversation = new Conversation(s,
                     Calendar.getInstance().getTime(),
                     user.getUid(),
-                    buddy.getId(),
+                    buddy.getProfileId(),
                     "");
             conversation.setStatus(Conversation.STATUS_SENDING);
             convList.add(conversation);
