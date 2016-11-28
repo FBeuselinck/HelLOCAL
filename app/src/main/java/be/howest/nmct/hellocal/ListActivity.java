@@ -94,6 +94,8 @@ public class ListActivity extends AppCompatActivity {
     private Boolean typeTrue = false;
     boolean blDate = false;
 
+    boolean UserAvailable = true;
+
 
 
     static Activity thisActivity = null;
@@ -119,20 +121,16 @@ public class ListActivity extends AppCompatActivity {
         Language = intent.getStringExtra("Language");
         Price = intent.getStringExtra("Price");
 
-
         noGuides = (TextView) findViewById(R.id.noGuides);
         noGuides.setVisibility(View.INVISIBLE);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewList);
-
-
 
         progress = new ProgressDialog(this);
         progress.setTitle("Loading guides");
         progress.setMessage("Hold on, we are finding your guides!");
         progress.setCancelable(false);
         progress.show();
-
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -154,15 +152,9 @@ public class ListActivity extends AppCompatActivity {
         //scale animation to shrink floating actionbar
         shrinkAnim = new ScaleAnimation(1.15f, 0f, 1.15f, 0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
-
         getAllAvailableBookings();
 
-
-
     }
-
-
-
 
     public void getAllAvailableBookings(){
 
@@ -176,16 +168,10 @@ public class ListActivity extends AppCompatActivity {
                 List<Object> values = new ArrayList<>(td.values());
 
 
-
-
                 for (int i=0; i<values.size(); i++){
 
                     Map<String, Object> ts = (HashMap<String,Object>) values.get(i);
                     List<Object> list = new ArrayList<>(ts.values());
-
-
-
-
 
 
                        final String name = list.get(8).toString();
@@ -203,8 +189,6 @@ public class ListActivity extends AppCompatActivity {
                     final ArrayList<String> type = new ArrayList<>();
 
 
-
-
                     for (int o = 0; o<list2.size();o++){
                         type.add(list2.get(o).toString());
                         if(list2.get(o).equals(Type)){
@@ -215,8 +199,6 @@ public class ListActivity extends AppCompatActivity {
                     if(Type.equals(NO_PREF)){
                         typeTrue = true;
                     }
-
-
 
                     try{
                         String myFormat = "dd/MM/yyyy";
@@ -231,83 +213,40 @@ public class ListActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-
-
-
-//                        ValueEventListener postEventListener = new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
-//
-//                                Languages.add(profileDetails.getLanguage().toString());
-//
-//
-//
-//                                for (int o = 0; o<Languages.size();o++){
-//                                    if(Languages.get(o).equals(Language) ){
-//                                        lang = true;
-//                                    }
-//                                }
-//
-//
-//
-//
-//
-//
-//
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//
-//
-//
-//
-//
-//                        };
-//                        DatabaseReference myRef = database.getReference("profileDetails").child(userId);
-//                        myRef.addListenerForSingleValueEvent(postEventListener);
-
-
-
                     if (Price == null){
                         Price = "0";
                     }
 
 
-                    if(Country.equals(country)){
-                        if(Integer.parseInt(People) <= Integer.parseInt(maxPeople) ){
-                            if(typeTrue){
-                                if(Transport.equals(transport)||Transport.equals(NO_PREF)){
-                                    if(Integer.parseInt(Price) >= Integer.parseInt(price) || Price.equals("0")){
-                                        if(blDate){
-                                            if(lang){
-                                                AvaiableGuides guide = new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri);
-                                                ListAllGuides.add(guide);
-                                            }else{
-                                                AvaiableGuides guide = new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri);
-                                                ListAllGuides.add(guide);
-                                            }
+                    getLang(userId);
 
+
+                    if(UserAvailable){
+                        if(Country.equals(country)){
+                            if(Integer.parseInt(People) <= Integer.parseInt(maxPeople) ){
+                                if(typeTrue){
+                                    if(Transport.equals(transport)||Transport.equals(NO_PREF)){
+                                        if(Integer.parseInt(Price) >= Integer.parseInt(price) || Price.equals("0")){
+                                            if(blDate){
+                                                if(lang){
+                                                    AvaiableGuides guide = new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri);
+                                                    ListAllGuides.add(guide);
+                                                }else{
+                                                    Toast.makeText(getApplicationContext(), "nuuuuuup",
+                                                            Toast.LENGTH_LONG).show();
+                                                }
+
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-
-
+                    
                     displayInList();
 
-
-
                 }
-
-
-
-
 
 
             }
@@ -331,6 +270,37 @@ public class ListActivity extends AppCompatActivity {
         }
 
         queryRef.addListenerForSingleValueEvent(postListener);
+
+    }
+
+
+    public void getLang(String userId){
+
+
+        ValueEventListener postEventListenerLang = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+
+                Languages.add(profileDetails.getLanguage().toString());
+                UserAvailable = profileDetails.getAvailable();
+
+                for (int o = 0; o<Languages.size();o++){
+                    if(Languages.get(o).equals(Language) ){
+                        lang = true;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        };
+        DatabaseReference myRef = database.getReference("profileDetails").child(userId);
+        myRef.addListenerForSingleValueEvent(postEventListenerLang);
 
     }
 
