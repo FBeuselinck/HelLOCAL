@@ -154,13 +154,11 @@ public class ListActivity extends AppCompatActivity {
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
 
                 List<Object> values = new ArrayList<>(td.values());
-
-
+                
                 for (int i=0; i<values.size(); i++){
 
                     Map<String, Object> ts = (HashMap<String,Object>) values.get(i);
                     List<Object> list = new ArrayList<>(ts.values());
-
 
                        filterName = list.get(8).toString();
                        filterCountry = list.get(2).toString();
@@ -245,9 +243,6 @@ public class ListActivity extends AppCompatActivity {
                                     if(lang){
                                         AvaiableGuides guide = new AvaiableGuides(filterName,filterCountry,filterLocation,filterDateFrom,filterDateTill,filterMaxPeople,filterPrice,filterType,filterTransport,filterUserId,filterPhotoUri);
                                         ListAllGuides.add(guide);
-                                    }else{
-                                        Toast.makeText(getApplicationContext(), "nuuuuuup",
-                                                Toast.LENGTH_LONG).show();
                                     }
 
                                 }
@@ -269,10 +264,17 @@ public class ListActivity extends AppCompatActivity {
                 ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
 
                 Languages = profileDetails.getLanguage();
-                UserAvailable = profileDetails.getAvailable();
+
+                if(profileDetails.getAvailable()!= null){
+                    UserAvailable = profileDetails.getAvailable();
+                }else{
+                    UserAvailable = true;
+                }
+
+
                 if(Languages != null) {
                     for (int o = 0; o < Languages.size(); o++) {
-                        if (Languages.get(o).equals(Language)) {
+                        if (Languages.get(o).equals(Language)|| Language.equals(NO_PREF) ) {
                             lang = true;
                         }
                     }
