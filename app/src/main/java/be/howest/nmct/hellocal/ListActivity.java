@@ -90,9 +90,9 @@ public class ListActivity extends AppCompatActivity {
 
     static Activity thisActivity = null;
 
-    // TODO -> 1. Get all profiledetails | 2. Get all user IDs where 'available' = false |
-    // TODO -> 3. for each availableBooking, check if user id equals user ID from (2)
-    // TODO -> 4. if 3 -> do not show in list
+    // TODO -> 1. Get all review scores | 2. If review GuideId equals userId in availabeGuides -> save score
+    // TODO -> 3. Take the average and add it to ratingbar.
+
 
 
     @Override
@@ -272,6 +272,10 @@ public class ListActivity extends AppCompatActivity {
                             if(Transport.equals(av.transport) || Transport.equals(NO_PREF)){
                                 if(Integer.parseInt(Price) >= Integer.parseInt(av.price) || Price.equals("0")){
                                     if(getDateFilter(av.dateFrom, av.dateTill)) {
+                                            if(getLanguageFilter(pd.getLanguage())){
+                                                ListAllGuides.add(av);
+                                            }
+                                    }else if(DateWant.equals("")){
                                         if(getLanguageFilter(pd.getLanguage())){
                                             ListAllGuides.add(av);
                                         }

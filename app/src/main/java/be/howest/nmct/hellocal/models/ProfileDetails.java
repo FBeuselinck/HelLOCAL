@@ -18,6 +18,8 @@ public class ProfileDetails implements Serializable {
     private String description;
     private Boolean available;
     private String homeTown;
+    private String name;
+    private String photoUri;
 
 
 
@@ -82,7 +84,18 @@ public class ProfileDetails implements Serializable {
         this.homeTown=homeTown;
     }
 
-
+    public ProfileDetails(Boolean available, String birthDate, String description, Gender gender, String homeTown, List<String> language, String name, String phoneNumber, String photoUri, String profileId) {
+        this.available = available;
+        this.birthDate = birthDate;
+        this.description = description;
+        this.gender = gender;
+        this.homeTown = homeTown;
+        this.language = language;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.photoUri = photoUri;
+        this.profileId = profileId;
+    }
 
     public String getProfileId() {
         return profileId;
@@ -138,6 +151,22 @@ public class ProfileDetails implements Serializable {
 
     public void setHomeTown(String homeTown) {
         this.homeTown = homeTown;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhotoUri() {
+        return photoUri;
+    }
+
+    public void setPhotoUri(String photoUri) {
+        this.photoUri = photoUri;
     }
 }
 

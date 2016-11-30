@@ -11,16 +11,18 @@ public class Reviews {
     public Float rating;
     public String comment;
     public String userId;
+    public String guideId;
 
 
     public Reviews(){
 
     }
 
-    public Reviews(String comment, Float rating, String userId) {
+    public Reviews(String comment, Float rating, String userId, String guideId) {
         this.comment = comment;
         this.rating = rating;
         this.userId = userId;
+        this.guideId = guideId;
     }
 
     public String getComment() {
@@ -45,5 +47,14 @@ public class Reviews {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+
+    public String getGuideId() {
+        return guideId;
+    }
+
+    public void setGuideId(String guideId) {
+        this.guideId = guideId;
     }
 }

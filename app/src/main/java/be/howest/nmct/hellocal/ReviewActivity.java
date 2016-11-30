@@ -8,7 +8,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +32,7 @@ import java.util.Map;
 import be.howest.nmct.hellocal.adapters.AvailabeGuidesAdapter;
 import be.howest.nmct.hellocal.adapters.ReviewAdapter;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
+import be.howest.nmct.hellocal.models.ProfileDetails;
 import be.howest.nmct.hellocal.models.Reviews;
 
 public class ReviewActivity extends AppCompatActivity {
@@ -37,11 +42,22 @@ public class ReviewActivity extends AppCompatActivity {
 
     String Uid;
 
+    private List<Reviews> mAvailableReviews;
+    private ArrayList<String> mUserids;
+    private ArrayList<ProfileDetails> mProfileDetails;
+
     private List<Reviews> listReviews = new ArrayList<>();
     private RecyclerView recyclerView;
     private ReviewAdapter mAdapter;
 
+    private List<String> ListNames = new ArrayList<>();
+    private List<String> ListPhotos = new ArrayList<>();
+
+
     private String Name, uid,photo;
+    private EditText comment;
+    private RatingBar score;
+    private Button save;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,32 +68,42 @@ public class ReviewActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        Name = intent.getStringExtra("name");
-        uid = intent.getStringExtra("userId");
-        photo = intent.getStringExtra("photo");
 
+        uid = intent.getStringExtra("userId");
+
+
+        comment = (EditText) findViewById(R.id.editTextComment);
+        score = (RatingBar) findViewById(R.id.ratingBars);
+        save = (Button) findViewById(R.id.buttonSave);
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewReviews);
 
-        getCurrentUserId();
+
+        getCurrentUser();
 
         getAllReviews();
 
 
 
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postReview();
+            }
+        });
+
 
     }
 
-    public void getCurrentUserId(){
-
+    public void getCurrentUser(){
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if(mUser != null){
             Uid = mUser.getUid();
         }
-
     }
+
 
     public void getAllReviews(){
 
@@ -86,33 +112,42 @@ public class ReviewActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                ArrayList<Object> td = (ArrayList<Object>) dataSnapshot.getValue();
+                Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
+
+                List<Object> lst = new ArrayList<>(td.values());
+
+
+                mAvailableReviews = new ArrayList<>();
+                mUserids = new ArrayList<>();
 
 
 
+                for (int i=0; i<lst.size(); i++){
 
-                for (int i=0; i<td.size(); i++){
+                    Reviews review = new Reviews();
 
-                    Map<String, Object> ts = (HashMap<String,Object>) td.get(i);
+                    Map<String, Object> ts = (HashMap<String,Object>) lst.get(i);
                     List<Object> list = new ArrayList<>(ts.values());
 
                     Log.e("list",list.toString());
 
-                        String comment = list.get(1).toString();
-                        Float rating = Float.parseFloat(list.get(2).toString());
-                        String userId = list.get(0).toString();
+                        review.comment = list.get(2).toString();
+                        review.rating = Float.parseFloat(list.get(3).toString());
+                        review.userId = list.get(0).toString();
+                        review.guideId = list.get(1).toString();
+
+
+                        mUserids.add(review.userId);
+                        mAvailableReviews.add(review);
 
 
 
 
-                        Reviews review = new Reviews(comment,rating,userId);
-
-                        listReviews.add(review);
 
 
 
                 }
-                displayInList();
+                getUsersInfo();
 
             }
 
@@ -127,12 +162,88 @@ public class ReviewActivity extends AppCompatActivity {
 
     }
 
+
+    private ProfileDetails getProfileDetail (String userid){
+        ProfileDetails pd = new ProfileDetails();
+        for(int i = 0 ; i < mProfileDetails.size(); i++){
+            if(mProfileDetails.get(i).getProfileId().equals(userid)){
+                pd = mProfileDetails.get(i);
+                i = mProfileDetails.size();
+            }
+        }
+        return pd;
+    }
+
+    public void filterList()
+    {
+        for(int i = 0 ;i < mAvailableReviews.size(); i++) {
+            ProfileDetails pd = getProfileDetail(mAvailableReviews.get(i).userId);
+            Reviews rv = mAvailableReviews.get(i);
+
+            if(rv.guideId.equals(uid)){
+
+                ListNames.add(pd.getName());
+                ListPhotos.add(pd.getPhotoUri());
+
+                listReviews.add(rv);
+            }
+
+
+
+        }
+        displayInList();
+    }
+
+
+
+    private void  getUsersInfo(){
+        if(mUserids.size() != 0){
+            ValueEventListener postEventListenerLang = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
+                    List<Object> lst = new ArrayList<>(td.values());
+
+                    mProfileDetails = new ArrayList<ProfileDetails>();
+                    for(int i = 0; i< lst.size(); i++)
+                    {
+
+                        ProfileDetails pd = new ProfileDetails();
+                        Map<String, Object> ts = (HashMap<String,Object>) lst.get(i);
+                        for(int j = 0; j<mAvailableReviews.size(); j++)
+                        {
+                            if(mAvailableReviews.get(j).userId.equals((String) ts.get("profileId")))
+                            {
+                                pd.setName((String) ts.get("name"));
+                                pd.setProfileId((String) ts.get("profileId"));
+                                pd.setPhotoUri((String) ts.get("photoUri"));
+                                mProfileDetails.add(pd);
+                                j = mAvailableReviews.size();
+                            }
+                        }
+                    }
+                    filterList();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+            DatabaseReference myRef = database.getReference("profileDetails");
+            myRef.addListenerForSingleValueEvent(postEventListenerLang);
+        }
+
+    }
+
+
+
     public void displayInList(){
 
 
 
 
-        mAdapter = new ReviewAdapter(listReviews,Name,photo,this);
+        mAdapter = new ReviewAdapter(listReviews,ListNames,ListPhotos,this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -153,6 +264,36 @@ public class ReviewActivity extends AppCompatActivity {
 
 
     }
+
+
+    private void postReview(){
+
+        if(!comment.equals("")){
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+            Reviews review = new Reviews(comment.getText().toString(),score.getRating(),Uid, uid);
+            mDatabase.child("reviews").push().setValue(review);
+            Toast.makeText(getApplication(), "Succesfully saved your review!", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getApplication(), "Please add some text", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return(super.onOptionsItemSelected(item));
+
+    }
+
 
 
 }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.NameList;
 import org.w3c.dom.Text;
 
 import java.util.List;
@@ -26,7 +27,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
 
     private List<Reviews> reviewsList;
 
-    String Name, PhotoUri;
+    private List<String> ListNames;
+    private List<String> ListPhotos;
 
     Context context;
 
@@ -45,10 +47,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
     }
 
 
-    public ReviewAdapter(List<Reviews> reviewsList, String Name, String PhotoUri, Context context) {
+    public ReviewAdapter(List<Reviews> reviewsList, List<String> ListNames, List<String> ListPhotos, Context context) {
         this.reviewsList = reviewsList;
-        this.Name = Name;
-        this.PhotoUri = PhotoUri;
+        this.ListNames = ListNames;
+        this.ListPhotos = ListPhotos;
         this.context = context;
     }
 
@@ -64,6 +66,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
     @Override
     public void onBindViewHolder(ReviewAdapter.MyViewHolder holder, int position) {
         Reviews review = reviewsList.get(position);
+        String Name = ListNames.get(position);
+        String PhotoUri = ListPhotos.get(position);
         holder.rating.setRating(review.getRating());
         holder.comment.setText(review.getComment());
         holder.name.setText(Name);

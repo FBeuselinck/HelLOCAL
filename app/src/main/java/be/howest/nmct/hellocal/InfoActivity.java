@@ -84,13 +84,10 @@ public class InfoActivity extends AppCompatActivity {
 
 
 
-<<<<<<< HEAD
     static Activity thisActivity = null;
 
 
 
-=======
->>>>>>> origin/develop
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,8 +159,8 @@ public class InfoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(thisActivity, ReviewActivity.class);
                 intent.putExtra("userId",UserId);
-                intent.putExtra("name",Name);
-                intent.putExtra("photo",PhotoUri);
+//                intent.putExtra("name",Name);
+//                intent.putExtra("photo",PhotoUri);
                 thisActivity.startActivity(intent);
             }
         });

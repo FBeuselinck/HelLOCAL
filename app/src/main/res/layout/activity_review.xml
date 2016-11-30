@@ -25,7 +25,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/recyclerViewReviews"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
 
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             />
@@ -36,9 +36,28 @@
             android:text="Add a review"/>
 
         <EditText
+            android:id="@+id/editTextComment"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="5"
              />
+
+        <RatingBar
+            android:id="@+id/ratingBars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars = "5"
+
+            />
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonSave"
+            android:text="SAVE"
+            android:background="#02D31C"
+            />
     </LinearLayout>
 
 
