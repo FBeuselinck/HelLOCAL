@@ -1,5 +1,6 @@
 package be.howest.nmct.hellocal;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -69,6 +71,8 @@ public class InfoActivity extends AppCompatActivity {
     private ImageView ImageView11;
     private ImageView ImageView12;
 
+    private LinearLayout linearLayout;
+
 
     private TextView Bio;
 
@@ -77,6 +81,8 @@ public class InfoActivity extends AppCompatActivity {
 
 
 
+    static Activity thisActivity = null;
+
 
 
     @Override
@@ -84,6 +90,7 @@ public class InfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
+        thisActivity = this;
 
         ActionBar ab = getSupportActionBar();
 
@@ -142,7 +149,18 @@ public class InfoActivity extends AppCompatActivity {
         ImageView12.setVisibility(View.GONE);
 
 
+        linearLayout = (LinearLayout) findViewById(R.id.LinearLayoutsz4);
 
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(thisActivity, ReviewActivity.class);
+                intent.putExtra("userId",UserId);
+                intent.putExtra("name",Name);
+                intent.putExtra("photo",PhotoUri);
+                thisActivity.startActivity(intent);
+            }
+        });
 
 
 
@@ -221,21 +239,6 @@ public class InfoActivity extends AppCompatActivity {
             ImageView4.setImageResource(R.drawable.smthelse);
         }
 
-
-//
-//        if(Culture.equals("True")&&Active.equals("false")&&City.equals("false")&&SmthElse.equals("false")){
-//            ImageView3.setImageResource(R.drawable.culture);
-//            ImageView2.setVisibility(View.GONE);
-//            ImageView1.setVisibility(View.GONE);
-//            ImageView4.setVisibility(View.GONE);
-//        }
-//
-//        if(SmthElse.equals("True")&&Active.equals("false")&&Culture.equals("false")&&City.equals("false")){
-//            ImageView4.setImageResource(R.drawable.smthelse);
-//            ImageView2.setVisibility(View.GONE);
-//            ImageView3.setVisibility(View.GONE);
-//            ImageView1.setVisibility(View.GONE);
-//        }
 
         if(Transport.equals("Guides transport")){
             ImageView5.setImageResource(R.drawable.guidetransport);
