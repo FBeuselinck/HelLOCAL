@@ -21,9 +21,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import be.howest.nmct.hellocal.models.Const;
 import be.howest.nmct.hellocal.models.ProfileDetails;
 
 public class InfoActivity extends AppCompatActivity {
@@ -76,15 +78,19 @@ public class InfoActivity extends AppCompatActivity {
 
     private TextView Bio;
 
+    private ProfileDetails profileDetails;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
 
+<<<<<<< HEAD
     static Activity thisActivity = null;
 
 
 
+=======
+>>>>>>> origin/develop
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,7 +179,14 @@ public class InfoActivity extends AppCompatActivity {
         textViewCountry.setText(Country);
         textViewPrice.setText(Price);
         btnBook.setText("BOOK " + Name.toUpperCase());
+
         btnContact.setText("CONTACT " + Name.toUpperCase());
+        btnContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Contact();
+            }
+        });
 
         Picasso.with(this.getApplicationContext()).load(PhotoUri.toString()).into(imagePhoto);
 
@@ -248,20 +261,16 @@ public class InfoActivity extends AppCompatActivity {
             ImageView5.setImageResource(R.drawable.notransport);
         }
 
-        getLanguages();
-
+        getProfile();
 
     }
 
-    private void getLanguages()
-    {
+    private void getProfile(){
         ValueEventListener postEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
-                ShowLanguages(profileDetails.getLanguage());
-                Bio.setText(profileDetails.getDescription());
-
+                profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+                getLanguages();
             }
 
             @Override
@@ -271,7 +280,12 @@ public class InfoActivity extends AppCompatActivity {
         };
         DatabaseReference myRef = database.getReference("profileDetails").child(UserId);
         myRef.addListenerForSingleValueEvent(postEventListener);
+    }
 
+    private void getLanguages()
+    {
+        ShowLanguages(profileDetails.getLanguage());
+        Bio.setText(profileDetails.getDescription());
     }
 
 
@@ -319,5 +333,9 @@ public class InfoActivity extends AppCompatActivity {
 
     }
 
-
+    private void Contact(){
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra(Const.EXTRA_DATA, (Serializable) profileDetails);
+        startActivity(intent);
+    }
 }

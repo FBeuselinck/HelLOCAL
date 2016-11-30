@@ -1,12 +1,13 @@
 package be.howest.nmct.hellocal.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Arno on 14/11/2016.
  */
 
-public class ProfileDetails {
+public class ProfileDetails implements Serializable {
 
 
     private String profileId;
