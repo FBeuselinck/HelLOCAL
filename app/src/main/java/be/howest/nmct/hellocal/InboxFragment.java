@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import be.howest.nmct.hellocal.models.ChatUser;
+import be.howest.nmct.hellocal.models.Const;
 import be.howest.nmct.hellocal.models.Message;
 import be.howest.nmct.hellocal.models.ProfileDetails;
 
@@ -180,6 +181,7 @@ public class InboxFragment extends Fragment {
 
                         Intent intent = new Intent(thisActivity, ChatActivity.class);
                         intent.putExtra("Name", Name.getText().toString());
+                        intent.putExtra(Const.EXTRA_DATA, profiles.get(position));
                         //intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
 
                         thisActivity.startActivity(intent);
