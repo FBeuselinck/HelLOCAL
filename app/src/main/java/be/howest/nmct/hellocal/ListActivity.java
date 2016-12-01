@@ -363,7 +363,7 @@ public class ListActivity extends AppCompatActivity {
                 intent.putExtra("Culture",Name.getTag(R.id.culture).toString());
                 intent.putExtra("SmthElse",Name.getTag(R.id.smthElse).toString());
                 intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
-
+                intent.putExtra("Date", DateWant);
 
 
                 thisActivity.startActivity(intent);
