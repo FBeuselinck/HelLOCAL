@@ -1,6 +1,8 @@
 package be.howest.nmct.hellocal;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -285,13 +287,41 @@ public class InfoActivity extends AppCompatActivity {
             Toast.makeText(this, "You can't book yourself", Toast.LENGTH_SHORT).show();
         }
         else {
-            BookingRequests br = new BookingRequests(UserId, mUser.getUid(), false, Date, AvaiableGuidesId);
-            DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-            mDatabaseReference.child("bookingRequests").push().setValue(br);
-            Toast.makeText(this, "Booking Created", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
+
+            // set title
+            alertDialogBuilder.setTitle("Are you Sure");
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("Are you sure you want to book " + Name + "?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, close
+                            // current activity
+                            RequestComfirmed();
+                        }
+                    })
+                    .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // if this button is clicked, just close
+                                    // the dialog box and do nothing
+                                    dialog.cancel();
+                                }
+                            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
         }
+    }
 
-
+    private void RequestComfirmed()
+    {
+        BookingRequests br = new BookingRequests(UserId, mUser.getUid(), false, Date, AvaiableGuidesId);
+        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mDatabaseReference.child("bookingRequests").push().setValue(br);
+        Toast.makeText(this, "Booking Created", Toast.LENGTH_SHORT).show();
     }
 
     private void getProfile(){

@@ -112,7 +112,7 @@ public class ListActivity extends AppCompatActivity {
         Price = intent.getStringExtra("Price");
 
         noGuides = (TextView) findViewById(R.id.noGuides);
-        noGuides.setVisibility(View.INVISIBLE);
+        noGuides.setVisibility(View.GONE);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewList);
 
