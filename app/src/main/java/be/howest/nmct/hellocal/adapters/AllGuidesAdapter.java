@@ -28,7 +28,7 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
     Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, city, country, price;
+        public TextView name, city, country, price, id;
         public ImageView photo;
 
         public MyViewHolder(View view) {
@@ -38,6 +38,7 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
             country = (TextView) view.findViewById(R.id.textViewCountry);
             price = (TextView) view.findViewById(R.id.textViewPrice);
             photo = (ImageView) view.findViewById(R.id.imagePhoto);
+            id = (TextView) view.findViewById(R.id.textViewAvailibleGuideId);
 
         }
     }
@@ -63,6 +64,7 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
         holder.city.setText(guide.getLocation());
         holder.country.setText(guide.getCountry());
         holder.price.setText("€ "+guide.getPrice()+"/h");
+        holder.id.setText(guide.getId());
 
 
         holder.name.setTag(R.id.guideId,guide.getUserId());

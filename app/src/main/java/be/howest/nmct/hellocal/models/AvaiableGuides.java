@@ -1,13 +1,6 @@
 package be.howest.nmct.hellocal.models;
 
-import android.net.Uri;
-
-import com.google.firebase.database.GenericTypeIndicator;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Simon on 7/11/2016.
@@ -25,6 +18,7 @@ public class AvaiableGuides {
     public String transport;
     public String userId;
     public String photoUri;
+    public String Id;
 
 //    public String combined;
 
@@ -133,6 +127,14 @@ public class AvaiableGuides {
 
     public String getPhotoUri() {
         return photoUri;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
     }
 
     public void setPhotoUri(String photoUri) {

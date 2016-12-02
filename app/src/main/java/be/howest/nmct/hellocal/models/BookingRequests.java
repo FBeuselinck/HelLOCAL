@@ -7,16 +7,20 @@ public class BookingRequests {
     private String RequestUserId;
     private Boolean IsConfirmed;
     private String Date;
+    private String AvailabeGuidesAdapterId;
+
+
 
     public BookingRequests(){
 
     }
 
-    public BookingRequests(String guideId, String requestUserId, Boolean isConfirmed, String date) {
+    public BookingRequests(String guideId, String requestUserId, Boolean isConfirmed, String date, String AvailabeGuidesAdapterId) {
         GuideId = guideId;
         RequestUserId = requestUserId;
         IsConfirmed = isConfirmed;
         Date = date;
+        this.AvailabeGuidesAdapterId = AvailabeGuidesAdapterId;
     }
 
     public String getDate() {
@@ -49,5 +53,13 @@ public class BookingRequests {
 
     public void setConfirmed(Boolean confirmed) {
         IsConfirmed = confirmed;
+    }
+
+    public String getAvailabeGuidesAdapterId() {
+        return AvailabeGuidesAdapterId;
+    }
+
+    public void setAvailabeGuidesAdapterId(String availabeGuidesAdapterId) {
+        AvailabeGuidesAdapterId = availabeGuidesAdapterId;
     }
 }

@@ -45,6 +45,7 @@ public class InfoActivity extends AppCompatActivity {
     private String SmthElse;
     private String PhotoUri;
     private String Date;
+    private String AvaiableGuidesId;
 
 
     private TextView textViewName;
@@ -113,6 +114,7 @@ public class InfoActivity extends AppCompatActivity {
         Price = intent.getStringExtra("Price");
         UserId = intent.getStringExtra("UserId");
         Date = intent.getStringExtra("Date");
+        AvaiableGuidesId = intent.getStringExtra("AvaiableGuidesId");
 
         Transport = intent.getStringExtra("Transport");
         Active = intent.getStringExtra("Active");
@@ -282,11 +284,14 @@ public class InfoActivity extends AppCompatActivity {
         if(mUser.getUid() == UserId){
             Toast.makeText(this, "You can't book yourself", Toast.LENGTH_SHORT).show();
         }
-        
-        BookingRequests br = new BookingRequests(UserId, mUser.getUid(), false, Date);
-        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mDatabaseReference.child("bookingRequests").push().setValue(br);
-        Toast.makeText(this, "Booking Created", Toast.LENGTH_SHORT).show();
+        else {
+            BookingRequests br = new BookingRequests(UserId, mUser.getUid(), false, Date, AvaiableGuidesId);
+            DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+            mDatabaseReference.child("bookingRequests").push().setValue(br);
+            Toast.makeText(this, "Booking Created", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     private void getProfile(){
