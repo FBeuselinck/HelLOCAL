@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:441500532356:android:2aac9e78bd3c16ca",
         "android_client_info": {
-          "package_name": "nmct.howest.be.hellocal"
+          "package_name": "be.howest.nmct.hellocal"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "441500532356-amj1d97m9se569crakubhbq81nrrocg5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "nmct.howest.be.hellocal",
+            "package_name": "be.howest.nmct.hellocal",
             "certificate_hash": "4DB71DE1FE38C026394627C52BC2A56F1A6C4903"
           }
         },
