@@ -13,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,9 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
+import be.howest.nmct.hellocal.models.BookingRequests;
 import be.howest.nmct.hellocal.models.Const;
 import be.howest.nmct.hellocal.models.ProfileDetails;
 
@@ -41,6 +44,7 @@ public class InfoActivity extends AppCompatActivity {
     private String CityIcon;
     private String SmthElse;
     private String PhotoUri;
+    private String Date;
 
 
     private TextView textViewName;
@@ -75,6 +79,7 @@ public class InfoActivity extends AppCompatActivity {
 
     private LinearLayout linearLayout;
 
+    private FirebaseUser mUser;
 
     private TextView Bio;
 
@@ -107,6 +112,7 @@ public class InfoActivity extends AppCompatActivity {
         Country = intent.getStringExtra("Country");
         Price = intent.getStringExtra("Price");
         UserId = intent.getStringExtra("UserId");
+        Date = intent.getStringExtra("Date");
 
         Transport = intent.getStringExtra("Transport");
         Active = intent.getStringExtra("Active");
@@ -258,8 +264,29 @@ public class InfoActivity extends AppCompatActivity {
             ImageView5.setImageResource(R.drawable.notransport);
         }
 
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+
         getProfile();
 
+        btnBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeBookingRequest();
+            }
+        });
+
+
+    }
+
+    private void makeBookingRequest(){
+        if(mUser.getUid() == UserId){
+            Toast.makeText(this, "You can't book yourself", Toast.LENGTH_SHORT).show();
+        }
+        
+        BookingRequests br = new BookingRequests(UserId, mUser.getUid(), false, Date);
+        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mDatabaseReference.child("bookingRequests").push().setValue(br);
+        Toast.makeText(this, "Booking Created", Toast.LENGTH_SHORT).show();
     }
 
     private void getProfile(){

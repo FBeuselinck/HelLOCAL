@@ -27,6 +27,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -363,8 +364,14 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
 
         if(booleanChangeFound || mBooleanLanguageChanged)
         {
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(name)
+                    .build();
+
+
+            mUser.updateProfile(profileUpdates);
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Languages, selectedGender, phoneNumber, birthDate, description, available, HomeTown);
+            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Languages, selectedGender, phoneNumber, birthDate, description, available, HomeTown, name, mUser.getPhotoUrl().toString());
             mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
             Toast.makeText(getContext(), "Changes made", Toast.LENGTH_SHORT).show();
         }

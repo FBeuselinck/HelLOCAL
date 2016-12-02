@@ -73,7 +73,7 @@ public class ProfileDetails implements Serializable {
         this.description = description;
     }
 
-    public ProfileDetails (String profileId, List<String> language, Gender gender, String phoneNumber, String birthDate, String description, Boolean available, String homeTown){
+    public ProfileDetails (String profileId, List<String> language, Gender gender, String phoneNumber, String birthDate, String description, Boolean available, String homeTown, String name, String photoUri){
         this.profileId = profileId;
         this.language = language;
         this.gender = gender;
@@ -82,21 +82,9 @@ public class ProfileDetails implements Serializable {
         this.description = description;
         this.available = available;
         this.homeTown=homeTown;
-    }
-
-    public ProfileDetails(Boolean available, String birthDate, String description, Gender gender, String homeTown, List<String> language, String name, String phoneNumber, String photoUri, String profileId) {
-        this.available = available;
-        this.birthDate = birthDate;
-        this.description = description;
-        this.gender = gender;
-        this.homeTown = homeTown;
-        this.language = language;
         this.name = name;
-        this.phoneNumber = phoneNumber;
         this.photoUri = photoUri;
-        this.profileId = profileId;
     }
-
     public String getProfileId() {
         return profileId;
     }

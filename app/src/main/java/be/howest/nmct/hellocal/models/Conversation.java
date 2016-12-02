@@ -17,6 +17,8 @@ public class Conversation
     private String receiver;
     private String photoUrl;
 
+	public Conversation(){}
+
 	public Conversation(String msg, Date date, String sender, String receiver, String photoUrl) {
         this.msg = msg;
 		this.date = date;
