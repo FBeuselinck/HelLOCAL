@@ -166,12 +166,15 @@ public class ListActivity extends AppCompatActivity {
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
                 mAvailibleGuides = new ArrayList<>();
                 List<Object> lst = new ArrayList<>(td.values());
+                List keys = new ArrayList(td.keySet());
                 mUserids = new ArrayList<>();
                 for(int i = 0; i<lst.size(); i++){
                     AvaiableGuides ag = new AvaiableGuides();
                     Map<String, Object> ts = (HashMap<String,Object>) lst.get(i);
                     List<Object> gd = new ArrayList<>(ts.values());
 
+
+                    ag.setId(keys.get(i).toString());
                     ag.country = (String) gd.get(2);
                     ag.dateFrom = (String) gd.get(7);
                     ag.dateTill = (String) gd.get(1);
@@ -484,6 +487,7 @@ public class ListActivity extends AppCompatActivity {
                 TextView City = (TextView) v.findViewById(R.id.textViewCity);
                 TextView Country = (TextView) v.findViewById(R.id.textViewCountry);
                 TextView Price = (TextView) v.findViewById(R.id.textViewPrice);
+                TextView id = (TextView) v.findViewById(R.id.textViewAvailibleGuideId);
 
                 Intent intent = new Intent(thisActivity, InfoActivity.class);
                 intent.putExtra("Name",Name.getText().toString());
@@ -499,6 +503,7 @@ public class ListActivity extends AppCompatActivity {
                 intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
                 intent.putExtra("Rating",Name.getTag(R.id.rating).toString());
                 intent.putExtra("Date", DateWant);
+                intent.putExtra("AvaiableGuidesId", id.getText());
 
 
                 thisActivity.startActivity(intent);

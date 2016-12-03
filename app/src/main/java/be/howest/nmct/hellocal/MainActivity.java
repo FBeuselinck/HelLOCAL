@@ -102,24 +102,27 @@ public class MainActivity extends AppCompatActivity
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
+                FirebaseUser mUser = firebaseAuth.getCurrentUser();
+                if (mUser == null) {
                     GotoLogin();
                 }
                 else{
-                    mUser = user;
-                    Uri photoUrl = mUser.getPhotoUrl();
-                    if(photoUrl != null)
-                        Picasso.with(getBaseContext()).load(photoUrl.toString()).into(imageViewNavHead);
-                    textViewNavName.setText(mUser.getDisplayName());
+                    ShowNavigationTop();
                 }
             }
         };
 
     }
 
-    private void GotoLogin()
-    {
+    public void ShowNavigationTop() {
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        Uri photoUrl = mUser.getPhotoUrl();
+        if(photoUrl != null)
+            Picasso.with(getBaseContext()).load(photoUrl.toString()).into(imageViewNavHead);
+        textViewNavName.setText(mUser.getDisplayName());
+    }
+
+    private void GotoLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }

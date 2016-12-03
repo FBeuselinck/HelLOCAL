@@ -5,8 +5,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,18 +19,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -245,18 +237,23 @@ public class SearchFragment extends Fragment  {
 
     private void Search(){
 
+        if(editTextDate.getText().toString().trim().equals("")){
+            Toast.makeText(getContext(), "Please select a date", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Intent intent = new Intent(getActivity(), ListActivity.class);
+            intent.putExtra("Location",Location);
+            intent.putExtra("Country",spinnerCountry.getSelectedItem().toString());
+            intent.putExtra("Date",editTextDate.getText().toString().trim());
+            intent.putExtra("People",spinnerPeople.getSelectedItem().toString());
+            intent.putExtra("Transport",spinnerTransport.getSelectedItem().toString());
+            intent.putExtra("Type",spinnerType.getSelectedItem().toString());
+            intent.putExtra("Language",spinnerLanguage.getSelectedItem().toString());
+            intent.putExtra("Price",seekbarValue);
+            startActivity(intent);
 
-
-        Intent intent = new Intent(getActivity(), ListActivity.class);
-        intent.putExtra("Location",Location);
-        intent.putExtra("Country",spinnerCountry.getSelectedItem().toString());
-        intent.putExtra("Date",editTextDate.getText().toString().trim());
-        intent.putExtra("People",spinnerPeople.getSelectedItem().toString());
-        intent.putExtra("Transport",spinnerTransport.getSelectedItem().toString());
-        intent.putExtra("Type",spinnerType.getSelectedItem().toString());
-        intent.putExtra("Language",spinnerLanguage.getSelectedItem().toString());
-        intent.putExtra("Price",seekbarValue);
-        startActivity(intent);
+        }
 
     }
 }

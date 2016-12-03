@@ -1,6 +1,8 @@
 package be.howest.nmct.hellocal;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -45,7 +47,11 @@ public class InfoActivity extends AppCompatActivity {
     private String SmthElse;
     private String PhotoUri;
     private String Date;
+<<<<<<< HEAD
     private String Rating;
+=======
+    private String AvaiableGuidesId;
+>>>>>>> origin/develop
 
 
     private TextView textViewName;
@@ -116,6 +122,7 @@ public class InfoActivity extends AppCompatActivity {
         Price = intent.getStringExtra("Price");
         UserId = intent.getStringExtra("UserId");
         Date = intent.getStringExtra("Date");
+        AvaiableGuidesId = intent.getStringExtra("AvaiableGuidesId");
 
         Transport = intent.getStringExtra("Transport");
         Active = intent.getStringExtra("Active");
@@ -290,8 +297,39 @@ public class InfoActivity extends AppCompatActivity {
         if(mUser.getUid() == UserId){
             Toast.makeText(this, "You can't book yourself", Toast.LENGTH_SHORT).show();
         }
-        
-        BookingRequests br = new BookingRequests(UserId, mUser.getUid(), false, Date);
+        else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
+
+            // set title
+            alertDialogBuilder.setTitle("Are you Sure");
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("Are you sure you want to book " + Name + "?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, close
+                            // current activity
+                            RequestComfirmed();
+                        }
+                    })
+                    .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // if this button is clicked, just close
+                                    // the dialog box and do nothing
+                                    dialog.cancel();
+                                }
+                            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
+    }
+
+    private void RequestComfirmed()
+    {
+        BookingRequests br = new BookingRequests(UserId, mUser.getUid(), false, Date, AvaiableGuidesId);
         DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mDatabaseReference.child("bookingRequests").push().setValue(br);
         Toast.makeText(this, "Booking Created", Toast.LENGTH_SHORT).show();
