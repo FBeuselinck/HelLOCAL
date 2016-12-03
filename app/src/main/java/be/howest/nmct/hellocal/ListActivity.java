@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,24 +28,33 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import be.howest.nmct.hellocal.adapters.AllGuidesAdapter;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 import be.howest.nmct.hellocal.models.ProfileDetails;
+import be.howest.nmct.hellocal.models.Reviews;
 
 public class ListActivity extends AppCompatActivity {
 
     private List<AvaiableGuides> mAvailibleGuides;
     private ArrayList<String> mUserids;
     private ArrayList<ProfileDetails> mProfileDetails;
+    private ArrayList<Reviews> mReviews;
     ScaleAnimation shrinkAnim;
     private StaggeredGridLayoutManager mLayoutManager;
     private TextView noGuides;
+
+    private Map<String, List<Float>> tq = new HashMap<>();
+
 
     private String filterCountry, filterMaxPeople, filterTransport, filterPrice, filterName,filterLocation,filterDateFrom,filterDateTill,filterUserId,filterPhotoUri;
     private ArrayList<String> filterType;
@@ -77,6 +87,8 @@ public class ListActivity extends AppCompatActivity {
 
 
     private List<AvaiableGuides> ListAllGuides = new ArrayList<>();
+    private List<Reviews> ListAllReviews = new ArrayList<>();
+
 
     private List<String> Languages = new ArrayList<>();
 
@@ -112,7 +124,7 @@ public class ListActivity extends AppCompatActivity {
         Price = intent.getStringExtra("Price");
 
         noGuides = (TextView) findViewById(R.id.noGuides);
-        noGuides.setVisibility(View.INVISIBLE);
+        noGuides.setVisibility(View.GONE);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewList);
 
@@ -209,6 +221,39 @@ public class ListActivity extends AppCompatActivity {
         return pd;
     }
 
+
+    private Reviews getReviews (String userid){
+        Reviews rv = new Reviews();
+
+        if(tq.get(userid)!=null){
+
+            List<List<Float>> ts = new ArrayList<>(Arrays.asList(tq.get(userid)));
+            String list = ts.toString();
+            String[] parts = list.split(",");
+            String ratingString = parts[0];
+            String amountString = parts[1];
+            ratingString = ratingString.substring(2,ratingString.length());
+            amountString = amountString.substring(0,amountString.length()-2);
+            Float ratingEffective = Float.parseFloat(ratingString) / Float.parseFloat(amountString);
+            rv.setRating(ratingEffective);
+
+
+        }else{
+
+            rv.setRating(Float.parseFloat("0"));
+
+        }
+
+
+//        for(int i = 0 ; i < mReviews.size(); i++){
+//            if(mReviews.get(i).getGuideId().equals(userid)){
+//                rv = mReviews.get(i);
+//                i = mReviews.size();
+//            }
+//        }
+        return rv;
+    }
+
     private boolean getTypesFilter(ArrayList<String> types){
         boolean bReturn = false;
         if(Type.equals(NO_PREF)){
@@ -259,9 +304,11 @@ public class ListActivity extends AppCompatActivity {
 
     public void filterList()
     {
+
         for(int i = 0 ;i < mAvailibleGuides.size(); i++)
         {
             ProfileDetails pd = getProfileDetail(mAvailibleGuides.get(i).userId);
+            Reviews rv = getReviews(mAvailibleGuides.get(i).userId);
             AvaiableGuides av = mAvailibleGuides.get(i);
             if(pd.getAvailable() == null) pd.setAvailable(true);
             if(Price == null) Price ="0";
@@ -274,10 +321,13 @@ public class ListActivity extends AppCompatActivity {
                                     if(getDateFilter(av.dateFrom, av.dateTill)) {
                                             if(getLanguageFilter(pd.getLanguage())){
                                                 ListAllGuides.add(av);
+                                                ListAllReviews.add(rv);
                                             }
                                     }else if(DateWant.equals("")){
                                         if(getLanguageFilter(pd.getLanguage())){
                                             ListAllGuides.add(av);
+                                            ListAllReviews.add(rv);
+
                                         }
                                     }
                                 }
@@ -315,7 +365,7 @@ public class ListActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    filterList();
+                    getReviews();
                 }
 
                 @Override
@@ -330,13 +380,97 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
+    private void getReviews(){
+        if(mUserids.size() != 0){
+            ValueEventListener postListenerReview = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
+
+                    List<Object> lst = new ArrayList<>(td.values());
+
+
+                    mReviews = new ArrayList<Reviews>();
+                    Reviews rv = new Reviews();
+
+                    for(int i = 0; i< lst.size(); i++)
+                    {
+
+                        Map<String, Object> ts = (HashMap<String,Object>) lst.get(i);
+
+                        if(!tq.isEmpty()){
+
+                            Boolean key = false;
+                            String keyUpdate = "";
+                            Map<String,Object> keyRating = new HashMap<>();;
+
+                            Iterator it = tq.entrySet().iterator();
+                            while (it.hasNext()){
+                                Map.Entry pair = (Map.Entry)it.next();
+                                if (pair.getKey().equals(ts.get("guideId"))){
+                                    key=true;
+                                    keyUpdate=pair.getKey().toString();
+                                    keyRating.put(keyUpdate,pair.getValue());
+                                    break;
+                                }
+                            }
+
+                            if(key){
+
+                                String id = keyUpdate;
+                                List<Object> testq = new ArrayList<>(keyRating.values());
+
+                                ArrayList<Object> wtf = new ArrayList<>(Arrays.asList(testq.get(0)));
+
+                                String list = wtf.get(0).toString();
+
+                                String[] parts = list.split(",");
+                                String ratingString = parts[0];
+                                String amountString = parts[1];
+
+                                ratingString = ratingString.substring(1,ratingString.length());
+                                amountString = amountString.substring(0,amountString.length()-1);
+
+                                Float ratings = Float.parseFloat(ratingString);
+                                Float amount = Float.parseFloat(amountString);
+
+                                ratings = ratings + Float.parseFloat(ts.get("rating").toString());
+                                amount ++;
+
+                                tq.put(id, Arrays.asList(ratings,amount));
+
+                            }else{
+                                tq.put(ts.get("guideId").toString(), Arrays.asList(Float.parseFloat(ts.get("rating").toString()),Float.parseFloat("1.0")));
+                            }
+                        }else{
+                            tq.put(ts.get("guideId").toString(), Arrays.asList(Float.parseFloat(ts.get("rating").toString()),Float.parseFloat("1.0")));
+                        }
+
+                    }
+
+                    filterList();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+            DatabaseReference myRef = database.getReference("reviews");
+            myRef.addListenerForSingleValueEvent(postListenerReview);
+        }
+    }
+
+
 
     public void displayInList(){
 
 
+
+
         progress.dismiss();
 
-        mAdapter = new AllGuidesAdapter(ListAllGuides,thisActivity);
+        mAdapter = new AllGuidesAdapter(ListAllGuides,ListAllReviews,thisActivity);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -363,6 +497,7 @@ public class ListActivity extends AppCompatActivity {
                 intent.putExtra("Culture",Name.getTag(R.id.culture).toString());
                 intent.putExtra("SmthElse",Name.getTag(R.id.smthElse).toString());
                 intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
+                intent.putExtra("Rating",Name.getTag(R.id.rating).toString());
                 intent.putExtra("Date", DateWant);
 
 

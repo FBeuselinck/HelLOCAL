@@ -45,6 +45,7 @@ public class InfoActivity extends AppCompatActivity {
     private String SmthElse;
     private String PhotoUri;
     private String Date;
+    private String Rating;
 
 
     private TextView textViewName;
@@ -54,6 +55,8 @@ public class InfoActivity extends AppCompatActivity {
     private TextView textViewReviews;
     private TextView textViewPrice;
     private ImageView imagePhoto;
+
+
 
     private Button btnBook;
     private Button btnContact;
@@ -121,6 +124,8 @@ public class InfoActivity extends AppCompatActivity {
         SmthElse = intent.getStringExtra("SmthElse");
         PhotoUri = intent.getStringExtra("PhotoUri");
 
+        Rating = intent.getStringExtra("Rating");
+
 
         textViewName = (TextView) findViewById(R.id.textViewName);
         textViewCity = (TextView) findViewById(R.id.textViewCity);
@@ -129,6 +134,8 @@ public class InfoActivity extends AppCompatActivity {
         textViewReviews = (TextView) findViewById(R.id.textViewReviews);
         textViewPrice = (TextView) findViewById(R.id.textViewPrice);
         imagePhoto = (ImageView) findViewById(R.id.imagePhoto);
+
+
 
         btnBook = (Button) findViewById(R.id.btnBook);
         btnContact = (Button) findViewById(R.id.btnContact);
@@ -176,6 +183,7 @@ public class InfoActivity extends AppCompatActivity {
 //        Toast.makeText(getApplicationContext(), UserId,
 //                Toast.LENGTH_LONG).show();
 
+        ratingBar.setRating(Float.parseFloat(Rating));
 
         textViewName.setText(Name);
         textViewCity.setText(City);

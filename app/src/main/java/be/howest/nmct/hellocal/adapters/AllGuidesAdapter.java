@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import be.howest.nmct.hellocal.R;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
+import be.howest.nmct.hellocal.models.Reviews;
 
 
 /**
@@ -24,12 +26,14 @@ import be.howest.nmct.hellocal.models.AvaiableGuides;
 public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyViewHolder> {
 
     private List<AvaiableGuides> guidesList;
+    private List<Reviews> reviewsList;
 
     Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, city, country, price;
         public ImageView photo;
+        public RatingBar score;
 
         public MyViewHolder(View view) {
             super(view);
@@ -38,13 +42,14 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
             country = (TextView) view.findViewById(R.id.textViewCountry);
             price = (TextView) view.findViewById(R.id.textViewPrice);
             photo = (ImageView) view.findViewById(R.id.imagePhoto);
-
+            score = (RatingBar) view.findViewById(R.id.ratingBar);
         }
     }
 
 
-    public AllGuidesAdapter(List<AvaiableGuides> guidesList, Context context) {
+    public AllGuidesAdapter(List<AvaiableGuides> guidesList, List<Reviews> reviewsList, Context context) {
         this.guidesList = guidesList;
+        this.reviewsList = reviewsList;
         this.context = context;
     }
 
@@ -59,15 +64,21 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
     @Override
     public void onBindViewHolder(AllGuidesAdapter.MyViewHolder holder, int position) {
         AvaiableGuides guide = guidesList.get(position);
+        Reviews review = reviewsList.get(position);
+
+        float score = review.getRating();
+
         holder.name.setText(guide.getName());
         holder.city.setText(guide.getLocation());
         holder.country.setText(guide.getCountry());
         holder.price.setText("€ "+guide.getPrice()+"/h");
+        holder.score.setRating(score);
 
 
         holder.name.setTag(R.id.guideId,guide.getUserId());
         holder.name.setTag(R.id.transport, guide.getTransport());
         holder.name.setTag(R.id.photoUri, guide.getPhotoUri());
+        holder.name.setTag(R.id.rating, review.getRating());
 
         Picasso.with(this.context).load(guide.getPhotoUri()).into(holder.photo);
 

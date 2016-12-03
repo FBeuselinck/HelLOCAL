@@ -8,4 +8,6 @@
     <item name="smthElse" type="id" />
     <item name="transport" type="id" />
     <item name="photoUri" type="id" />
+    <item name="rating" type="id" />
+
 </resources>
