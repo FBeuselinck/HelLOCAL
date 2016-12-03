@@ -47,12 +47,9 @@ public class InfoActivity extends AppCompatActivity {
     private String SmthElse;
     private String PhotoUri;
     private String Date;
-<<<<<<< HEAD
     private String Rating;
-=======
     private String AvaiableGuidesId;
->>>>>>> origin/develop
-
+    private String Amount;
 
     private TextView textViewName;
     private TextView textViewCity;
@@ -130,7 +127,7 @@ public class InfoActivity extends AppCompatActivity {
         Culture = intent.getStringExtra("Culture");
         SmthElse = intent.getStringExtra("SmthElse");
         PhotoUri = intent.getStringExtra("PhotoUri");
-
+        Amount = intent.getStringExtra("Amount");
         Rating = intent.getStringExtra("Rating");
 
 
@@ -191,6 +188,13 @@ public class InfoActivity extends AppCompatActivity {
 //                Toast.LENGTH_LONG).show();
 
         ratingBar.setRating(Float.parseFloat(Rating));
+
+        String parts[] = Amount.split("\\.");
+        String amountInt = parts[0];
+
+        amountInt = amountInt.substring(1,amountInt.length());
+
+        textViewReviews.setText(amountInt + " reviews");
 
         textViewName.setText(Name);
         textViewCity.setText(City);

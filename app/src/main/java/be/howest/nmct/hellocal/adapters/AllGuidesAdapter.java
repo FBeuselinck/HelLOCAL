@@ -27,6 +27,7 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
 
     private List<AvaiableGuides> guidesList;
     private List<Reviews> reviewsList;
+    private List<String> amountsList;
 
     Context context;
 
@@ -42,20 +43,18 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
             country = (TextView) view.findViewById(R.id.textViewCountry);
             price = (TextView) view.findViewById(R.id.textViewPrice);
             photo = (ImageView) view.findViewById(R.id.imagePhoto);
-<<<<<<< HEAD
             score = (RatingBar) view.findViewById(R.id.ratingBar);
-=======
             id = (TextView) view.findViewById(R.id.textViewAvailibleGuideId);
 
->>>>>>> origin/develop
         }
     }
 
 
-    public AllGuidesAdapter(List<AvaiableGuides> guidesList, List<Reviews> reviewsList, Context context) {
+    public AllGuidesAdapter(List<AvaiableGuides> guidesList, List<Reviews> reviewsList, List<String> amountsList, Context context) {
         this.guidesList = guidesList;
         this.reviewsList = reviewsList;
         this.context = context;
+        this.amountsList = amountsList;
     }
 
     @Override
@@ -70,6 +69,7 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
     public void onBindViewHolder(AllGuidesAdapter.MyViewHolder holder, int position) {
         AvaiableGuides guide = guidesList.get(position);
         Reviews review = reviewsList.get(position);
+        String amount = amountsList.get(position);
 
         float score = review.getRating();
 
@@ -77,17 +77,15 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
         holder.city.setText(guide.getLocation());
         holder.country.setText(guide.getCountry());
         holder.price.setText("€ "+guide.getPrice()+"/h");
-<<<<<<< HEAD
         holder.score.setRating(score);
-=======
         holder.id.setText(guide.getId());
->>>>>>> origin/develop
 
 
         holder.name.setTag(R.id.guideId,guide.getUserId());
         holder.name.setTag(R.id.transport, guide.getTransport());
         holder.name.setTag(R.id.photoUri, guide.getPhotoUri());
         holder.name.setTag(R.id.rating, review.getRating());
+        holder.name.setTag(R.id.amount, amount);
 
         Picasso.with(this.context).load(guide.getPhotoUri()).into(holder.photo);
 

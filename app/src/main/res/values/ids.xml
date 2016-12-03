@@ -9,5 +9,6 @@
     <item name="transport" type="id" />
     <item name="photoUri" type="id" />
     <item name="rating" type="id" />
+    <item name="amount" type="id" />
 
 </resources>

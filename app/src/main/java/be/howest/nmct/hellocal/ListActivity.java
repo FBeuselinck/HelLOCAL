@@ -89,6 +89,8 @@ public class ListActivity extends AppCompatActivity {
     private List<AvaiableGuides> ListAllGuides = new ArrayList<>();
     private List<Reviews> ListAllReviews = new ArrayList<>();
 
+    private List<String> ListAmounts = new ArrayList<>();
+
 
     private List<String> Languages = new ArrayList<>();
 
@@ -239,21 +241,16 @@ public class ListActivity extends AppCompatActivity {
             amountString = amountString.substring(0,amountString.length()-2);
             Float ratingEffective = Float.parseFloat(ratingString) / Float.parseFloat(amountString);
             rv.setRating(ratingEffective);
+            ListAmounts.add(amountString);
 
 
         }else{
 
             rv.setRating(Float.parseFloat("0"));
+            ListAmounts.add("0");
 
         }
 
-
-//        for(int i = 0 ; i < mReviews.size(); i++){
-//            if(mReviews.get(i).getGuideId().equals(userid)){
-//                rv = mReviews.get(i);
-//                i = mReviews.size();
-//            }
-//        }
         return rv;
     }
 
@@ -443,10 +440,10 @@ public class ListActivity extends AppCompatActivity {
                                 tq.put(id, Arrays.asList(ratings,amount));
 
                             }else{
-                                tq.put(ts.get("guideId").toString(), Arrays.asList(Float.parseFloat(ts.get("rating").toString()),Float.parseFloat("1.0")));
+                                tq.put(ts.get("guideId").toString(), Arrays.asList(Float.parseFloat(ts.get("rating").toString()),Float.parseFloat("1")));
                             }
                         }else{
-                            tq.put(ts.get("guideId").toString(), Arrays.asList(Float.parseFloat(ts.get("rating").toString()),Float.parseFloat("1.0")));
+                            tq.put(ts.get("guideId").toString(), Arrays.asList(Float.parseFloat(ts.get("rating").toString()),Float.parseFloat("1")));
                         }
 
                     }
@@ -473,7 +470,7 @@ public class ListActivity extends AppCompatActivity {
 
         progress.dismiss();
 
-        mAdapter = new AllGuidesAdapter(ListAllGuides,ListAllReviews,thisActivity);
+        mAdapter = new AllGuidesAdapter(ListAllGuides,ListAllReviews,ListAmounts,thisActivity);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -504,6 +501,7 @@ public class ListActivity extends AppCompatActivity {
                 intent.putExtra("Rating",Name.getTag(R.id.rating).toString());
                 intent.putExtra("Date", DateWant);
                 intent.putExtra("AvaiableGuidesId", id.getText());
+                intent.putExtra("Amount",Name.getTag(R.id.amount).toString());
 
 
                 thisActivity.startActivity(intent);
