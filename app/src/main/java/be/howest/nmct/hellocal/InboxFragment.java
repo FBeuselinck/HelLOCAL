@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,8 +44,8 @@ public class InboxFragment extends Fragment {
     private TextView noMessages;
     private ArrayList<String> mContactIds;
     private ArrayList<ProfileDetails> mProfiles;
+    private ArrayList<Message> mMessages;
     private ProgressDialog progressDia;
-
     static Activity thisActivity = null;
 
     public static String userId;
@@ -90,18 +92,21 @@ public class InboxFragment extends Fragment {
 
     private void loadInbox(){
         mContactIds = new ArrayList<String>();
+        mMessages = new ArrayList<>();
         database.child("messages").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Message msg = ds.getValue(Message.class);
                     if (msg.getSender().contentEquals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                        mMessages.add(msg);
                         if(!mContactIds.contains(msg.getReceiver())){
                             mContactIds.add(msg.getReceiver());
                             getContact(msg.getReceiver());
                         }
                     }
                     else if(msg.getReceiver().contentEquals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                        mMessages.add(msg);
                         if(!mContactIds.contains(msg.getSender())){
                             mContactIds.add(msg.getSender());
                             getContact(msg.getSender());
@@ -159,6 +164,14 @@ public class InboxFragment extends Fragment {
         public void onBindViewHolder(InboxViewHolder holder, int position) {
             ProfileDetails profile = profiles.get(position);
             holder.textViewNaam.setText(profile.getName());
+            Picasso.with(getActivity().getApplicationContext()).load(profile.getPhotoUri()).into(holder.imageViewPhoto);
+
+            for(Message msg : mMessages){
+                if(msg.getReceiver().equals(profile.getProfileId()) || msg.getSender().equals(profile.getProfileId())){
+                    holder.textViewReceived.setText(DateUtils.getRelativeDateTimeString(getActivity(), msg.getDate().getTime(), DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
+                    holder.textViewPreview.setText(msg.getMsg());
+                }
+            }
         }
 
         @Override
@@ -169,23 +182,25 @@ public class InboxFragment extends Fragment {
         class InboxViewHolder extends RecyclerView.ViewHolder {
 
             TextView textViewNaam;
+            TextView textViewReceived;
+            TextView textViewPreview;
             ImageView imageViewPhoto;
 
             public InboxViewHolder(View v) {
                 super(v);
                 textViewNaam = (TextView) v.findViewById(R.id.textViewNaam);
+                textViewReceived = (TextView) v.findViewById(R.id.textViewReceived);
+                textViewPreview = (TextView) v.findViewById(R.id.textViewPreview);
                 imageViewPhoto = (ImageView) v.findViewById(R.id.imagePhoto);
 
                 ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 
-                        TextView Name = (TextView) v.findViewById(R.id.textViewNaam);
+                        //TextView Name = (TextView) v.findViewById(R.id.textViewNaam);
 
                         Intent intent = new Intent(thisActivity, ChatActivity.class);
-                        intent.putExtra("Name", Name.getText().toString());
                         intent.putExtra(Const.EXTRA_DATA, profiles.get(position));
-                        //intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
 
                         thisActivity.startActivity(intent);
                     }
