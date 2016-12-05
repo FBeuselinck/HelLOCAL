@@ -424,7 +424,9 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
 
             mUser.updateProfile(profileUpdates);
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), mProfileDetails.getLanguage(), selectedGender, phoneNumber, birthDate, description, available, mProfileDetails.getHomeTown(), name, mUser.getPhotoUrl().toString());
+            String Photouri = "";
+            if(mUser.getPhotoUrl() != null)  Photouri = mUser.getPhotoUrl().toString();
+            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), mProfileDetails.getLanguage(), selectedGender, phoneNumber, birthDate, description, available, mProfileDetails.getHomeTown(), name, Photouri);
             mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
             saveDataToSharedPreference();
             Toast.makeText(getContext(), "Changes made", Toast.LENGTH_SHORT).show();
