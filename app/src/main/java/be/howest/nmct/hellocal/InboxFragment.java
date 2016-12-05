@@ -164,7 +164,9 @@ public class InboxFragment extends Fragment {
         public void onBindViewHolder(InboxViewHolder holder, int position) {
             ProfileDetails profile = profiles.get(position);
             holder.textViewNaam.setText(profile.getName());
-            Picasso.with(getActivity().getApplicationContext()).load(profile.getPhotoUri()).into(holder.imageViewPhoto);
+            
+            if(!profile.getPhotoUri().isEmpty())
+                Picasso.with(getActivity().getApplicationContext()).load(profile.getPhotoUri()).into(holder.imageViewPhoto);
 
             for(Message msg : mMessages){
                 if(msg.getReceiver().equals(profile.getProfileId()) || msg.getSender().equals(profile.getProfileId())){
