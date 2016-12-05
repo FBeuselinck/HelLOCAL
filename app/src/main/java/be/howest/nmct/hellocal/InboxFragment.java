@@ -63,9 +63,6 @@ public class InboxFragment extends Fragment {
 
         thisActivity = getActivity();
 
-        //noMessages = (TextView) getActivity().findViewById(R.id.noMessages);
-        //noMessages.setVisibility(View.INVISIBLE);
-
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewInbox);
         mRecyclerView.setHasFixedSize(true);
         if (mRecyclerView != null) {
@@ -111,6 +108,7 @@ public class InboxFragment extends Fragment {
                         }
                     }
                 }
+                dismissNoMessages();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -139,6 +137,11 @@ public class InboxFragment extends Fragment {
         });
     }
 
+    private void dismissNoMessages(){
+        noMessages = (TextView) getActivity().findViewById(R.id.noMessages);
+        noMessages.setVisibility(View.GONE);
+    }
+
     public class InboxRecycleViewAdapter extends RecyclerView.Adapter<InboxRecycleViewAdapter.InboxViewHolder> {
         private ArrayList<ProfileDetails> profiles = null;
 
@@ -155,7 +158,7 @@ public class InboxFragment extends Fragment {
         @Override
         public void onBindViewHolder(InboxViewHolder holder, int position) {
             ProfileDetails profile = profiles.get(position);
-            holder.textViewNaam.setText(profile.getProfileId());
+            holder.textViewNaam.setText(profile.getName());
         }
 
         @Override

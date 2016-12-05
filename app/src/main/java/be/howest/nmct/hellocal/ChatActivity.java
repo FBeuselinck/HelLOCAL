@@ -3,9 +3,12 @@ package be.howest.nmct.hellocal;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.format.DateUtils;
 import android.view.MenuItem;
@@ -36,7 +39,7 @@ import be.howest.nmct.hellocal.models.Const;
 import be.howest.nmct.hellocal.models.Conversation;
 import be.howest.nmct.hellocal.models.ProfileDetails;
 
-public class ChatActivity extends FragmentActivity implements View.OnClickListener{
+public class ChatActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ArrayList<Conversation> convList;
     private ChatAdapter adp;
@@ -49,6 +52,10 @@ public class ChatActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        // Enable the Up button
+        ab.setDisplayHomeAsUpEnabled(true);
 
         convList = new ArrayList<Conversation>();
         ListView list = (ListView) findViewById(R.id.list);
@@ -71,10 +78,22 @@ public class ChatActivity extends FragmentActivity implements View.OnClickListen
 
         buddy = (ProfileDetails) getIntent().getSerializableExtra(Const.EXTRA_DATA);
 
-        ActionBar actionBar = getActionBar();
-        if(actionBar != null)
-            actionBar.setTitle(buddy.getProfileId());
+        if(ab != null)
+            ab.setTitle(buddy.getName());
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent parentIntent = NavUtils.getParentActivityIntent(this);
+                parentIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(parentIntent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -154,7 +173,7 @@ public class ChatActivity extends FragmentActivity implements View.OnClickListen
                 if(user != null) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Conversation conversation = ds.getValue(Conversation.class);
-                        if (conversation.getReceiver().contentEquals(user.getUid()) || conversation.getSender().contentEquals(user.getUid())) {
+                        if ((conversation.getReceiver().contentEquals(user.getUid()) && conversation.getSender().contentEquals(buddy.getProfileId())) || (conversation.getSender().contentEquals(user.getUid()) && conversation.getReceiver().contentEquals(buddy.getProfileId()))) {
                             convList.add(conversation);
                             if (lastMsgDate == null
                                     || lastMsgDate.before(conversation.getDate()))
@@ -226,13 +245,5 @@ public class ChatActivity extends FragmentActivity implements View.OnClickListen
             return v;
         }
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
