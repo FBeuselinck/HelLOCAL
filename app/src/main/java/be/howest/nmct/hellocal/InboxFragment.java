@@ -25,10 +25,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import be.howest.nmct.hellocal.models.ChatUser;
 import be.howest.nmct.hellocal.models.Const;
 import be.howest.nmct.hellocal.models.Message;
 import be.howest.nmct.hellocal.models.ProfileDetails;
+import be.howest.nmct.hellocal.models.User;
 
 
 /**
@@ -46,8 +46,7 @@ public class InboxFragment extends Fragment {
 
     static Activity thisActivity = null;
 
-    private static ArrayList<String> defaultRoom = new ArrayList<String>(Arrays.asList(new String[]{"home"} ));
-    public static ChatUser user = new ChatUser("P4hJs5t9BaN6QsFYcGLRw6B5a7P2", "Joe Soap", "demo@myapptemplates.com", true, defaultRoom);
+    public static String userId;
 
 
 
@@ -57,6 +56,7 @@ public class InboxFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         progressDia = ProgressDialog.show(getActivity(), null, getString(R.string.alert_loading));
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         View v =inflater.inflate(R.layout.fragment_inbox, container, false);
         database = FirebaseDatabase.getInstance().getReference();
