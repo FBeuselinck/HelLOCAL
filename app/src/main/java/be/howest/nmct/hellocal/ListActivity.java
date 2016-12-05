@@ -176,7 +176,7 @@ public class ListActivity extends AppCompatActivity {
                     List<Object> gd = new ArrayList<>(ts.values());
 
 
-                    ag.setId(keys.get(i).toString());
+//                    ag.setId(keys.get(i).toString());
                     ag.country = (String) gd.get(2);
                     ag.dateFrom = (String) gd.get(7);
                     ag.dateTill = (String) gd.get(1);

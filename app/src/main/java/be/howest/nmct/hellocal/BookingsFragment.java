@@ -1,6 +1,7 @@
 package be.howest.nmct.hellocal;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,7 @@ public class BookingsFragment extends Fragment {
     String UidAvailabe;
 
     private List<AvaiableGuides> ListUserGuides = new ArrayList<>();
+    private List<String> ListBookingIds = new ArrayList<>();
     private RecyclerView recyclerView;
     private AvailabeGuidesAdapter mAdapter;
 
@@ -46,6 +49,12 @@ public class BookingsFragment extends Fragment {
 
     private TextView textViewNoBookings;
     private TextView textViewAvailable;
+    private TextView textViewDate;
+
+    private Button btnRemove;
+
+    static Activity thisActivity = null;
+
 
 
     public BookingsFragment() {
@@ -60,10 +69,19 @@ public class BookingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bookings, container, false);
 
+        thisActivity = this.getActivity();
+
+
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewBookings);
 
         textViewNoBookings = (TextView) v.findViewById(R.id.noGuides);
         textViewAvailable = (TextView) v.findViewById(R.id.availableBookings);
+
+        textViewDate = (TextView) v.findViewById(R.id.textViewDate);
+
+        btnRemove = (Button) v.findViewById(R.id.btnClose);
+
+
 
         textViewNoBookings.setVisibility(View.GONE);
         textViewAvailable.setVisibility(View.GONE);
@@ -102,6 +120,7 @@ public class BookingsFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
+                List Keys = new ArrayList(td.keySet());
 
                 List<Object> values = new ArrayList<>(td.values());
 
@@ -139,6 +158,8 @@ public class BookingsFragment extends Fragment {
                         AvaiableGuides guide = new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri);
 
                         ListUserGuides.add(guide);
+                        ListBookingIds.add(Keys.get(i).toString());
+                        String gfsg = "";
 
                     }
 
@@ -166,7 +187,7 @@ public class BookingsFragment extends Fragment {
         progress.dismiss();
         textViewAvailable.setVisibility(View.VISIBLE);
 
-        mAdapter = new AvailabeGuidesAdapter(ListUserGuides);
+        mAdapter = new AvailabeGuidesAdapter(ListUserGuides, ListBookingIds, thisActivity);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -185,7 +206,23 @@ public class BookingsFragment extends Fragment {
             }
         });
 
+//        btnRemove.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                removeBooking(textViewDate.getTag(R.id.bookingId).toString());
+//            }
+//        });
+
 
     }
+
+//    public void removeBooking(final String BookingId){
+//
+//
+//        DatabaseReference myRef = database.getReference("avaiableGuides");
+//
+//        myRef.getParent().child(BookingId).removeValue();
+//
+//    }
 
 }

@@ -84,6 +84,8 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     private EditText EditTextPrice;
     private Button btnSave;
 
+    private AutoCompleteTextView EditTextLocation;
+
     private String Location;
 
     String stringUserId, mHomeTown;
@@ -126,6 +128,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         chkElse = (CheckBox) v.findViewById(R.id.chkElse);
         EditTextPrice = (EditText) v.findViewById(R.id.EditTextPrice);
         btnSave = (Button) v.findViewById(R.id.btnSave);
+        EditTextLocation = (AutoCompleteTextView) v.findViewById(R.id.myLocation2);
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -317,7 +320,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.btnSave:
-                if((!Location.isEmpty()) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)&& !isEmpty(EditTextPrice)){
+                if((!isEmpty(EditTextLocation)) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)&& !isEmpty(EditTextPrice)){
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
@@ -359,7 +362,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
 
                 }else{
-                    if(Location.isEmpty()){
+                    if(!isEmpty(EditTextLocation)){
                         Toast.makeText(getContext(), "Please enter a valid location!", Toast.LENGTH_SHORT).show();
                     }else if(isEmpty(EditTextFrom)){
                         Toast.makeText(getContext(), "Please enter a valid startdate", Toast.LENGTH_SHORT).show();
