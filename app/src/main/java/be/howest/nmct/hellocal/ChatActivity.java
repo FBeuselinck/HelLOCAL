@@ -136,7 +136,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             simpleDateFormat.setTimeZone(timeZone);
 
             final Conversation conversation = new Conversation(s,
-                    Calendar.getInstance().getTime(),
+                    calendar.getInstance().getTime(),
                     user.getUid(),
                     buddy.getProfileId(),
                     "");
