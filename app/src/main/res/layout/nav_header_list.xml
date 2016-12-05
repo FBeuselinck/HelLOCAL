@@ -14,11 +14,12 @@
 
     <ImageView
         android:id="@+id/imageView_Nav"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@android:drawable/sym_def_app_icon"
-        android:scaleType="centerCrop"/>
+        app:srcCompat="@drawable/ic_logo"
+        android:scaleType="centerInside"
+        android:contentDescription="@string/ic_logodesc"/>
 
     <TextView
         android:id="@+id/textview_Nav_Name"
