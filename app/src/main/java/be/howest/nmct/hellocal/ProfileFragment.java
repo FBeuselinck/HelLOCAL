@@ -1,7 +1,9 @@
 package be.howest.nmct.hellocal;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -37,9 +39,12 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import be.howest.nmct.hellocal.adapters.PlacesAutoCompleteAdapter;
 import be.howest.nmct.hellocal.models.Gender;
@@ -57,12 +62,10 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
     private  MultiSelectionSpinner multiSelectionSpinner;
     ToggleButton tglAvailable;
 
-    String stringUserId, mPhoneNumber, mBirthDate, mDescription, mHomeTown, HomeTown = "";
-    private List<String> Languages;
+
+    private ProfileDetails mProfileDetails;
     private List<String> LanguagesIds;
-    Boolean blAvailable;
     Boolean mBooleanLanguageChanged;
-    Gender mGender;
 
     private GoogleApiClient mGoogleApiClient;
     private PlacesAutoCompleteAdapter mPlacesAdapter;
@@ -74,6 +77,10 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     Calendar myCalendar = Calendar.getInstance();
+
+    private final String SHAREDPREFERENCE = "profilesave";
+
+
     //endregion
 
 
@@ -118,6 +125,8 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                 mGoogleApiClient,null, null);
         homeTown.setOnItemClickListener(mAutocompleteClickListener);
         homeTown.setAdapter(mPlacesAdapter);
+
+        mProfileDetails = new ProfileDetails();
 
         showDetails();
 
@@ -182,7 +191,7 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
             }
             // Selecting the first object buffer.
             final Place place = places.get(0);
-            HomeTown = place.getName().toString();
+            mProfileDetails.setHomeTown(place.getName().toString());
         }
     };
 
@@ -220,7 +229,7 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
 
     @Override
     public void selectedStrings(List<String> strings) {
-        Languages = strings;
+        mProfileDetails.setLanguage(strings);
         mBooleanLanguageChanged = true;
         saveDetails();
     }
@@ -232,16 +241,67 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
         saveDetails();
     }
 
+    private void getDataFromSharedPreference(){
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        mProfileDetails.setAvailable(sharedPref.getBoolean("availible", false));
+        mProfileDetails.setDescription(sharedPref.getString("description", ""));
+        mProfileDetails.setHomeTown(sharedPref.getString("hometown", ""));
+        mProfileDetails.setBirthDate(sharedPref.getString("birthdate", ""));
+        mProfileDetails.setName(sharedPref.getString("name",""));
+        mProfileDetails.setPhoneNumber(sharedPref.getString("phonenumber",""));
+        mProfileDetails.setPhotoUri(sharedPref.getString("photouri",""));
+        mProfileDetails.setProfileId(sharedPref.getString("id",""));
+        Gender g = Gender.Undefined;
+        String stringgender = sharedPref.getString("gender", "");
+        if (stringgender.equals("Male")) g = Gender.Male;
+        if(stringgender.equals("Female")) g= Gender.Female;
+        mProfileDetails.setGender(g);
+
+        if(sharedPref.getStringSet("languages", null) !=null){
+            List<String> list = Arrays.asList(
+                    sharedPref.getStringSet("languages",null).toArray( new String[0] ) );
+            mProfileDetails.setLanguage(list);
+        }
+
+
+        showFromData();
+    }
+
+    private void showFromData()
+    {
+        PopulateLanguages();
+        tglAvailable.setChecked(mProfileDetails.getAvailable());
+        editTextPhoneNumber.setText(mProfileDetails.getPhoneNumber());
+        editTextBirthDate.setText(mProfileDetails.getBirthDate());
+        homeTown.setText(mProfileDetails.getHomeTown());
+        if(mProfileDetails.getBirthDate() != null && !mProfileDetails.getBirthDate().equals("")) {
+            myCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(mProfileDetails.getBirthDate().substring(0,2)));
+            myCalendar.set(Calendar.MONTH, Integer.parseInt(mProfileDetails.getBirthDate().substring(3,5)) -1);
+            myCalendar.set(Calendar.YEAR, Integer.parseInt(mProfileDetails.getBirthDate().substring(6,10)));
+        }
+        editTextDescription.setText(mProfileDetails.getDescription());
+
+        if(mProfileDetails.getGender() == Gender.Male) spinnerGender.setSelection(0);
+        else if(mProfileDetails.getGender() == Gender.Female) spinnerGender.setSelection(1);
+        else  if(mProfileDetails.getGender() == Gender.Undefined) spinnerGender.setSelection(2);
+
+    }
+
     public void showDetails()
     {
+        getDataFromSharedPreference();
+
         mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+
 
         if(mUser != null) {
 
             String name = mUser.getDisplayName();
             String email = mUser.getEmail();
             Uri photoUrl = mUser.getPhotoUrl();
-            stringUserId = mUser.getUid();
+            mProfileDetails.setProfileId(mUser.getUid());
 
 
             editTextMail.setText(email);
@@ -261,46 +321,17 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                         List<String> UserLanguage;
                         List<String> DefaultLang = new ArrayList<>();
                         DefaultLang.add("English");
-                        mPhoneNumber = "";
-                        mBirthDate = "";
-                        mDescription = "";
-                        mGender = Gender.Undefined;
-                        mHomeTown = "";
 
-                        UserLanguage = profileDetails.getLanguage();
-                        mGender = profileDetails.getGender();
-                        mPhoneNumber = profileDetails.getPhoneNumber();
-                        mBirthDate = profileDetails.getBirthDate();
-                        mDescription = profileDetails.getDescription();
-                        blAvailable = profileDetails.getAvailable();
-                        mHomeTown = profileDetails.getHomeTown();
+                        mProfileDetails = profileDetails;
 
-                        LanguagesIds = new ArrayList<>();
+                        if(mProfileDetails.getGender() == null) mProfileDetails.setGender(Gender.Undefined);
 
-                        if(UserLanguage != null) if(UserLanguage.size() != 0) LanguagesIds = UserLanguage;
-                        PopulateLanguages();
-
-                        if(blAvailable != null) tglAvailable.setChecked(blAvailable);
-                        else {
-                            tglAvailable.setChecked(true);
-                            blAvailable = false;
+                        if(mProfileDetails.getAvailable() == null) {
+                            tglAvailable.setChecked(false);
+                            mProfileDetails.setAvailable(false);
                         }
-
-                        if(mGender == Gender.Male) spinnerGender.setSelection(0);
-                        else if(mGender == Gender.Female) spinnerGender.setSelection(1);
-                        else  if(mGender == Gender.Undefined) spinnerGender.setSelection(2);
-
-                        editTextPhoneNumber.setText(mPhoneNumber);
-                        editTextBirthDate.setText(mBirthDate);
-
-                        homeTown.setText(mHomeTown);
-
-                        if(mBirthDate != null && !mBirthDate.equals("")) {
-                            myCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(mBirthDate.substring(0,2)));
-                            myCalendar.set(Calendar.MONTH, Integer.parseInt(mBirthDate.substring(3,5)) -1);
-                            myCalendar.set(Calendar.YEAR, Integer.parseInt(mBirthDate.substring(6,10)));
-                        }
-                        editTextDescription.setText(mDescription);
+                        saveDataToSharedPreference();
+                        showFromData();
                     }
                 }
 
@@ -310,18 +341,40 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
                 }
             };
 
-            DatabaseReference myRef = database.getReference("profileDetails").child(stringUserId);
+            DatabaseReference myRef = database.getReference("profileDetails").child(mUser.getUid());
             myRef.addListenerForSingleValueEvent(postListener);
         }
     }
 
 
+    private void saveDataToSharedPreference(){
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putBoolean("availible", mProfileDetails.getAvailable());
+        editor.putString("birthdate", mProfileDetails.getBirthDate());
+        editor.putString("description", mProfileDetails.getDescription());
+        editor.putString("gender", mProfileDetails.getGender().toString());
+        editor.putString("hometown", mProfileDetails.getHomeTown());
+
+        Set<String> foo = new HashSet<String>(mProfileDetails.getLanguage());
+        editor.putStringSet("languages", (foo));
+        editor.putString("name", mUser.getDisplayName());
+        editor.putString("phonenumber", mProfileDetails.getPhoneNumber());
+        if(mUser.getPhotoUrl()!= null) editor.putString("photouri", mUser.getPhotoUrl().toString());
+        editor.putString("id", mUser.getUid());
+
+        editor.apply();
+    }
+
     private void PopulateLanguages(){
+        LanguagesIds = new ArrayList<>();
+        if(mProfileDetails.getLanguage() != null) LanguagesIds = mProfileDetails.getLanguage();
         String[] array = {"English", "Dutch","French", "German", "Spanish", "Portuguese", "Russian"};
         multiSelectionSpinner.setItems(array);
         if(LanguagesIds.size() != 0) multiSelectionSpinner.setSelection(LanguagesIds);
         multiSelectionSpinner.setListener(this);
-        Languages = multiSelectionSpinner.getSelectedStrings();
+        mProfileDetails.setLanguage(multiSelectionSpinner.getSelectedStrings());
     }
 
     private void UploadProfilePic()
@@ -351,13 +404,13 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
 
         if(spinnerGender.getSelectedItemPosition() == 0) selectedGender = Gender.Male;
         if(spinnerGender.getSelectedItemPosition() == 1) selectedGender = Gender.Female;
-        if(selectedGender != mGender) booleanChangeFound = true;
+        if(selectedGender != mProfileDetails.getGender()) booleanChangeFound = true;
 
         if(!name.equals(mUser.getDisplayName())) booleanChangeFound = true;
-        if(!birthDate.equals(mBirthDate)) booleanChangeFound = true;
-        if(!phoneNumber.equals(mPhoneNumber)) booleanChangeFound = true;
-        if(description.equals(mDescription)) booleanChangeFound = true;
-        if(available == blAvailable) booleanChangeFound = true;
+        if(!birthDate.equals(mProfileDetails.getBirthDate())) booleanChangeFound = true;
+        if(!phoneNumber.equals(mProfileDetails.getPhoneNumber())) booleanChangeFound = true;
+        if(description.equals(mProfileDetails.getDescription())) booleanChangeFound = true;
+        if(available == mProfileDetails.getAvailable()) booleanChangeFound = true;
 
 
 
@@ -371,8 +424,9 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
 
             mUser.updateProfile(profileUpdates);
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), Languages, selectedGender, phoneNumber, birthDate, description, available, HomeTown, name, mUser.getPhotoUrl().toString());
+            ProfileDetails profileDetails = new ProfileDetails(mUser.getUid(), mProfileDetails.getLanguage(), selectedGender, phoneNumber, birthDate, description, available, mProfileDetails.getHomeTown(), name, mUser.getPhotoUrl().toString());
             mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
+            saveDataToSharedPreference();
             Toast.makeText(getContext(), "Changes made", Toast.LENGTH_SHORT).show();
         }
         else Toast.makeText(getContext(), "You need to change something", Toast.LENGTH_SHORT).show();
