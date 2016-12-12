@@ -10,5 +10,7 @@
     <item name="photoUri" type="id" />
     <item name="rating" type="id" />
     <item name="amount" type="id" />
+    <item name="bookingId" type="id" />
+
 
 </resources>

@@ -31,9 +31,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import be.howest.nmct.hellocal.models.Const;
 import be.howest.nmct.hellocal.models.Conversation;
@@ -125,8 +128,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null) {
+
+            TimeZone timeZone = TimeZone.getTimeZone("UTC");
+            Calendar calendar = Calendar.getInstance(timeZone);
+            SimpleDateFormat simpleDateFormat =
+                    new SimpleDateFormat("EE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+            simpleDateFormat.setTimeZone(timeZone);
+
             final Conversation conversation = new Conversation(s,
-                    Calendar.getInstance().getTime(),
+                    calendar.getInstance().getTime(),
                     user.getUid(),
                     buddy.getProfileId(),
                     "");

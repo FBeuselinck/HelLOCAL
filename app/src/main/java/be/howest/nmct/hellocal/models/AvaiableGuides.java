@@ -18,7 +18,7 @@ public class AvaiableGuides {
     public String transport;
     public String userId;
     public String photoUri;
-    public String Id;
+    private String Id;
 
 //    public String combined;
 
@@ -129,13 +129,13 @@ public class AvaiableGuides {
         return photoUri;
     }
 
-    public String getId() {
-        return Id;
-    }
-
-    public void setId(String id) {
-        Id = id;
-    }
+//    private String getId() {
+//        return Id;
+//    }
+//
+//    private void setId(String id) {
+//        Id = id;
+//    }
 
     public void setPhotoUri(String photoUri) {
         this.photoUri = photoUri;
