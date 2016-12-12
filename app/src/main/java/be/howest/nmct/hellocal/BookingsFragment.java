@@ -34,12 +34,12 @@ import java.util.List;
 import java.util.Map;
 
 import be.howest.nmct.hellocal.adapters.AvailabeGuidesAdapter;
-<<<<<<< HEAD
+
 import be.howest.nmct.hellocal.adapters.bookings_as_guide_adapter;
-=======
+
 import be.howest.nmct.hellocal.contracts.SqliteContract;
 import be.howest.nmct.hellocal.helpers.SqliteHelper;
->>>>>>> origin/develop
+
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 import be.howest.nmct.hellocal.models.BookingRequests;
 import be.howest.nmct.hellocal.models.Gender;
@@ -207,12 +207,11 @@ public class BookingsFragment extends Fragment {
                     }
 
                 }
-<<<<<<< HEAD
+
                 displayInList("first");
-=======
-                displayInList();
+
                 sqliteSave();
->>>>>>> origin/develop
+
 
             }
 
@@ -279,16 +278,9 @@ public class BookingsFragment extends Fragment {
             ListBookingIds.add(c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_FIREBASEID)));
         } while (c.moveToNext());
 
-        displayInList();
+        displayInList("first");
     }
 
-<<<<<<< HEAD
-    public void getAllBookingRequests(){
-
-        ValueEventListener postListener2 = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-=======
     public void sqliteSave(){
         if(ListUserGuides.size() != 0)
         {
@@ -312,7 +304,16 @@ public class BookingsFragment extends Fragment {
         }
 
     }
->>>>>>> origin/develop
+
+
+    public void getAllBookingRequests(){
+
+        ValueEventListener postListener2 = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+
 
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
 
