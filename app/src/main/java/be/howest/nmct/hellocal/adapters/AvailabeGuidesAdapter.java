@@ -38,13 +38,14 @@ public class AvailabeGuidesAdapter extends RecyclerView.Adapter<AvailabeGuidesAd
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView location, date;
+        public TextView location, date, date2;
         public Button btnRemove;
 
         public MyViewHolder(View view) {
             super(view);
             location = (TextView) view.findViewById(R.id.textViewLocation);
             date = (TextView) view.findViewById(R.id.textViewTime);
+            date2 = (TextView) view.findViewById(R.id.textViewTime2);
             btnRemove = (Button) view.findViewById(R.id.btnClose);
 
         }
@@ -71,7 +72,8 @@ public class AvailabeGuidesAdapter extends RecyclerView.Adapter<AvailabeGuidesAd
         AvaiableGuides guide = guidesList.get(position);
         final String bookingId = bookingIds.get(position);
         holder.location.setText(guide.getLocation());
-        holder.date.setText("From " + guide.getDateFrom() + " till " + guide.getDateTill());
+        holder.date.setText("From " + guide.getDateFrom());
+        holder.date2.setText("Till "+ guide.getDateTill());
         holder.date.setTag(R.id.bookingId, bookingId );
 
 
