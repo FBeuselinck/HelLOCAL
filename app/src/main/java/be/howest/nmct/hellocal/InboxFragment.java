@@ -164,7 +164,7 @@ public class InboxFragment extends Fragment {
         public void onBindViewHolder(InboxViewHolder holder, int position) {
             ProfileDetails profile = profiles.get(position);
             holder.textViewNaam.setText(profile.getName());
-            
+
             if(!profile.getPhotoUri().isEmpty())
                 Picasso.with(getActivity().getApplicationContext()).load(profile.getPhotoUri()).into(holder.imageViewPhoto);
 
