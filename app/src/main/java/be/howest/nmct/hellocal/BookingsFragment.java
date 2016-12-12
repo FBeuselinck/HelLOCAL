@@ -3,6 +3,11 @@ package be.howest.nmct.hellocal;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -29,7 +34,12 @@ import java.util.List;
 import java.util.Map;
 
 import be.howest.nmct.hellocal.adapters.AvailabeGuidesAdapter;
+<<<<<<< HEAD
 import be.howest.nmct.hellocal.adapters.bookings_as_guide_adapter;
+=======
+import be.howest.nmct.hellocal.contracts.SqliteContract;
+import be.howest.nmct.hellocal.helpers.SqliteHelper;
+>>>>>>> origin/develop
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 import be.howest.nmct.hellocal.models.BookingRequests;
 import be.howest.nmct.hellocal.models.Gender;
@@ -41,6 +51,8 @@ public class BookingsFragment extends Fragment {
 
     FirebaseUser mUser;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    SqliteHelper mdbHelper;
+    Boolean mBooleanIsOnline;
 
     String Uid;
     String UidAvailabe;
@@ -108,6 +120,20 @@ public class BookingsFragment extends Fragment {
         progress.setMessage("Hold on, we are finding your bookings!");
         progress.setCancelable(false);
         progress.show();
+
+        mdbHelper = new SqliteHelper(v.getContext());
+
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity()
+                .getSystemService(v.getContext().CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            mBooleanIsOnline = true;
+        } else {
+            mBooleanIsOnline = false;
+        }
+
 
         getCurrentUserId();
 
@@ -181,7 +207,12 @@ public class BookingsFragment extends Fragment {
                     }
 
                 }
+<<<<<<< HEAD
                 displayInList("first");
+=======
+                displayInList();
+                sqliteSave();
+>>>>>>> origin/develop
 
             }
 
@@ -190,17 +221,98 @@ public class BookingsFragment extends Fragment {
 
             }
 
+
         };
-        DatabaseReference myRef = database.getReference("avaiableGuides");
-        myRef.addListenerForSingleValueEvent(postListener);
+        if(mBooleanIsOnline)
+        {
+            DatabaseReference myRef = database.getReference("avaiableGuides");
+            myRef.addListenerForSingleValueEvent(postListener);
+        }
+        else getDataFromSql();
+
 
     }
 
+    public void getDataFromSql()
+    {
+        ListUserGuides = new ArrayList<>();
+
+        SQLiteDatabase db = mdbHelper.getReadableDatabase();
+
+        String[] projection = {
+                SqliteContract.MyBookings._ID,
+                SqliteContract.MyBookings.COLUMN_TRANSPORT,
+                SqliteContract.MyBookings.COLUMN_PRICE,
+                SqliteContract.MyBookings.COLUMN_MAXPOEPLE,
+                SqliteContract.MyBookings.COLUMN_LOCATION,
+                SqliteContract.MyBookings.COLUMN_COUNTRY,
+                SqliteContract.MyBookings.COLUMN_DATEFROM,
+                SqliteContract.MyBookings.COLUMN_DATETILL,
+                SqliteContract.MyBookings.COLUMN_FIREBASEID
+        };
+
+        String sortOrder =
+                SqliteContract.MyBookings.COLUMN_DATEFROM + " ASC";
+
+        Cursor c = db.query(
+                SqliteContract.MyBookings.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        c.moveToFirst();
+        do {
+            AvaiableGuides ag = new AvaiableGuides();
+            ag.dateFrom = c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_DATEFROM));
+            ag.price = c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_PRICE));
+            ag.country = c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_COUNTRY));
+            ag.dateTill = c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_DATETILL));
+            ag.location = c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_LOCATION));
+            ag.maxPeople = c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_MAXPOEPLE));
+            ag.transport = c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_TRANSPORT));
+
+            ListUserGuides.add(ag);
+            ListBookingIds.add(c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_FIREBASEID)));
+        } while (c.moveToNext());
+
+        displayInList();
+    }
+
+<<<<<<< HEAD
     public void getAllBookingRequests(){
 
         ValueEventListener postListener2 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+=======
+    public void sqliteSave(){
+        if(ListUserGuides.size() != 0)
+        {
+            for(int i = 0; i< ListUserGuides.size(); i++)
+            {
+                SQLiteDatabase db = mdbHelper.getWritableDatabase();
+                mdbHelper.onUpgrade(db,0, 1);
+                ContentValues values = new ContentValues();
+
+                values.put(SqliteContract.MyBookings.COLUMN_COUNTRY, ListUserGuides.get(i).country);
+                values.put(SqliteContract.MyBookings.COLUMN_DATEFROM, ListUserGuides.get(i).dateFrom);
+                values.put(SqliteContract.MyBookings.COLUMN_DATETILL, ListUserGuides.get(i).dateTill);
+                values.put(SqliteContract.MyBookings.COLUMN_LOCATION, ListUserGuides.get(i).location);
+                values.put(SqliteContract.MyBookings.COLUMN_MAXPOEPLE, ListUserGuides.get(i).maxPeople);
+                values.put(SqliteContract.MyBookings.COLUMN_PRICE, ListUserGuides.get(i).price);
+                values.put(SqliteContract.MyBookings.COLUMN_TRANSPORT, ListUserGuides.get(i).transport);
+                values.put(SqliteContract.MyBookings.COLUMN_FIREBASEID, ListBookingIds.get(i));
+
+                long newRowId = db.insert(SqliteContract.MyBookings.TABLE_NAME, null, values);
+            }
+        }
+
+    }
+>>>>>>> origin/develop
 
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
 

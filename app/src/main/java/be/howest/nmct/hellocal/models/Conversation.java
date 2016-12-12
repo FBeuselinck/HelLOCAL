@@ -38,7 +38,10 @@ public class Conversation
 
 	public boolean isSent()
 	{
-		return InboxFragment.userId.contentEquals(sender);
+		if(InboxFragment.userId == null)
+			return true;
+		else
+			return InboxFragment.userId.contentEquals(sender);
 	}
 
 	public Date getDate() {

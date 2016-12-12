@@ -78,7 +78,7 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
         holder.country.setText(guide.getCountry());
         holder.price.setText("€ "+guide.getPrice()+"/h");
         holder.score.setRating(score);
-//        holder.id.setText(guide.getId());
+        holder.id.setText(guide.getId());
 
 
         holder.name.setTag(R.id.guideId,guide.getUserId());

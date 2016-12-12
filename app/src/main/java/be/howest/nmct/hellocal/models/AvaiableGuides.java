@@ -129,13 +129,13 @@ public class AvaiableGuides {
         return photoUri;
     }
 
-//    private String getId() {
-//        return Id;
-//    }
-//
-//    private void setId(String id) {
-//        Id = id;
-//    }
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
 
     public void setPhotoUri(String photoUri) {
         this.photoUri = photoUri;

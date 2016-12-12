@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -83,7 +84,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         if(ab != null)
             ab.setTitle(buddy.getName());
-
     }
 
     @Override
@@ -175,7 +175,40 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void loadConversationList() {
+        FirebaseDatabase.getInstance().getReference("messages").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot ds, String prevChildKey) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user != null) {
+                    Conversation conversation = ds.getValue(Conversation.class);
+                    if ((conversation.getReceiver().contentEquals(user.getUid()) && conversation.getSender().contentEquals(buddy.getProfileId())) || (conversation.getSender().contentEquals(user.getUid()) && conversation.getReceiver().contentEquals(buddy.getProfileId()))) {
+                        convList.add(conversation);
+                        if (lastMsgDate == null
+                                || lastMsgDate.before(conversation.getDate()))
+                            lastMsgDate = conversation.getDate();
+                        adp.notifyDataSetChanged();
+                    }
+                }
+            }
 
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey){
+
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey){
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        /*
         FirebaseDatabase.getInstance().getReference("messages").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -201,6 +234,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+        */
 
     }
 
