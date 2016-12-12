@@ -11,7 +11,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,8 +34,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
 import be.howest.nmct.hellocal.adapters.AllGuidesAdapter;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
@@ -176,7 +173,7 @@ public class ListActivity extends AppCompatActivity {
                     List<Object> gd = new ArrayList<>(ts.values());
 
 
-//                    ag.setId(keys.get(i).toString());
+                    ag.setId(keys.get(i).toString());
                     ag.country = (String) gd.get(2);
                     ag.dateFrom = (String) gd.get(7);
                     ag.dateTill = (String) gd.get(1);
@@ -464,10 +461,6 @@ public class ListActivity extends AppCompatActivity {
 
 
     public void displayInList(){
-
-
-
-
         progress.dismiss();
 
         mAdapter = new AllGuidesAdapter(ListAllGuides,ListAllReviews,ListAmounts,thisActivity);

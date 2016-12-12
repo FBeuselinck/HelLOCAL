@@ -1,51 +1,28 @@
 package be.howest.nmct.hellocal;
 
 
-import android.*;
-import android.Manifest;
 import android.app.DatePickerDialog;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-
-import be.howest.nmct.hellocal.adapters.PlacesAutoCompleteAdapter;
-import be.howest.nmct.hellocal.models.AvaiableGuides;
-import be.howest.nmct.hellocal.R;
-import be.howest.nmct.hellocal.models.Gender;
-import be.howest.nmct.hellocal.models.ProfileDetails;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -53,14 +30,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
+
+import be.howest.nmct.hellocal.adapters.PlacesAutoCompleteAdapter;
+import be.howest.nmct.hellocal.models.AvaiableGuides;
+import be.howest.nmct.hellocal.models.ProfileDetails;
 
 
 /**
@@ -318,9 +296,13 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+        Boolean check;
+        if(chkActive.isChecked()|| chkCity.isChecked()|| chkCulture.isChecked() || chkElse.isChecked()) check= true;
+        else check = false;
+
         switch(view.getId()){
             case R.id.btnSave:
-                if((!isEmpty(EditTextLocation)) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)&& !isEmpty(EditTextPrice)){
+                if((!isEmpty(EditTextLocation)) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)&& !isEmpty(EditTextPrice) && check){
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
@@ -347,7 +329,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
                 if(!photoUri.isEmpty()){
 
-                    newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), Location,EditTextFrom.getText().toString(),
+                    newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString(),EditTextFrom.getText().toString(),
                             EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
                             type,spinnerTransport.getSelectedItem().toString(),uid,photoUri);
 
@@ -362,13 +344,15 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
 
 
                 }else{
-                    if(!isEmpty(EditTextLocation)){
+                    if(isEmpty(EditTextLocation)){
                         Toast.makeText(getContext(), "Please enter a valid location!", Toast.LENGTH_SHORT).show();
                     }else if(isEmpty(EditTextFrom)){
                         Toast.makeText(getContext(), "Please enter a valid startdate", Toast.LENGTH_SHORT).show();
                     }else if(isEmpty(EditTextTill)){
                         Toast.makeText(getContext(), "Please enter a valid endDate", Toast.LENGTH_SHORT).show();
                     }
+                    else if (isEmpty(EditTextPrice)) Toast.makeText(getContext(), "Please enter a valid price", Toast.LENGTH_SHORT).show();
+                    else if(!check) Toast.makeText(getContext(), "Please select one type", Toast.LENGTH_SHORT).show();
                 }
                 //to remove current fragment
 
