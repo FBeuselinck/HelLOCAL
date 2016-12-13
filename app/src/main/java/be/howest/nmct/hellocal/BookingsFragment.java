@@ -34,17 +34,13 @@ import java.util.List;
 import java.util.Map;
 
 import be.howest.nmct.hellocal.adapters.AvailabeGuidesAdapter;
-
 import be.howest.nmct.hellocal.adapters.bookings_as_guide_adapter;
-
 import be.howest.nmct.hellocal.contracts.SqliteContract;
 import be.howest.nmct.hellocal.helpers.SqliteHelper;
-
 import be.howest.nmct.hellocal.models.AvaiableGuides;
 import be.howest.nmct.hellocal.models.BookingRequests;
 import be.howest.nmct.hellocal.models.Gender;
 import be.howest.nmct.hellocal.models.ProfileDetails;
-import be.howest.nmct.hellocal.models.Reviews;
 
 
 public class BookingsFragment extends Fragment {
@@ -232,9 +228,9 @@ public class BookingsFragment extends Fragment {
 
     }
 
-    public void getDataFromSql()
-    {
+    public void getListUserGuides(){
         ListUserGuides = new ArrayList<>();
+        ListUserGuides2 = new ArrayList<>();
 
         SQLiteDatabase db = mdbHelper.getReadableDatabase();
 
@@ -247,7 +243,8 @@ public class BookingsFragment extends Fragment {
                 SqliteContract.MyBookings.COLUMN_COUNTRY,
                 SqliteContract.MyBookings.COLUMN_DATEFROM,
                 SqliteContract.MyBookings.COLUMN_DATETILL,
-                SqliteContract.MyBookings.COLUMN_FIREBASEID
+                SqliteContract.MyBookings.COLUMN_FIREBASEID,
+                SqliteContract.MyBookings.COLUMN_MYBOOKING
         };
 
         String sortOrder =
@@ -274,33 +271,187 @@ public class BookingsFragment extends Fragment {
             ag.maxPeople = c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_MAXPOEPLE));
             ag.transport = c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_TRANSPORT));
 
-            ListUserGuides.add(ag);
+            String s = c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_MYBOOKING));
+
+            if(s.equals("false")) ListUserGuides2.add(ag);
+            else ListUserGuides.add(ag);
+
+
             ListBookingIds.add(c.getString(c.getColumnIndex(SqliteContract.MyBookings.COLUMN_FIREBASEID)));
         } while (c.moveToNext());
-
-        displayInList("first");
     }
 
-    public void sqliteSave(){
-        if(ListUserGuides.size() != 0)
+    public void getListBookingRequests (){
+        ListBookingRequests = new ArrayList<>();
+
+        SQLiteDatabase db = mdbHelper.getReadableDatabase();
+
+        String[] projection = {
+                SqliteContract.BookingRequests._ID,
+                SqliteContract.BookingRequests.COLUMN_REQUESTUSERID,
+                SqliteContract.BookingRequests.COLUMN_GUIDEID,
+                SqliteContract.BookingRequests.COLUMN_DATE,
+                SqliteContract.BookingRequests.COLUMN_AVAILABEGUIDESADAPTERID,
+                SqliteContract.BookingRequests.COLUMN_CONFIRMED
+        };
+
+        String sortOrder =
+                SqliteContract.BookingRequests.COLUMN_DATE + " ASC";
+
+        Cursor c = db.query(
+                SqliteContract.BookingRequests.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        c.moveToFirst();
+        do {
+            BookingRequests br = new BookingRequests();
+            br.setAvailabeGuidesAdapterId(c.getString(c.getColumnIndex(SqliteContract.BookingRequests.COLUMN_AVAILABEGUIDESADAPTERID)));
+            br.setDate(c.getString(c.getColumnIndex(SqliteContract.BookingRequests.COLUMN_DATE)));
+            br.setGuideId(c.getString(c.getColumnIndex(SqliteContract.BookingRequests.COLUMN_GUIDEID)));
+            br.setRequestUserId(c.getString(c.getColumnIndex(SqliteContract.BookingRequests.COLUMN_REQUESTUSERID)));
+
+            String s = c.getString(c.getColumnIndex(SqliteContract.BookingRequests.COLUMN_CONFIRMED));
+
+            br.setConfirmed(s.equals("true"));
+
+            ListBookingRequests.add(br);
+        } while (c.moveToNext());
+
+    }
+
+    public void getListUserDetails(){
+        ListProfileDetails = new ArrayList<>();
+
+        SQLiteDatabase db = mdbHelper.getReadableDatabase();
+
+        String[] projection = {
+                SqliteContract.UserDetails.COLUMN_AVAILABLE,
+                SqliteContract.UserDetails.COLUMN_PROFILEID,
+                SqliteContract.UserDetails.COLUMN_PHONENUMBER,
+                SqliteContract.UserDetails.COLUMN_PHOTOURI,
+                SqliteContract.UserDetails.COLUMN_NAME,
+                SqliteContract.UserDetails.COLUMN_HOMETOWN,
+                SqliteContract.UserDetails.COLUMN_DESCRIPTION,
+                SqliteContract.UserDetails.COLUMN_BIRTHDATE,
+                SqliteContract.UserDetails.COLUMN_GENDER,
+        };
+
+
+        Cursor c = db.query(
+                SqliteContract.UserDetails.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+
+        c.moveToFirst();
+        do {
+            ProfileDetails pd = new ProfileDetails();
+            pd.setPhoneNumber(c.getString(c.getColumnIndex(SqliteContract.UserDetails.COLUMN_PHONENUMBER)));
+            pd.setProfileId(c.getString(c.getColumnIndex(SqliteContract.UserDetails.COLUMN_PROFILEID)));
+            pd.setPhotoUri(c.getString(c.getColumnIndex(SqliteContract.UserDetails.COLUMN_PHOTOURI)));
+            String s = c.getString(c.getColumnIndex(SqliteContract.UserDetails.COLUMN_AVAILABLE));
+            pd.setBirthDate(c.getString(c.getColumnIndex(SqliteContract.UserDetails.COLUMN_BIRTHDATE)));
+            pd.setDescription(c.getString(c.getColumnIndex(SqliteContract.UserDetails.COLUMN_DESCRIPTION)));
+            pd.setHomeTown(c.getString(c.getColumnIndex(SqliteContract.UserDetails.COLUMN_HOMETOWN)));
+            pd.setName(c.getString(c.getColumnIndex(SqliteContract.UserDetails.COLUMN_NAME)));
+
+            pd.setAvailable(s.equals("true"));
+
+            ListProfileDetails.add(pd);
+        } while (c.moveToNext());
+
+    }
+
+    public void getDataFromSql()
+    {
+        getListUserGuides();
+        getListBookingRequests();
+        getListUserDetails();
+
+        displayInList("first");
+        displayInList("second");
+    }
+
+    public void sqliteSaveUserGuidesTable(List<AvaiableGuides> listag, Boolean mybooking){
+        SQLiteDatabase db = mdbHelper.getWritableDatabase();
+        for(int i = 0; i< listag.size(); i++)
         {
-            for(int i = 0; i< ListUserGuides.size(); i++)
-            {
-                SQLiteDatabase db = mdbHelper.getWritableDatabase();
-                mdbHelper.onUpgrade(db,0, 1);
-                ContentValues values = new ContentValues();
 
-                values.put(SqliteContract.MyBookings.COLUMN_COUNTRY, ListUserGuides.get(i).country);
-                values.put(SqliteContract.MyBookings.COLUMN_DATEFROM, ListUserGuides.get(i).dateFrom);
-                values.put(SqliteContract.MyBookings.COLUMN_DATETILL, ListUserGuides.get(i).dateTill);
-                values.put(SqliteContract.MyBookings.COLUMN_LOCATION, ListUserGuides.get(i).location);
-                values.put(SqliteContract.MyBookings.COLUMN_MAXPOEPLE, ListUserGuides.get(i).maxPeople);
-                values.put(SqliteContract.MyBookings.COLUMN_PRICE, ListUserGuides.get(i).price);
-                values.put(SqliteContract.MyBookings.COLUMN_TRANSPORT, ListUserGuides.get(i).transport);
-                values.put(SqliteContract.MyBookings.COLUMN_FIREBASEID, ListBookingIds.get(i));
+            ContentValues values = new ContentValues();
 
-                long newRowId = db.insert(SqliteContract.MyBookings.TABLE_NAME, null, values);
-            }
+            values.put(SqliteContract.MyBookings.COLUMN_COUNTRY, ListUserGuides.get(i).country);
+            values.put(SqliteContract.MyBookings.COLUMN_DATEFROM, ListUserGuides.get(i).dateFrom);
+            values.put(SqliteContract.MyBookings.COLUMN_DATETILL, ListUserGuides.get(i).dateTill);
+            values.put(SqliteContract.MyBookings.COLUMN_LOCATION, ListUserGuides.get(i).location);
+            values.put(SqliteContract.MyBookings.COLUMN_MAXPOEPLE, ListUserGuides.get(i).maxPeople);
+            values.put(SqliteContract.MyBookings.COLUMN_PRICE, ListUserGuides.get(i).price);
+            values.put(SqliteContract.MyBookings.COLUMN_TRANSPORT, ListUserGuides.get(i).transport);
+            values.put(SqliteContract.MyBookings.COLUMN_FIREBASEID, ListBookingIds.get(i));
+            values.put(SqliteContract.MyBookings.COLUMN_MYBOOKING, mybooking.toString());
+
+            db.insert(SqliteContract.MyBookings.TABLE_NAME, null, values);
+        }
+    }
+    public void sqliteSaveBookingRequests(List<BookingRequests> list){
+        SQLiteDatabase db = mdbHelper.getWritableDatabase();
+
+        for(int j = 0; j<list.size(); j++){
+            ContentValues values = new ContentValues();
+            BookingRequests br = list.get(j);
+            values.put(SqliteContract.BookingRequests.COLUMN_AVAILABEGUIDESADAPTERID, br.getAvailabeGuidesAdapterId());
+            values.put(SqliteContract.BookingRequests.COLUMN_CONFIRMED, br.getConfirmed());
+            values.put(SqliteContract.BookingRequests.COLUMN_DATE, br.getDate());
+            values.put(SqliteContract.BookingRequests.COLUMN_GUIDEID, mUser.getUid());
+            values.put(SqliteContract.BookingRequests.COLUMN_REQUESTUSERID, br.getRequestUserId());
+
+            db.insert(SqliteContract.BookingRequests.TABLE_NAME, null, values);
+        }
+    }
+    public void sqliteSaveProfileDetails(List<ProfileDetails> list)
+    {
+        SQLiteDatabase db = mdbHelper.getWritableDatabase();
+
+        for(int j = 0; j<list.size(); j++){
+            ContentValues values = new ContentValues();
+            ProfileDetails pd = list.get(j);
+            values.put(SqliteContract.UserDetails.COLUMN_AVAILABLE, pd.getAvailable());
+            values.put(SqliteContract.UserDetails.COLUMN_BIRTHDATE, pd.getBirthDate());
+            values.put(SqliteContract.UserDetails.COLUMN_DESCRIPTION, pd.getDescription());
+            values.put(SqliteContract.UserDetails.COLUMN_GENDER, pd.getGender().toString());
+            values.put(SqliteContract.UserDetails.COLUMN_HOMETOWN, pd.getHomeTown());
+            values.put(SqliteContract.UserDetails.COLUMN_NAME, pd.getName());
+            values.put(SqliteContract.UserDetails.COLUMN_PHONENUMBER, pd.getPhoneNumber());
+            values.put(SqliteContract.UserDetails.COLUMN_PROFILEID, pd.getProfileId());
+            values.put(SqliteContract.UserDetails.COLUMN_PHOTOURI, pd.getPhotoUri());
+
+            db.insert(SqliteContract.UserDetails.TABLE_NAME, null, values);
+        }
+    }
+
+    public void sqliteSave() {
+        SQLiteDatabase db = mdbHelper.getWritableDatabase();
+        mdbHelper.onUpgrade(db, 0, 1);
+        if (ListUserGuides == null || ListUserGuides.size() != 0){
+            sqliteSaveUserGuidesTable(ListUserGuides, true);
+        }
+        if (ListUserGuides2 != null && ListUserGuides2.size() != 0){
+            sqliteSaveUserGuidesTable(ListUserGuides2, false);
+        }
+        if(ListBookingRequests != null && ListBookingRequests.size() != 0){
+            sqliteSaveBookingRequests(ListBookingRequests);
+        }
+        if(ListProfileDetails != null && ListProfileDetails.size() != 0){
+            sqliteSaveProfileDetails(ListProfileDetails);
         }
 
     }
@@ -311,9 +462,6 @@ public class BookingsFragment extends Fragment {
         ValueEventListener postListener2 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-
 
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
 
@@ -484,17 +632,12 @@ public class BookingsFragment extends Fragment {
                                 for (int o = 0; o < list2.size(); o++) {
                                     type.add(list2.get(o).toString());
                                 }
-
                                 AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri);
-
                                 ListUserGuides2.add(guide);
-
                             }
-
-
                 }
-
                 displayInList("second");
+                sqliteSave();
             }
 
             @Override

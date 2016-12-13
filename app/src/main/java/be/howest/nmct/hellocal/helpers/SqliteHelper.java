@@ -22,11 +22,15 @@ public class SqliteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SqliteContract.MyBookings.CREATE_TABLE);
+        db.execSQL(SqliteContract.BookingRequests.CREATE_TABLE);
+        db.execSQL(SqliteContract.UserDetails.CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SqliteContract.MyBookings.DELETE_TABLE);
+        db.execSQL(SqliteContract.BookingRequests.DELETE_TABLE);
+        db.execSQL(SqliteContract.UserDetails.DELETE_TABLE);
         onCreate(db);
     }
 }
