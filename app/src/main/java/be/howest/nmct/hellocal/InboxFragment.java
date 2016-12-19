@@ -3,13 +3,17 @@ package be.howest.nmct.hellocal;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +28,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Locale;
 
+import be.howest.nmct.hellocal.contracts.SqliteContract;
+import be.howest.nmct.hellocal.helpers.SqliteHelper;
 import be.howest.nmct.hellocal.models.Const;
 import be.howest.nmct.hellocal.models.Message;
 import be.howest.nmct.hellocal.models.ProfileDetails;
-import be.howest.nmct.hellocal.models.User;
 
 
 /**
@@ -47,6 +54,8 @@ public class InboxFragment extends Fragment {
     private ArrayList<Message> mMessages;
     private ProgressDialog progressDia;
     static Activity thisActivity = null;
+    private SqliteHelper sqliteHelper;
+    private Boolean mIsOnline;
 
     public static String userId;
 
@@ -74,6 +83,20 @@ public class InboxFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        sqliteHelper = new SqliteHelper(v.getContext());
+
+
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity()
+                .getSystemService(v.getContext().CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            mIsOnline = true;
+        } else {
+            mIsOnline = false;
+        }
+
         // Inflate the layout for this fragment
         return v;
     }
@@ -86,8 +109,119 @@ public class InboxFragment extends Fragment {
 
     @Override
     public void onResume(){
+        if(mIsOnline) loadInbox();
+        else loadDataFromSQL();
         super.onResume();
-        loadInbox();
+    }
+
+    private void loadDataFromSQL() {
+        getSqlListProfiles();
+        try {
+            getSqlListMessages();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        dismissNoMessages();
+        InboxRecycleViewAdapter adapter = new InboxRecycleViewAdapter(mProfiles);
+        mRecyclerView.setAdapter(adapter);
+        progressDia.dismiss();
+
+    }
+    private void getSqlListProfiles(){
+        mProfiles = new ArrayList<>();
+
+        SQLiteDatabase db = sqliteHelper.getReadableDatabase();
+
+        String[] projection = {
+                SqliteContract.ProfileDetailsMessages.COLUMN_AVAILABLE,
+                SqliteContract.ProfileDetailsMessages.COLUMN_PROFILEID,
+                SqliteContract.ProfileDetailsMessages.COLUMN_PHONENUMBER,
+                SqliteContract.ProfileDetailsMessages.COLUMN_PHOTOURI,
+                SqliteContract.ProfileDetailsMessages.COLUMN_NAME,
+                SqliteContract.ProfileDetailsMessages.COLUMN_HOMETOWN,
+                SqliteContract.ProfileDetailsMessages.COLUMN_DESCRIPTION,
+                SqliteContract.ProfileDetailsMessages.COLUMN_BIRTHDATE,
+                SqliteContract.ProfileDetailsMessages.COLUMN_GENDER,
+        };
+
+
+        Cursor c = db.query(
+                SqliteContract.ProfileDetailsMessages.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+
+        c.moveToFirst();
+        do {
+            ProfileDetails pd = new ProfileDetails();
+            pd.setPhoneNumber(c.getString(c.getColumnIndex(SqliteContract.ProfileDetailsMessages.COLUMN_PHONENUMBER)));
+            pd.setProfileId(c.getString(c.getColumnIndex(SqliteContract.ProfileDetailsMessages.COLUMN_PROFILEID)));
+            pd.setPhotoUri(c.getString(c.getColumnIndex(SqliteContract.ProfileDetailsMessages.COLUMN_PHOTOURI)));
+            String s = c.getString(c.getColumnIndex(SqliteContract.ProfileDetailsMessages.COLUMN_AVAILABLE));
+            pd.setBirthDate(c.getString(c.getColumnIndex(SqliteContract.ProfileDetailsMessages.COLUMN_BIRTHDATE)));
+            pd.setDescription(c.getString(c.getColumnIndex(SqliteContract.ProfileDetailsMessages.COLUMN_DESCRIPTION)));
+            pd.setHomeTown(c.getString(c.getColumnIndex(SqliteContract.ProfileDetailsMessages.COLUMN_HOMETOWN)));
+            pd.setName(c.getString(c.getColumnIndex(SqliteContract.ProfileDetailsMessages.COLUMN_NAME)));
+
+            pd.setAvailable(s.equals("true"));
+
+            mProfiles.add(pd);
+        } while (c.moveToNext());
+
+    }
+    private void getSqlListMessages() throws ParseException {
+        mMessages = new ArrayList<>();
+
+        SQLiteDatabase db = sqliteHelper.getReadableDatabase();
+
+        String[] projection = {
+                SqliteContract.Messages.COLUMN_STATUS,
+                SqliteContract.Messages.COLUMN_SENDER,
+                SqliteContract.Messages.COLUMN_RECIEVER,
+                SqliteContract.Messages.COLUMN_MESSAGE,
+                SqliteContract.Messages.COLUMN_DATE,
+                SqliteContract.Messages.COLUMN_SENT
+        };
+
+
+        Cursor c = db.query(
+                SqliteContract.Messages.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+
+        c.moveToFirst();
+        do {
+            Message msg = new Message();
+
+            String s = c.getString(c.getColumnIndex(SqliteContract.Messages.COLUMN_DATE));
+            SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
+            msg.setDate((df.parse(s)));
+
+            msg.setMsg(c.getString(c.getColumnIndex(SqliteContract.Messages.COLUMN_MESSAGE)));
+            msg.setReceiver(c.getString(c.getColumnIndex(SqliteContract.Messages.COLUMN_RECIEVER)));
+            msg.setSender(c.getString(c.getColumnIndex(SqliteContract.Messages.COLUMN_SENDER)));
+            s = c.getString(c.getColumnIndex(SqliteContract.Messages.COLUMN_SENT));
+            if(s.equals("1"))
+                msg.setSent(true);
+            else
+            msg.setSent(false);
+
+            msg.setStatus(c.getInt(c.getColumnIndex(SqliteContract.Messages.COLUMN_STATUS)));
+
+
+
+           mMessages.add(msg);
+        } while (c.moveToNext());
+
     }
 
     private void loadInbox(){
@@ -114,6 +248,7 @@ public class InboxFragment extends Fragment {
                     }
                 }
                 dismissNoMessages();
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -134,6 +269,9 @@ public class InboxFragment extends Fragment {
                 mRecyclerView.setAdapter(adapter);
 
                 progressDia.dismiss();
+
+                SaveSQL();
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -142,6 +280,50 @@ public class InboxFragment extends Fragment {
         });
     }
 
+    private void SaveSQL(){
+        //reset database
+        SQLiteDatabase db = sqliteHelper.getWritableDatabase();
+        sqliteHelper.onUpgrade(db,0,2);
+
+        SaveSQLProfiles(mProfiles);
+        SaveSQLMessages(mMessages);
+    }
+
+    private void SaveSQLProfiles(ArrayList<ProfileDetails> list) {
+        SQLiteDatabase db = sqliteHelper.getWritableDatabase();
+
+        for(int j = 0; j<list.size(); j++){
+            ContentValues values = new ContentValues();
+            ProfileDetails pd = list.get(j);
+            values.put(SqliteContract.ProfileDetailsMessages.COLUMN_AVAILABLE, pd.getAvailable());
+            values.put(SqliteContract.ProfileDetailsMessages.COLUMN_BIRTHDATE, pd.getBirthDate());
+            values.put(SqliteContract.ProfileDetailsMessages.COLUMN_DESCRIPTION, pd.getDescription());
+            values.put(SqliteContract.ProfileDetailsMessages.COLUMN_GENDER, pd.getGender().toString());
+            values.put(SqliteContract.ProfileDetailsMessages.COLUMN_HOMETOWN, pd.getHomeTown());
+            values.put(SqliteContract.ProfileDetailsMessages.COLUMN_NAME, pd.getName());
+            values.put(SqliteContract.ProfileDetailsMessages.COLUMN_PHONENUMBER, pd.getPhoneNumber());
+            values.put(SqliteContract.ProfileDetailsMessages.COLUMN_PROFILEID, pd.getProfileId());
+            values.put(SqliteContract.ProfileDetailsMessages.COLUMN_PHOTOURI, pd.getPhotoUri());
+
+            db.insert(SqliteContract.ProfileDetailsMessages.TABLE_NAME, null, values);
+        }
+    }
+
+    private void SaveSQLMessages(ArrayList<Message> list){
+        SQLiteDatabase db = sqliteHelper.getWritableDatabase();
+        for(int i = 0; i<list.size(); i++){
+            ContentValues values = new ContentValues();
+            Message msg = list.get(i);
+            values.put(SqliteContract.Messages.COLUMN_DATE, msg.getDate().toString());
+            values.put(SqliteContract.Messages.COLUMN_MESSAGE, msg.getMsg());
+            values.put(SqliteContract.Messages.COLUMN_RECIEVER, msg.getReceiver());
+            values.put(SqliteContract.Messages.COLUMN_SENDER, msg.getSender());
+            values.put(SqliteContract.Messages.COLUMN_SENT, msg.getSent());
+            values.put(SqliteContract.Messages.COLUMN_STATUS, msg.getStatus());
+
+            db.insert(SqliteContract.Messages.TABLE_NAME, null, values);
+        }
+    }
     private void dismissNoMessages(){
         noMessages = (TextView) getActivity().findViewById(R.id.noMessages);
         noMessages.setVisibility(View.GONE);

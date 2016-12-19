@@ -31,6 +31,49 @@ public class SqliteContract {
         public static String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 
+    public static class ProfileDetailsMessages implements BaseColumns{
+        public static String TABLE_NAME = "userDetailsMessages";
+        public static String COLUMN_AVAILABLE = "available";
+        public static String COLUMN_BIRTHDATE = "birthDate";
+        public static String COLUMN_DESCRIPTION = "description";
+        public static String COLUMN_GENDER = "gender";
+        public static String COLUMN_HOMETOWN = "hometown";
+        public static String COLUMN_NAME = "name";
+        public static String COLUMN_PHONENUMBER = "phoneNumber";
+        public static String COLUMN_PHOTOURI = "photoUri";
+        public static String COLUMN_PROFILEID = "profileId";
+        public static String CREATE_TABLE = "create table "
+                + TABLE_NAME + "(" + _ID + " integer primary key autoincrement, "
+                + COLUMN_AVAILABLE + " text,"
+                + COLUMN_BIRTHDATE + " text,"
+                + COLUMN_DESCRIPTION + " text,"
+                + COLUMN_GENDER + " text,"
+                + COLUMN_HOMETOWN + " text,"
+                + COLUMN_NAME + " text,"
+                + COLUMN_PHONENUMBER + " text,"
+                + COLUMN_PHOTOURI + " text,"
+                + COLUMN_PROFILEID + " text);";
+        public static String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
+
+    public static class Messages implements BaseColumns{
+        public static String TABLE_NAME = "messages";
+        public static String COLUMN_DATE = "date";
+        public static String COLUMN_MESSAGE = "message";
+        public static String COLUMN_RECIEVER = "reciever";
+        public static String COLUMN_SENDER = "sender";
+        public static String COLUMN_SENT = "sent";
+        public static String COLUMN_STATUS = "status";
+        public static String CREATE_TABLE = "create table "
+                + TABLE_NAME + " (" + _ID + " integer primary key autoincrement, "
+                + COLUMN_DATE + " text,"
+                + COLUMN_MESSAGE + " text,"
+                + COLUMN_RECIEVER + " text,"
+                + COLUMN_SENDER + " text,"
+                + COLUMN_SENT + " text,"
+                + COLUMN_STATUS + " text);";
+        public static String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
 
     public static class BookingRequests implements BaseColumns{
         public static String TABLE_NAME = "bookingRequests";

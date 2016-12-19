@@ -24,13 +24,27 @@ public class SqliteHelper extends SQLiteOpenHelper {
         db.execSQL(SqliteContract.MyBookings.CREATE_TABLE);
         db.execSQL(SqliteContract.BookingRequests.CREATE_TABLE);
         db.execSQL(SqliteContract.UserDetails.CREATE_TABLE);
+        db.execSQL(SqliteContract.ProfileDetailsMessages.CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SqliteContract.MyBookings.DELETE_TABLE);
-        db.execSQL(SqliteContract.BookingRequests.DELETE_TABLE);
-        db.execSQL(SqliteContract.UserDetails.DELETE_TABLE);
-        onCreate(db);
+        if(oldVersion == 0 && newVersion ==1)
+        {
+            db.execSQL(SqliteContract.MyBookings.DELETE_TABLE);
+            db.execSQL(SqliteContract.MyBookings.CREATE_TABLE);
+            db.execSQL(SqliteContract.BookingRequests.DELETE_TABLE);
+            db.execSQL(SqliteContract.BookingRequests.CREATE_TABLE);
+            db.execSQL(SqliteContract.UserDetails.DELETE_TABLE);
+            db.execSQL(SqliteContract.UserDetails.CREATE_TABLE);
+        }
+        if(oldVersion == 0 && newVersion == 2){
+            db.execSQL(SqliteContract.ProfileDetailsMessages.DELETE_TABLE);
+            db.execSQL(SqliteContract.ProfileDetailsMessages.CREATE_TABLE);
+            db.execSQL(SqliteContract.Messages.DELETE_TABLE);
+            db.execSQL(SqliteContract.Messages.CREATE_TABLE);
+        }
+
+
     }
 }
