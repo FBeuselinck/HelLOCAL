@@ -87,7 +87,7 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
             holder.btnConfirm.setText("CONTACT");
         }else{
             holder.confirmed.setImageResource(R.drawable.checked);
-            holder.btnConfirm.setText("CONFIRM");
+            holder.btnConfirm.setText("ANSWER");
         }
 
         if(req.getConfirmed()){
@@ -113,26 +113,73 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                 public void onClick(View v) {
 
 
+
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                             context);
 
-                    alertDialogBuilder.setTitle("Are you really sure you want to confirm this booking?")
-                            .setMessage("You can't undo this!");
+                    alertDialogBuilder.setTitle("Do you want to confirm this booking?");
 
                     alertDialogBuilder
-                            .setCancelable(false)
-                            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                            .setCancelable(true)
+                            .setPositiveButton("Confirm",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
                                     //confirm booking
+
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                            context);
+
+                                    alertDialogBuilder.setTitle("Are you really sure you want to confirm this booking?")
+                                            .setMessage("You can't undo this!");
+
+                                    alertDialogBuilder
+                                            .setCancelable(false)
+                                            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog,int id) {
+                                                    //confirm booking
+                                                }
+                                            })
+                                            .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                    alertDialog.show();
+
                                 }
                             })
-                            .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                            .setNegativeButton("Decline",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
+                                    // decline booking
+
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                            context);
+
+                                    alertDialogBuilder.setTitle("Are you really sure you want to decline this booking?")
+                                            .setMessage("You can't undo this!");
+
+                                    alertDialogBuilder
+                                            .setCancelable(false)
+                                            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog,int id) {
+                                                    //decline booking
+                                                }
+                                            })
+                                            .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                    alertDialog.show();
+
                                 }
                             });
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
+
+
+
                     
                 }
             });
@@ -159,9 +206,10 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                                 //contact guide
                             }
                         })
-                        .setNegativeButton("Decline",new DialogInterface.OnClickListener() {
+                        .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                //decline booking
+                                dialog.cancel();
+
                             }
                         });
                 AlertDialog alertDialog = alertDialogBuilder.create();
