@@ -62,6 +62,9 @@ public class BookingsFragment extends Fragment {
     private List<String> ListBookingIds = new ArrayList<>();
     private List<String> ListAvailableGuidesIds = new ArrayList<>();
     private List<String> ListRequestUserIds = new ArrayList<>();
+    private List<String> ListKeys1 = new ArrayList<>();
+    private List<String> ListKeys2 = new ArrayList<>();
+
 
     private List<BookingRequests> ListBookingRequestsTourist = new ArrayList<>();
     private List<String> ListAvailableGuidesIds2 = new ArrayList<>();
@@ -236,7 +239,7 @@ public class BookingsFragment extends Fragment {
         if(mBooleanIsOnline)
         {
             DatabaseReference myRef = database.getReference("avaiableGuides");
-            myRef.addListenerForSingleValueEvent(postListener);
+            myRef.addValueEventListener(postListener);
         }
         else getDataFromSql();
 
@@ -478,6 +481,25 @@ public class BookingsFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                ListBookingRequests.clear();
+                ListAvailableGuidesIds.clear();
+                ListRequestUserIds.clear();
+                ListKeys1.clear();
+
+                ListBookingRequestsTourist.clear();
+                ListAvailableGuidesIds2.clear();
+                ListGuideUserIds.clear();
+                ListKeys2.clear();
+
+                ListUserGuides3.clear();
+                ListProfileDetails.clear();
+                ListUserGuides2.clear();
+                ListProfileDetailsGuide.clear();
+
+
+
+
+
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
 
                 List<Object> values = new ArrayList<>(td.values());
@@ -487,6 +509,9 @@ public class BookingsFragment extends Fragment {
 
                     Map<String, Object> ts = (HashMap<String,Object>) values.get(i);
                     List<Object> list = new ArrayList<>(ts.values());
+
+                    List<String> keys = new ArrayList<>(td.keySet());
+
 
                     UidAvailabe = list.get(3).toString();
                     UidRequest = list.get(0).toString();
@@ -504,6 +529,7 @@ public class BookingsFragment extends Fragment {
                         ListBookingRequests.add(req);
                         ListAvailableGuidesIds.add(availableGuideAdapterId);
                         ListRequestUserIds.add(requestId);
+                        ListKeys1.add(keys.get(i).toString());
 
                     }else if(Uid.equals(UidRequest)){
 
@@ -518,6 +544,8 @@ public class BookingsFragment extends Fragment {
                         ListBookingRequestsTourist.add(req);
                         ListAvailableGuidesIds2.add(availableGuideAdapterId);
                         ListGuideUserIds.add(requestId);
+                        ListKeys2.add(keys.get(i).toString());
+
 
                     }
 
@@ -535,7 +563,7 @@ public class BookingsFragment extends Fragment {
 
         };
         DatabaseReference myRef = database.getReference("bookingRequests");
-        myRef.addListenerForSingleValueEvent(postListener2);
+        myRef.addValueEventListener(postListener2);
 
     }
 
@@ -544,6 +572,7 @@ public class BookingsFragment extends Fragment {
         ValueEventListener postListener3 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
 
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
 
@@ -612,7 +641,7 @@ public class BookingsFragment extends Fragment {
 
         };
         DatabaseReference myRef = database.getReference("profileDetails");
-        myRef.addListenerForSingleValueEvent(postListener3);
+        myRef.addValueEventListener(postListener3);
 
     }
 
@@ -623,6 +652,7 @@ public class BookingsFragment extends Fragment {
         ValueEventListener postListener5 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
 
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
 
@@ -691,7 +721,7 @@ public class BookingsFragment extends Fragment {
 
         };
         DatabaseReference myRef = database.getReference("profileDetails");
-        myRef.addListenerForSingleValueEvent(postListener5);
+        myRef.addValueEventListener(postListener5);
 
     }
 
@@ -705,6 +735,7 @@ public class BookingsFragment extends Fragment {
         ValueEventListener postListener4 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
 
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
                 List Keys = new ArrayList(td.keySet());
@@ -762,7 +793,7 @@ public class BookingsFragment extends Fragment {
 
         };
         DatabaseReference myRef = database.getReference("avaiableGuides");
-        myRef.addListenerForSingleValueEvent(postListener4);
+        myRef.addValueEventListener(postListener4);
 
     }
 
@@ -772,6 +803,7 @@ public class BookingsFragment extends Fragment {
         ValueEventListener postListener6 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
 
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
                 List Keys = new ArrayList(td.keySet());
@@ -829,7 +861,7 @@ public class BookingsFragment extends Fragment {
 
         };
         DatabaseReference myRef = database.getReference("avaiableGuides");
-        myRef.addListenerForSingleValueEvent(postListener6);
+        myRef.addValueEventListener(postListener6);
 
     }
 
@@ -868,7 +900,7 @@ public class BookingsFragment extends Fragment {
 
             textViewBookings.setVisibility(View.VISIBLE);
 
-            mBAdapter = new bookings_as_guide_adapter(ListBookingRequests, ListProfileDetails, ListUserGuides2 , thisActivity);
+            mBAdapter = new bookings_as_guide_adapter(ListBookingRequests, ListProfileDetails, ListUserGuides2, ListKeys1 , thisActivity);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             recyclerViewBookings.setLayoutManager(mLayoutManager);
             recyclerViewBookings.setItemAnimator(new DefaultItemAnimator());
@@ -880,7 +912,7 @@ public class BookingsFragment extends Fragment {
 
             textViewTourist.setVisibility(View.VISIBLE);
 
-            mTAdapter = new bookings_as_tourist_adapter(ListBookingRequestsTourist, ListProfileDetailsGuide, ListUserGuides3 , thisActivity);
+            mTAdapter = new bookings_as_tourist_adapter(ListBookingRequestsTourist, ListProfileDetailsGuide, ListUserGuides3 , ListKeys2, thisActivity);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             recyclerViewTourist.setLayoutManager(mLayoutManager);
             recyclerViewTourist.setItemAnimator(new DefaultItemAnimator());

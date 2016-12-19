@@ -33,6 +33,7 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
     private List<AvaiableGuides> guidesList;
     private List<BookingRequests> reqsList;
     private List<ProfileDetails> profile;
+    private List<String> keys;
 
     Context context;
 
@@ -54,10 +55,11 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
     }
 
 
-    public bookings_as_tourist_adapter(List<BookingRequests> reqsList, List<ProfileDetails> profile , List<AvaiableGuides> guidesList, Context context) {
+    public bookings_as_tourist_adapter(List<BookingRequests> reqsList, List<ProfileDetails> profile , List<AvaiableGuides> guidesList, List<String> keys, Context context) {
         this.guidesList = guidesList;
         this.profile = profile;
         this.reqsList = reqsList;
+        this.keys = keys;
         this.context = context;
     }
 

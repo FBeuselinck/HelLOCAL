@@ -42,6 +42,7 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
     private List<AvaiableGuides> guidesList;
     private List<BookingRequests> reqsList;
     private List<ProfileDetails> profile;
+    private List<String> keys;
 
     Context context;
 
@@ -63,11 +64,13 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
     }
 
 
-    public bookings_as_guide_adapter(List<BookingRequests> reqsList, List<ProfileDetails> profile , List<AvaiableGuides> guidesList, Context context) {
+    public bookings_as_guide_adapter(List<BookingRequests> reqsList, List<ProfileDetails> profile , List<AvaiableGuides> guidesList, List<String> keys, Context context) {
         this.guidesList = guidesList;
         this.profile = profile;
         this.reqsList = reqsList;
+        this.keys = keys;
         this.context = context;
+
     }
 
     @Override
@@ -84,6 +87,7 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
         final AvaiableGuides guide = guidesList.get(position);
         final BookingRequests req = reqsList.get(position);
         final ProfileDetails prof = profile.get(position);
+        final String uid = keys.get(position);
 
 
 
@@ -145,32 +149,24 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                                                 public void onClick(DialogInterface dialog,int id) {
                                                     //confirm booking
 
+                                                    final DatabaseReference myRef = database.getReference("bookingRequests");
 
                                                     ValueEventListener postListener = new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                                                             Map<String, Object> td = (HashMap<String, Object>) dataSnapshot.getValue();
-                                                            List Keys = new ArrayList(td.keySet());
+                                                            List<String> list = new ArrayList<>(td.keySet());
 
 
-                                                            for (int i = 0; i < Keys.size(); i++) {
-
-//                                                                Map<String, Object> ts = (HashMap<String, Object>) values.get(i);
-//                                                                List<Object> list = new ArrayList<>(ts.values());
-
-                                                                String currentKey = Keys.get(i).toString();
-
-                                                                Boolean checkTrue = false;
-//
-//                                                                for (int q = 0; q < ListAvailableGuidesIds.size(); q++) {
-//                                                                    if (ListAvailableGuidesIds.get(q).equals(currentKey)) {
-//                                                                        checkTrue = true;
-//                                                                    }
-//                                                                }
-
-                                                               
+                                                            for(int i = 0; i< list.size(); i++){
+                                                                if(list.get(i).equals(uid)){
+                                                                    HashMap<String, Object> result = new HashMap<>();
+                                                                    result.put("confirmed", true);
+                                                                    myRef.child(uid).updateChildren(result);
+                                                                }
                                                             }
+
                                                         }
 
                                                         @Override
@@ -179,8 +175,7 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                                                         }
 
                                                     };
-                                                    DatabaseReference myRef = database.getReference("bookingRequests");
-                                                    myRef.addListenerForSingleValueEvent(postListener);
+                                                    myRef.addValueEventListener(postListener);
 
                                                 }})
 
