@@ -227,7 +227,7 @@ public class InboxFragment extends Fragment {
     private void loadInbox(){
         mContactIds = new ArrayList<String>();
         mMessages = new ArrayList<>();
-        database.child("messages").addListenerForSingleValueEvent(new ValueEventListener() {
+        database.child("messages").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -259,7 +259,7 @@ public class InboxFragment extends Fragment {
 
     private void getContact(String contactId){
         mProfiles = new ArrayList<ProfileDetails>();
-        database.child("profileDetails").child(contactId).addListenerForSingleValueEvent(new ValueEventListener() {
+        database.child("profileDetails").child(contactId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfileDetails profile = dataSnapshot.getValue(ProfileDetails.class);
