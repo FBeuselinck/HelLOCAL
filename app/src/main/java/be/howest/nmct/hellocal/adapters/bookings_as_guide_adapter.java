@@ -12,11 +12,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import be.howest.nmct.hellocal.ChatActivity;
 import be.howest.nmct.hellocal.R;
@@ -136,8 +144,49 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                                             .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog,int id) {
                                                     //confirm booking
-                                                }
-                                            })
+
+
+                                                    ValueEventListener postListener = new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                            Map<String, Object> td = (HashMap<String, Object>) dataSnapshot.getValue();
+                                                            List Keys = new ArrayList(td.keySet());
+
+
+                                                            for (int i = 0; i < Keys.size(); i++) {
+
+//                                                                Map<String, Object> ts = (HashMap<String, Object>) values.get(i);
+//                                                                List<Object> list = new ArrayList<>(ts.values());
+
+                                                                String currentKey = Keys.get(i).toString();
+
+                                                                Boolean checkTrue = false;
+//
+//                                                                for (int q = 0; q < ListAvailableGuidesIds.size(); q++) {
+//                                                                    if (ListAvailableGuidesIds.get(q).equals(currentKey)) {
+//                                                                        checkTrue = true;
+//                                                                    }
+//                                                                }
+
+                                                               
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+
+                                                    };
+                                                    DatabaseReference myRef = database.getReference("bookingRequests");
+                                                    myRef.addListenerForSingleValueEvent(postListener);
+
+                                                }})
+
+
+
+
                                             .setNegativeButton("No",new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     dialog.cancel();

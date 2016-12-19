@@ -83,13 +83,10 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
 
         if(req.getConfirmed()){
             holder.confirmed.setImageResource(R.drawable.checkedtrue);
-            holder.btnConfirm.setText("CONTACT");
         }else{
             holder.confirmed.setImageResource(R.drawable.checked);
-            holder.btnConfirm.setText("ANSWER");
         }
 
-        if(req.getConfirmed()){
 
             holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -105,66 +102,48 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
                 }
             });
 
-        }else{
 
-            holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
+
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                if(!req.getConfirmed()) {
 
 
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                             context);
 
-                    alertDialogBuilder.setTitle("Do you want to confirm this booking?");
+                    alertDialogBuilder.setTitle("Pending").setMessage("No official booking is made until the guide has confirmed the booking. Please wait.");
 
                     alertDialogBuilder
                             .setCancelable(true)
-                            .setPositiveButton("Confirm",new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,int id) {
-                                    //confirm booking
-
-                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                                            context);
-
-                                    alertDialogBuilder.setTitle("Are you really sure you want to confirm this booking?")
-                                            .setMessage("You can't undo this!");
-
-                                    alertDialogBuilder
-                                            .setCancelable(false)
-                                            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog,int id) {
-                                                    //confirm booking
-                                                }
-                                            })
-                                            .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                    AlertDialog alertDialog = alertDialogBuilder.create();
-                                    alertDialog.show();
+                            .setPositiveButton("Contact", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(context, ChatActivity.class);
+                                    intent.putExtra(Const.EXTRA_DATA, (Serializable) prof);
+                                    context.startActivity(intent);
 
                                 }
                             })
-                            .setNegativeButton("Decline",new DialogInterface.OnClickListener() {
+                            .setNegativeButton("Cancel booking", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    // decline booking
 
                                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                             context);
 
-                                    alertDialogBuilder.setTitle("Are you really sure you want to decline this booking?")
+                                    alertDialogBuilder.setTitle("Are you really sure you want to cancel this booking?")
                                             .setMessage("You can't undo this!");
 
                                     alertDialogBuilder
                                             .setCancelable(false)
-                                            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog,int id) {
-                                                    //decline booking
+                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    //cancel booking
                                                 }
                                             })
-                                            .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     dialog.cancel();
                                                 }
@@ -177,42 +156,39 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
 
+                }else{
+
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                            context);
+
+                    alertDialogBuilder.setTitle("Confirmed").setMessage("Your booking is confirmed and will set place on "+ req.getDate() + "\r\n with "+
+                    prof.getName() + " for " + guide.getPrice() + "/h");
+
+                    alertDialogBuilder
+                            .setCancelable(true)
+                            .setPositiveButton("Contact", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(context, ChatActivity.class);
+                                    intent.putExtra(Const.EXTRA_DATA, (Serializable) prof);
+                                    context.startActivity(intent);
+
+                                }
+                            })
+                            .setNegativeButton("Cancel booking", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    dialog.cancel();
+
+
+                                }
+                            });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
 
 
 
                 }
-            });
-
-        }
-
-
-        holder.itemView.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-
-
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        context);
-
-                alertDialogBuilder.setTitle("Booking details")
-                        .setMessage("Booking with " + prof.getName() + "\r\n" +
-                                "on " + req.getDate() + " for " + guide.getPrice() + "/h");
-
-                alertDialogBuilder
-                        .setCancelable(true)
-                        .setPositiveButton("Contact",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                //contact guide
-                            }
-                        })
-                        .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
 
             }
         });
