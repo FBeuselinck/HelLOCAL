@@ -112,6 +112,11 @@ public class ReviewActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+
+                ListNames.clear();
+                listReviews.clear();
+                ListPhotos.clear();
+
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
 
                 List<Object> lst = new ArrayList<>(td.values());
@@ -158,7 +163,7 @@ public class ReviewActivity extends AppCompatActivity {
 
         };
         DatabaseReference myRef = database.getReference("reviews");
-        myRef.addListenerForSingleValueEvent(postListener);
+        myRef.addValueEventListener(postListener);
 
     }
 
@@ -201,6 +206,8 @@ public class ReviewActivity extends AppCompatActivity {
             ValueEventListener postEventListenerLang = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+
                     Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
                     List<Object> lst = new ArrayList<>(td.values());
 
@@ -231,7 +238,7 @@ public class ReviewActivity extends AppCompatActivity {
                 }
             };
             DatabaseReference myRef = database.getReference("profileDetails");
-            myRef.addListenerForSingleValueEvent(postEventListenerLang);
+            myRef.addValueEventListener(postEventListenerLang);
         }
 
     }
@@ -249,18 +256,7 @@ public class ReviewActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-//        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-//            @Override
-//            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-//
-//                TextView date = (TextView) v.findViewById(R.id.textViewTime);
-//
-//
-//                Toast.makeText(getActivity(), date.getText().toString(),
-//                        Toast.LENGTH_LONG).show();
-//
-//            }
-//        });
+
 
 
     }
@@ -273,6 +269,8 @@ public class ReviewActivity extends AppCompatActivity {
             Reviews review = new Reviews(comment.getText().toString(),score.getRating(),Uid, uid);
             mDatabase.child("reviews").push().setValue(review);
             Toast.makeText(getApplication(), "Succesfully saved your review!", Toast.LENGTH_SHORT).show();
+            comment.setText("");
+            score.setRating(0);
         }else{
             Toast.makeText(getApplication(), "Please add some text", Toast.LENGTH_SHORT).show();
 

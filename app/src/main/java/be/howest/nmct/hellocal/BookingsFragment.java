@@ -543,7 +543,7 @@ public class BookingsFragment extends Fragment {
 
                         ListBookingRequestsTourist.add(req);
                         ListAvailableGuidesIds2.add(availableGuideAdapterId);
-                        ListGuideUserIds.add(requestId);
+                        ListGuideUserIds.add(guideId);
                         ListKeys2.add(keys.get(i).toString());
 
 

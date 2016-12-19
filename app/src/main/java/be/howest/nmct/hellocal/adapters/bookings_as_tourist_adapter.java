@@ -164,7 +164,7 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                             context);
 
-                    alertDialogBuilder.setTitle("Confirmed").setMessage("Your booking is confirmed and will set place on "+ req.getDate() + "\r\n with "+
+                    alertDialogBuilder.setTitle("Confirmed").setMessage("Your booking is confirmed and will set place on "+ req.getDate() + "\r\nwith "+
                     prof.getName() + " for " + guide.getPrice() + "/h");
 
                     alertDialogBuilder
