@@ -35,6 +35,7 @@ import java.util.Map;
 
 import be.howest.nmct.hellocal.adapters.AvailabeGuidesAdapter;
 import be.howest.nmct.hellocal.adapters.bookings_as_guide_adapter;
+import be.howest.nmct.hellocal.adapters.bookings_as_tourist_adapter;
 import be.howest.nmct.hellocal.contracts.SqliteContract;
 import be.howest.nmct.hellocal.helpers.SqliteHelper;
 import be.howest.nmct.hellocal.models.AvaiableGuides;
@@ -52,18 +53,26 @@ public class BookingsFragment extends Fragment {
 
     String Uid;
     String UidAvailabe;
+    String UidRequest;
 
     private List<AvaiableGuides> ListUserGuides = new ArrayList<>();
     private List<AvaiableGuides> ListUserGuides2 = new ArrayList<>();
-    private List<AvaiableGuides> ListUserGuidesRequest = new ArrayList<>();
+    private List<AvaiableGuides> ListUserGuides3 = new ArrayList<>();
     private List<BookingRequests> ListBookingRequests = new ArrayList<>();
     private List<String> ListBookingIds = new ArrayList<>();
     private List<String> ListAvailableGuidesIds = new ArrayList<>();
     private List<String> ListRequestUserIds = new ArrayList<>();
+
+    private List<BookingRequests> ListBookingRequestsTourist = new ArrayList<>();
+    private List<String> ListAvailableGuidesIds2 = new ArrayList<>();
+    private List<String> ListGuideUserIds = new ArrayList<>();
+
     private List<ProfileDetails> ListProfileDetails = new ArrayList<>();
-    private RecyclerView recyclerView, recyclerViewBookings;
+    private List<ProfileDetails>  ListProfileDetailsGuide = new ArrayList<>();
+    private RecyclerView recyclerView, recyclerViewBookings, recyclerViewTourist;
     private AvailabeGuidesAdapter mAdapter;
     private bookings_as_guide_adapter mBAdapter;
+    private bookings_as_tourist_adapter mTAdapter;
 
     private ProgressDialog progress;
 
@@ -71,6 +80,7 @@ public class BookingsFragment extends Fragment {
     private TextView textViewBookings;
     private TextView textViewAvailable;
     private TextView textViewDate;
+    private TextView textViewTourist;
 
     private Button btnRemove;
 
@@ -95,10 +105,12 @@ public class BookingsFragment extends Fragment {
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewBookings);
         recyclerViewBookings = (RecyclerView) v.findViewById(R.id.recyclerViewBookings2);
+        recyclerViewTourist = (RecyclerView) v.findViewById(R.id.recyclerViewBookings3);
 
         textViewNoBookings = (TextView) v.findViewById(R.id.noGuides);
         textViewAvailable = (TextView) v.findViewById(R.id.availableBookings);
         textViewBookings = (TextView) v.findViewById(R.id.Bookings);
+        textViewTourist = (TextView) v.findViewById(R.id.BookingsNormal);
 
         textViewDate = (TextView) v.findViewById(R.id.textViewDate);
 
@@ -109,6 +121,7 @@ public class BookingsFragment extends Fragment {
         textViewNoBookings.setVisibility(View.GONE);
         textViewAvailable.setVisibility(View.GONE);
         textViewBookings.setVisibility(View.GONE);
+        textViewTourist.setVisibility(View.GONE);
 
 
         progress = new ProgressDialog(getActivity());
@@ -136,6 +149,8 @@ public class BookingsFragment extends Fragment {
         getAllAvailableBookings();
 
         getAllBookingRequests();
+
+
 
 
         return v;
@@ -474,6 +489,7 @@ public class BookingsFragment extends Fragment {
                     List<Object> list = new ArrayList<>(ts.values());
 
                     UidAvailabe = list.get(3).toString();
+                    UidRequest = list.get(0).toString();
                     if (UidAvailabe.equals(Uid)){
 
 
@@ -489,11 +505,26 @@ public class BookingsFragment extends Fragment {
                         ListAvailableGuidesIds.add(availableGuideAdapterId);
                         ListRequestUserIds.add(requestId);
 
+                    }else if(Uid.equals(UidRequest)){
+
+                        String requestId = list.get(0).toString();
+                        String date = list.get(1).toString();
+                        Boolean confirmed = Boolean.parseBoolean(list.get(2).toString());
+                        String guideId = list.get(3).toString();
+                        String availableGuideAdapterId = list.get(4).toString();
+
+                        BookingRequests req = new BookingRequests(guideId,requestId,confirmed,date,availableGuideAdapterId);
+
+                        ListBookingRequestsTourist.add(req);
+                        ListAvailableGuidesIds2.add(availableGuideAdapterId);
+                        ListGuideUserIds.add(requestId);
+
                     }
 
                 }
 
                 getRequestUserDetails();
+                getGuideUserDetails();
 
             }
 
@@ -585,6 +616,90 @@ public class BookingsFragment extends Fragment {
 
     }
 
+
+
+    public void getGuideUserDetails(){
+
+        ValueEventListener postListener5 = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
+
+                List<Object> values = new ArrayList<>(td.values());
+
+
+                for (int p = 0; p < ListGuideUserIds.size(); p++) {
+
+                    for (int i=0; i<values.size(); i++) {
+
+                        Map<String, Object> ts = (HashMap<String, Object>) values.get(i);
+                        List<Object> list = new ArrayList<>(ts.values());
+
+                        List keys = new ArrayList<>(td.keySet());
+                        String getKey = keys.get(i).toString();
+                        String UidAvailable = getKey;
+
+                        Boolean checkTrue = false;
+
+
+                        if (ListGuideUserIds.get(p).equals(UidAvailable)){
+                            checkTrue = true;
+                        }
+
+
+                        if (checkTrue) {
+
+                            String profileId = list.get(0).toString();
+                            String description = list.get(1).toString();
+                            String image = list.get(2).toString();
+                            String birthdate = list.get(3).toString();
+                            String name = list.get(4).toString();
+                            Gender gender = Gender.valueOf( list.get(5).toString());
+                            String phonenumber = list.get(7).toString();
+                            String location = list.get(8).toString();
+                            Boolean availbale = Boolean.parseBoolean(list.get(9).toString());
+
+
+                            ArrayList<String> list2 = (ArrayList<String>) list.get(6);
+                            ArrayList<String> language = new ArrayList<>();
+
+                            for (int o = 0; o < list2.size(); o++) {
+                                language.add(list2.get(o).toString());
+                            }
+
+
+                            ProfileDetails profile = new ProfileDetails(profileId, language,gender,phonenumber,birthdate,description,availbale,location,name,image);
+
+                            ListProfileDetailsGuide.add(profile);
+
+                        }
+
+                    }
+
+                    getAvailableGuidesById2();
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        };
+        DatabaseReference myRef = database.getReference("profileDetails");
+        myRef.addListenerForSingleValueEvent(postListener5);
+
+    }
+
+
+
+
+
+
     public void getAvailableGuidesById(){
 
         ValueEventListener postListener4 = new ValueEventListener() {
@@ -637,7 +752,7 @@ public class BookingsFragment extends Fragment {
                             }
                 }
                 displayInList("second");
-                sqliteSave();
+//                sqliteSave();
             }
 
             @Override
@@ -648,6 +763,73 @@ public class BookingsFragment extends Fragment {
         };
         DatabaseReference myRef = database.getReference("avaiableGuides");
         myRef.addListenerForSingleValueEvent(postListener4);
+
+    }
+
+
+    public void getAvailableGuidesById2(){
+
+        ValueEventListener postListener6 = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
+                List Keys = new ArrayList(td.keySet());
+
+                List<Object> values = new ArrayList<>(td.values());
+
+
+
+                for (int i=0; i<values.size(); i++){
+
+                    Map<String, Object> ts = (HashMap<String,Object>) values.get(i);
+                    List<Object> list = new ArrayList<>(ts.values());
+
+                    String currentKey = Keys.get(i).toString();
+
+                    Boolean checkTrue = false;
+
+                    for (int q = 0; q < ListAvailableGuidesIds2.size(); q++) {
+                        if (ListAvailableGuidesIds2.get(q).equals(currentKey)) {
+                            checkTrue = true;
+                        }
+                    }
+
+                    if (checkTrue) {
+
+                        String name = list.get(8).toString();
+                        String country = list.get(2).toString();
+                        String location = list.get(4).toString();
+                        String dateFrom = list.get(7).toString();
+                        String dateTill = list.get(1).toString();
+                        String maxPeople = list.get(6).toString();
+                        String price = list.get(0).toString();
+                        String transport = list.get(10).toString();
+                        String userId = list.get(5).toString();
+                        String photoUri = list.get(3).toString();
+
+                        ArrayList<String> list2 = (ArrayList<String>) list.get(9);
+                        ArrayList<String> type = new ArrayList<>();
+
+                        for (int o = 0; o < list2.size(); o++) {
+                            type.add(list2.get(o).toString());
+                        }
+                        AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri);
+                        ListUserGuides3.add(guide);
+                    }
+                }
+                displayInList("third");
+//                sqliteSave();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        };
+        DatabaseReference myRef = database.getReference("avaiableGuides");
+        myRef.addListenerForSingleValueEvent(postListener6);
 
     }
 
@@ -691,6 +873,18 @@ public class BookingsFragment extends Fragment {
             recyclerViewBookings.setLayoutManager(mLayoutManager);
             recyclerViewBookings.setItemAnimator(new DefaultItemAnimator());
             recyclerViewBookings.setAdapter(mBAdapter);
+
+        }
+
+        if(position.equals("third")){
+
+            textViewTourist.setVisibility(View.VISIBLE);
+
+            mTAdapter = new bookings_as_tourist_adapter(ListBookingRequestsTourist, ListProfileDetailsGuide, ListUserGuides3 , thisActivity);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            recyclerViewTourist.setLayoutManager(mLayoutManager);
+            recyclerViewTourist.setItemAnimator(new DefaultItemAnimator());
+            recyclerViewTourist.setAdapter(mTAdapter);
 
         }
 

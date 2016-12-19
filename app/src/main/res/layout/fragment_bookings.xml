@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Your bookings"
+        android:text="Your bookings as a guide"
         />
 
     <FrameLayout
@@ -40,6 +40,35 @@
             android:orientation="horizontal"/>
 
     </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/BookingsNormal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Your bookings as a tourist"
+        />
+
+    <FrameLayout
+        android:id="@+id/frame_container3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <android.support.v7.widget.RecyclerView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/recyclerViewBookings3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:orientation="horizontal"/>
+
+    </FrameLayout>
+
+
     <TextView
         android:id="@+id/availableBookings"
         android:layout_width="match_parent"
