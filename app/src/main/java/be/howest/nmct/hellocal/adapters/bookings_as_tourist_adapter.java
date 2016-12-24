@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.CalendarContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 
 import be.howest.nmct.hellocal.ChatActivity;
@@ -129,6 +131,30 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
 
                                 }
                             })
+                            .setNeutralButton("Save", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Calendar beginTime = Calendar.getInstance();
+                                    String year = req.getDate().substring(6,10);
+                                    String month = req.getDate().substring(3,5);
+                                    String day = req.getDate().substring(0,2);
+
+                                    beginTime.set(Integer.parseInt(year),Integer.parseInt(month) -1, Integer.parseInt(day));
+                                    Calendar endTime = Calendar.getInstance();
+                                    endTime.set(Integer.parseInt(year),Integer.parseInt(month) -1, Integer.parseInt(day));
+                                    Intent intent = new Intent(Intent.ACTION_INSERT)
+                                            .setData(CalendarContract.Events.CONTENT_URI)
+                                            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                                            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                                            .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
+                                            .putExtra(CalendarContract.Events.TITLE, "Hellocal tour from " + prof.getName())
+                                            .putExtra(CalendarContract.Events.DESCRIPTION, "You getting a tour from " + prof.getName() + ". For a price of " + guide.getPrice() + "€/h.")
+                                            .putExtra(CalendarContract.Events.EVENT_LOCATION, guide.getLocation())
+                                            .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+
+                                    context.startActivity(intent);
+                                }
+                            })
                             .setNegativeButton("Cancel booking", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
@@ -176,7 +202,30 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
                                     context.startActivity(intent);
 
                                 }
-                            })
+                            }).setNeutralButton("Save", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Calendar beginTime = Calendar.getInstance();
+                            String year = req.getDate().substring(6,10);
+                            String month = req.getDate().substring(3,5);
+                            String day = req.getDate().substring(0,2);
+
+                            beginTime.set(Integer.parseInt(year),Integer.parseInt(month) -1, Integer.parseInt(day));
+                            Calendar endTime = Calendar.getInstance();
+                            endTime.set(Integer.parseInt(year),Integer.parseInt(month) -1, Integer.parseInt(day));
+                            Intent intent = new Intent(Intent.ACTION_INSERT)
+                                    .setData(CalendarContract.Events.CONTENT_URI)
+                                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                                    .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
+                                    .putExtra(CalendarContract.Events.TITLE, "Hellocal tour from " + prof.getName())
+                                    .putExtra(CalendarContract.Events.DESCRIPTION, "You getting a tour from " + prof.getName() + ". For a price of " + guide.getPrice() + "€/h.")
+                                    .putExtra(CalendarContract.Events.EVENT_LOCATION, guide.getLocation())
+                                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+
+                            context.startActivity(intent);
+                        }
+                    })
                             .setNegativeButton("Cancel booking", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 

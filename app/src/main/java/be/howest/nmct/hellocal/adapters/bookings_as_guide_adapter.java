@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.CalendarContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +17,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import be.howest.nmct.hellocal.ChatActivity;
 import be.howest.nmct.hellocal.R;
@@ -107,13 +107,10 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
             holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     //Contact
-
                     Intent intent = new Intent(context, ChatActivity.class);
                     intent.putExtra(Const.EXTRA_DATA, (Serializable) prof);
                     context.startActivity(intent);
-
 
                 }
             });
@@ -123,9 +120,6 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
             holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                             context);
 
@@ -245,6 +239,30 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
 
                 alertDialogBuilder
                         .setCancelable(true)
+                        .setNeutralButton("Save to calander", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Calendar beginTime = Calendar.getInstance();
+                                String year = req.getDate().substring(6,10);
+                                String month = req.getDate().substring(3,5);
+                                String day = req.getDate().substring(0,2);
+
+                                beginTime.set(Integer.parseInt(year),Integer.parseInt(month) -1, Integer.parseInt(day));
+                                Calendar endTime = Calendar.getInstance();
+                                endTime.set(Integer.parseInt(year),Integer.parseInt(month) -1, Integer.parseInt(day));
+                                Intent intent = new Intent(Intent.ACTION_INSERT)
+                                        .setData(CalendarContract.Events.CONTENT_URI)
+                                        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                                        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                                        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
+                                        .putExtra(CalendarContract.Events.TITLE, "Hellocal guide for " + prof.getName())
+                                        .putExtra(CalendarContract.Events.DESCRIPTION, "You are guiding for " + prof.getName() + ". For a price of " + guide.getPrice() + "€/h.")
+                                        .putExtra(CalendarContract.Events.EVENT_LOCATION, guide.getLocation())
+                                        .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+
+                                context.startActivity(intent);
+                            }
+                        })
                         .setPositiveButton("Contact",new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 //contact guide

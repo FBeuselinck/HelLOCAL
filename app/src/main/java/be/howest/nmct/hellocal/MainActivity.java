@@ -110,8 +110,11 @@ public class MainActivity extends AppCompatActivity
     public void ShowNavigationTop() {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         Uri photoUrl = mUser.getPhotoUrl();
-        if(photoUrl != null)
+        if(photoUrl != null){
             Picasso.with(getBaseContext()).load(photoUrl.toString()).into(imageViewNavHead);
+
+        }
+
         textViewNavName.setText(mUser.getDisplayName());
     }
 

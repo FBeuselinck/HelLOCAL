@@ -496,10 +496,6 @@ public class BookingsFragment extends Fragment {
                 ListUserGuides2.clear();
                 ListProfileDetailsGuide.clear();
 
-
-
-
-
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
 
                 List<Object> values = new ArrayList<>(td.values());
