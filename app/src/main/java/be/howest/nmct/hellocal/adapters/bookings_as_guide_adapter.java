@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.FormatException;
 import android.provider.CalendarContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,8 +22,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +48,10 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
     private List<BookingRequests> reqsList;
     private List<ProfileDetails> profile;
     private List<String> keys;
+    private List<AvaiableGuides> ListUserGuides = new ArrayList<>();
+
+    private DatabaseReference mDatabaseReference;
+
 
     Context context;
 
@@ -60,6 +69,9 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
             date = (TextView) view.findViewById(R.id.textViewTime);
             btnConfirm = (Button) view.findViewById(R.id.btnConfirm);
             confirmed = (ImageView) view.findViewById(R.id.imageConfirmed);
+
+            mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
         }
     }
 
@@ -171,6 +183,10 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                                                     };
                                                     myRef.addValueEventListener(postListener);
 
+
+                                                    removeDate(req.getDate(),req.getGuideId());
+
+
                                                 }})
 
 
@@ -200,7 +216,7 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                                             .setCancelable(false)
                                             .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog,int id) {
-                                                    //decline booking
+                                                    //TODO -> decline booking
                                                 }
                                             })
                                             .setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -281,6 +297,197 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
         });
 
     }
+
+    public void removeDate(final String date, final String guideId){
+
+            // get all bookings where userId = guideId
+
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange (DataSnapshot dataSnapshot) {
+
+
+                Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
+                List Keys = new ArrayList(td.keySet());
+
+                List<Object> values = new ArrayList<>(td.values());
+
+                for(int i = 0; i< values.size(); i++){
+
+                    Map<String, Object> ts = (HashMap<String,Object>) values.get(i);
+                    List<Object> list = new ArrayList<>(ts.values());
+
+                    List keys = new ArrayList<>(td.keySet());
+                    String getKey = keys.get(i).toString();
+
+                    String userId = list.get(5).toString();
+                    String dateFrom = list.get(8).toString();
+                    String dateTill = list.get(1).toString();
+
+                    if(userId.equals(guideId)){
+
+                        Date checkDateFrom = new Date();
+                        Date checkDateTill = new Date();
+                        Date checkDate = new Date();
+
+
+                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                        try {
+                             checkDateFrom = format.parse(dateFrom);
+                             checkDateTill = format.parse(dateTill);
+                             checkDate = format.parse(date);
+
+                        } catch (ParseException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+
+
+                        if(checkDate.compareTo(checkDateFrom) >= 0 && checkDate.compareTo(checkDateTill)<=0){
+
+                            String name = list.get(9).toString();
+                            String country = list.get(2).toString();
+                            String location = list.get(4).toString();
+                            String maxPeople = list.get(6).toString();
+                            String price = list.get(0).toString();
+                            String transport = list.get(11).toString();
+                            String photoUri = list.get(3).toString();
+                            Boolean canBeBooked = Boolean.parseBoolean(list.get(7).toString());
+
+                            ArrayList<String> list2 = (ArrayList<String>) list.get(10);
+                            ArrayList<String> type = new ArrayList<>();
+
+                            for (int o = 0; o < list2.size(); o++) {
+                                type.add(list2.get(o).toString());
+                            }
+
+                            AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri, getKey, canBeBooked);
+                            ListUserGuides.add(guide);
+
+                        }
+
+
+
+                    }
+
+                }
+
+                removeDates(date);
+
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        };
+        DatabaseReference myRef = database.getReference("avaiableGuides");
+        myRef.addListenerForSingleValueEvent(postListener);
+
+
+
+    }
+
+
+    public void removeDates(String date){
+
+
+
+        for(int i = 0 ; i<ListUserGuides.size(); i++){
+
+            String dateFrom = ListUserGuides.get(i).getDateFrom();
+            String dateTill = ListUserGuides.get(i).getDateTill();
+
+            Date checkDateFrom = new Date();
+            Date checkDateTill = new Date();
+            Date checkDate = new Date();
+
+
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                checkDateFrom = format.parse(dateFrom);
+                checkDateTill = format.parse(dateTill);
+                checkDate = format.parse(date);
+
+            } catch (ParseException e) {
+            }
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(checkDate);
+            cal.add(Calendar.DATE, -1);
+            Date checkDateTill2 = cal.getTime();
+
+            Calendar cal2 = Calendar.getInstance();
+            cal2.setTime(checkDate);
+            cal2.add(Calendar.DATE, 1);
+            Date checkDateFrom2 = cal.getTime();
+
+            String stringCheckDateFrom2 = "", stringCheckDateTill2 = "";
+
+
+            try {
+                stringCheckDateFrom2 = format.format(checkDateFrom2);
+                stringCheckDateTill2 = format.format(checkDateFrom2);
+
+
+            } catch (Exception e) {
+
+            }
+
+
+            String name = ListUserGuides.get(i).getName();
+            String country = ListUserGuides.get(i).getCountry();
+            String location = ListUserGuides.get(i).getLocation();
+            String maxPeople = ListUserGuides.get(i).getMaxPeople();
+            String price = ListUserGuides.get(i).getPrice();
+            String transport = ListUserGuides.get(i).getTransport();
+            String userId = ListUserGuides.get(i).getUserId();
+            String photoUri = ListUserGuides.get(i).getPhotoUri();
+            String key = ListUserGuides.get(i).getKey();
+            Boolean canBeBooked = ListUserGuides.get(i).getCanBeBooked();
+
+
+            ArrayList<String> list2 = (ArrayList<String>) ListUserGuides.get(i).getType();;
+            ArrayList<String> type = new ArrayList<>();
+
+            for (int o = 0; o < list2.size(); o++) {
+                type.add(list2.get(o).toString());
+            }
+
+            AvaiableGuides guide1 = new AvaiableGuides(name, country, location, dateFrom, stringCheckDateTill2, maxPeople, price, type, transport, userId, photoUri, true);
+            AvaiableGuides guide2 = new AvaiableGuides(name, country, location, stringCheckDateFrom2, dateTill, maxPeople, price, type, transport, userId, photoUri, true);
+
+
+
+
+            mDatabaseReference.child("avaiableGuides").push().setValue(guide1);
+            mDatabaseReference.child("avaiableGuides").push().setValue(guide2);
+
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("canBeBooked", false);
+
+            if(canBeBooked){
+                mDatabaseReference.child("avaiableGuides").child(key).updateChildren(result);
+            }
+
+        }
+    }
+
+
+
+
+
+
+
+//        Toast.makeText(context, date + guideId, Toast.LENGTH_SHORT).show();
+
+
+
+
 
     @Override
     public int getItemCount() {

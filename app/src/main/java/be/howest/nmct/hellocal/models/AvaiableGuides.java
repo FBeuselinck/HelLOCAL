@@ -19,6 +19,8 @@ public class AvaiableGuides {
     public String userId;
     public String photoUri;
     private String Id;
+    public String key;
+    public Boolean canBeBooked;
 
 //    public String combined;
 
@@ -39,6 +41,41 @@ public class AvaiableGuides {
         this.transport=transport;
         this.userId = userId;
         this.photoUri = photoUri;
+//        this.combined=combined;
+    }
+
+    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport,  String userId, String photoUri, boolean canBeBooked){
+        this.name=name;
+        this.country = country;
+        this.location=location;
+        this.dateFrom=dateFrom;
+        this.dateTill=dateTill;
+        this.maxPeople=maxPeople;
+        this.price=price;
+        this.type=type;
+        this.transport=transport;
+        this.userId = userId;
+        this.photoUri = photoUri;
+        this.canBeBooked = canBeBooked;
+//        this.combined=combined;
+    }
+
+
+
+    public AvaiableGuides(String name,String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport,  String userId, String photoUri, String key, Boolean canBeBooked){
+        this.name=name;
+        this.country = country;
+        this.location=location;
+        this.dateFrom=dateFrom;
+        this.dateTill=dateTill;
+        this.maxPeople=maxPeople;
+        this.price=price;
+        this.type=type;
+        this.transport=transport;
+        this.userId = userId;
+        this.photoUri = photoUri;
+        this.key=key;
+        this.canBeBooked = canBeBooked;
 //        this.combined=combined;
     }
 
@@ -156,6 +193,23 @@ public class AvaiableGuides {
 //    public void setCombined(String combined) {
 //        this.combined = combined;
 //    }
+
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public Boolean getCanBeBooked() {
+        return canBeBooked;
+    }
+
+    public void setCanBeBooked(Boolean canBeBooked) {
+        this.canBeBooked = canBeBooked;
+    }
 }
 
 

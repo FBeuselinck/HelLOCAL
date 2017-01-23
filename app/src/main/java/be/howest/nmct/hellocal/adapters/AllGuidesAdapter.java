@@ -51,7 +51,14 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<AllGuidesAdapter.MyV
 
 
     public AllGuidesAdapter(List<AvaiableGuides> guidesList, List<Reviews> reviewsList, List<String> amountsList, Context context) {
-        this.guidesList = guidesList;
+
+        List<AvaiableGuides> listje = new ArrayList<>();
+        for(int i = 0; i< guidesList.size(); i++){
+            if(guidesList.get(i).getCanBeBooked()){
+                listje.add(guidesList.get(i));
+            }
+        }
+        this.guidesList = listje;
         this.reviewsList = reviewsList;
         this.context = context;
         this.amountsList = amountsList;

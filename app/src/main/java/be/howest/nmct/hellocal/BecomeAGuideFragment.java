@@ -360,9 +360,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     }
 
     private void newBooking(String name, String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport,  String userId, String photoUri) {
-        //Creating a movie object with user defined variables
-        AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,userId, photoUri);
-        //referring to movies node and setting the values from movie object to that location
+        AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,userId, photoUri, true);
         mDatabaseReference.child("avaiableGuides").push().setValue(guide);
     }
 

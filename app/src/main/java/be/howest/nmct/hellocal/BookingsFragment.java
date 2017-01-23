@@ -176,6 +176,8 @@ public class BookingsFragment extends Fragment {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                ListUserGuides.clear();
+                ListBookingIds.clear();
 
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
                 List Keys = new ArrayList(td.keySet());
@@ -192,19 +194,20 @@ public class BookingsFragment extends Fragment {
                     if (UidAvailabe.equals(Uid)){
 
 
-                        String name = list.get(8).toString();
+                        String name = list.get(9).toString();
                         String country = list.get(2).toString();
                         String location = list.get(4).toString();
-                        String dateFrom = list.get(7).toString();
+                        String dateFrom = list.get(8).toString();
                         String dateTill = list.get(1).toString();
                         String maxPeople = list.get(6).toString();
                         String price = list.get(0).toString();
-                        String transport = list.get(10).toString();
+                        String transport = list.get(11).toString();
                         String userId = list.get(5).toString();
                         String photoUri = list.get(3).toString();
+                        Boolean canBeBooked = Boolean.parseBoolean(list.get(7).toString());
 
 
-                        ArrayList<String> list2 = (ArrayList<String>) list.get(9);
+                        ArrayList<String> list2 = (ArrayList<String>) list.get(10);
                         ArrayList<String> type = new ArrayList<>();
 
                          for (int o = 0; o<list2.size();o++){
@@ -213,7 +216,7 @@ public class BookingsFragment extends Fragment {
 
 
 
-                        AvaiableGuides guide = new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri);
+                        AvaiableGuides guide =  new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri,canBeBooked);
 
                         ListUserGuides.add(guide);
                         ListBookingIds.add(Keys.get(i).toString());
@@ -637,7 +640,7 @@ public class BookingsFragment extends Fragment {
 
         };
         DatabaseReference myRef = database.getReference("profileDetails");
-        myRef.addValueEventListener(postListener3);
+        myRef.addListenerForSingleValueEvent(postListener3);
 
     }
 
@@ -717,7 +720,7 @@ public class BookingsFragment extends Fragment {
 
         };
         DatabaseReference myRef = database.getReference("profileDetails");
-        myRef.addValueEventListener(postListener5);
+        myRef.addListenerForSingleValueEvent(postListener5);
 
     }
 
@@ -757,18 +760,18 @@ public class BookingsFragment extends Fragment {
 
                             if (checkTrue) {
 
-                                String name = list.get(8).toString();
+                                String name = list.get(9).toString();
                                 String country = list.get(2).toString();
                                 String location = list.get(4).toString();
-                                String dateFrom = list.get(7).toString();
+                                String dateFrom = list.get(8).toString();
                                 String dateTill = list.get(1).toString();
                                 String maxPeople = list.get(6).toString();
                                 String price = list.get(0).toString();
-                                String transport = list.get(10).toString();
+                                String transport = list.get(11).toString();
                                 String userId = list.get(5).toString();
                                 String photoUri = list.get(3).toString();
 
-                                ArrayList<String> list2 = (ArrayList<String>) list.get(9);
+                                ArrayList<String> list2 = (ArrayList<String>) list.get(10);
                                 ArrayList<String> type = new ArrayList<>();
 
                                 for (int o = 0; o < list2.size(); o++) {
@@ -789,7 +792,7 @@ public class BookingsFragment extends Fragment {
 
         };
         DatabaseReference myRef = database.getReference("avaiableGuides");
-        myRef.addValueEventListener(postListener4);
+        myRef.addListenerForSingleValueEvent(postListener4);
 
     }
 
@@ -825,18 +828,18 @@ public class BookingsFragment extends Fragment {
 
                     if (checkTrue) {
 
-                        String name = list.get(8).toString();
+                        String name = list.get(9).toString();
                         String country = list.get(2).toString();
                         String location = list.get(4).toString();
-                        String dateFrom = list.get(7).toString();
+                        String dateFrom = list.get(8).toString();
                         String dateTill = list.get(1).toString();
                         String maxPeople = list.get(6).toString();
                         String price = list.get(0).toString();
-                        String transport = list.get(10).toString();
+                        String transport = list.get(11).toString();
                         String userId = list.get(5).toString();
                         String photoUri = list.get(3).toString();
 
-                        ArrayList<String> list2 = (ArrayList<String>) list.get(9);
+                        ArrayList<String> list2 = (ArrayList<String>) list.get(10);
                         ArrayList<String> type = new ArrayList<>();
 
                         for (int o = 0; o < list2.size(); o++) {
@@ -857,7 +860,7 @@ public class BookingsFragment extends Fragment {
 
         };
         DatabaseReference myRef = database.getReference("avaiableGuides");
-        myRef.addValueEventListener(postListener6);
+        myRef.addListenerForSingleValueEvent(postListener6);
 
     }
 

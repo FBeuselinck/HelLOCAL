@@ -336,7 +336,9 @@ public class InfoActivity extends AppCompatActivity {
         BookingRequests br = new BookingRequests(UserId, mUser.getUid(), false, Date, AvaiableGuidesId);
         DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mDatabaseReference.child("bookingRequests").push().setValue(br);
-        Toast.makeText(this, "Booking Created", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Booking requested", Toast.LENGTH_SHORT).show();
+
+
     }
 
     private void getProfile(){

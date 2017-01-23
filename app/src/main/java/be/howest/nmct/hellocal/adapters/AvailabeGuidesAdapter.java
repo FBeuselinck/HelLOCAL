@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -53,7 +54,13 @@ public class AvailabeGuidesAdapter extends RecyclerView.Adapter<AvailabeGuidesAd
 
 
     public AvailabeGuidesAdapter(List<AvaiableGuides> guidesList, List<String> bookingIds, Context context) {
-        this.guidesList = guidesList;
+        List<AvaiableGuides> listje = new ArrayList<>();
+        for(int i = 0; i< guidesList.size(); i++){
+            if(guidesList.get(i).getCanBeBooked()){
+                listje.add(guidesList.get(i));
+            }
+        }
+        this.guidesList = listje;
         this.bookingIds = bookingIds;
         this.context = context;
     }
@@ -71,10 +78,14 @@ public class AvailabeGuidesAdapter extends RecyclerView.Adapter<AvailabeGuidesAd
     public void onBindViewHolder(MyViewHolder holder, int position) {
         AvaiableGuides guide = guidesList.get(position);
         final String bookingId = bookingIds.get(position);
+
+
+
+
         holder.location.setText(guide.getLocation());
         holder.date.setText("From " + guide.getDateFrom());
-        holder.date2.setText("Till "+ guide.getDateTill());
-        holder.date.setTag(R.id.bookingId, bookingId );
+        holder.date2.setText("Till " + guide.getDateTill());
+        holder.date.setTag(R.id.bookingId, bookingId);
 
 
         holder.btnRemove.setOnClickListener(new View.OnClickListener() {
@@ -89,13 +100,13 @@ public class AvailabeGuidesAdapter extends RecyclerView.Adapter<AvailabeGuidesAd
 
                 alertDialogBuilder
                         .setCancelable(false)
-                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
                                 DatabaseReference myRef = database.getReference("avaiableGuides").child(bookingId);
                                 myRef.removeValue();
                             }
                         })
-                        .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
@@ -108,6 +119,8 @@ public class AvailabeGuidesAdapter extends RecyclerView.Adapter<AvailabeGuidesAd
         });
 
     }
+
+
 
     @Override
     public int getItemCount() {

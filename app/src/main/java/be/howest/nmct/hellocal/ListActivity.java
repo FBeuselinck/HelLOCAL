@@ -175,16 +175,17 @@ public class ListActivity extends AppCompatActivity {
 
                     ag.setId(keys.get(i).toString());
                     ag.country = (String) gd.get(2);
-                    ag.dateFrom = (String) gd.get(7);
+                    ag.dateFrom = (String) gd.get(8);
                     ag.dateTill = (String) gd.get(1);
                     ag.location = (String) gd.get(4);
                     ag.maxPeople = (String) gd.get(6);
-                    ag.name = (String) gd.get(8);
+                    ag.name = (String) gd.get(9);
                     ag.photoUri = (String) gd.get(3);
                     ag.price = (String) gd.get(0);
-                    ag.transport = (String) gd.get(10);
+                    ag.transport = (String) gd.get(11);
                     ag.userId = (String) gd.get(5);
-                    ag.type = (ArrayList<String>) gd.get(9);
+                    ag.type = (ArrayList<String>) gd.get(10);
+                    ag.canBeBooked = (Boolean) gd.get(7);
 
                     mUserids.add(ag.userId);
                     mAvailibleGuides.add(ag);
