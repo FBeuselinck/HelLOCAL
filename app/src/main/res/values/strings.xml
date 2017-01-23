@@ -25,6 +25,7 @@
 
     <string name="signed_out">Signed out</string>
     <string name="log_in">Log in</string>
+    <string name="log_in_android">Google sign in</string>
     <string name="log_out">Log out</string>
 
     <string name="msg_no_user_found">No users found for chat!</string>
