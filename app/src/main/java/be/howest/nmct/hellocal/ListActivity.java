@@ -18,6 +18,9 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -84,6 +87,8 @@ public class ListActivity extends AppCompatActivity {
 
 
     private List<AvaiableGuides> ListAllGuides = new ArrayList<>();
+    private List<Object> mRecyclerViewItems = new ArrayList<>();
+
     private List<Reviews> ListAllReviews = new ArrayList<>();
 
     private List<String> ListAmounts = new ArrayList<>();
@@ -154,6 +159,38 @@ public class ListActivity extends AppCompatActivity {
         shrinkAnim = new ScaleAnimation(1.15f, 0f, 1.15f, 0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
         getAllAvailableBookings();
+
+    }
+
+    private void addNativeExpressAds(){
+
+        List<AvaiableGuides> listje = new ArrayList<>();
+
+        for(int i = 0; i < ListAllGuides.size();i++){
+            if(ListAllGuides.get(i).getCanBeBooked()) {
+                listje.add(ListAllGuides.get(i));
+            }
+        }
+
+        ListAllGuides = listje;
+
+        for(int i = 0; i< ListAllGuides.size(); i++){
+            mRecyclerViewItems.add("test");
+        }
+        for(int i = 0; i< ListAllGuides.size(); i+=2){
+            NativeExpressAdView adView = new NativeExpressAdView(this);
+            adView.setAdSize(new AdSize(360,100));
+            adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+            adView.loadAd(new AdRequest.Builder().build());
+            mRecyclerViewItems.add(i, adView);
+            ArrayList typeTest = new ArrayList();
+            typeTest.add("test");
+            ListAllGuides.add(i,new AvaiableGuides("test","test","test","test","test","test","test",typeTest,"test","test","test", true));
+            ListAmounts.add(i,"0");
+            ListAllReviews.add(i,new Reviews("test",0f,"test","test"));
+        }
+
+        displayInList();
 
     }
 
@@ -335,7 +372,7 @@ public class ListActivity extends AppCompatActivity {
                 }
             }
         }
-        displayInList();
+        addNativeExpressAds();
     }
     private void  getUsersInfo(){
         if(mUserids.size() != 0){
@@ -462,9 +499,11 @@ public class ListActivity extends AppCompatActivity {
 
 
     public void displayInList(){
+
+
         progress.dismiss();
 
-        mAdapter = new AllGuidesAdapter(ListAllGuides,ListAllReviews,ListAmounts,thisActivity);
+        mAdapter = new AllGuidesAdapter(ListAllGuides,ListAllReviews,ListAmounts, mRecyclerViewItems,thisActivity);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
