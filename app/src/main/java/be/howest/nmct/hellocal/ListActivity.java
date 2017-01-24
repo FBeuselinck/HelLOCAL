@@ -178,10 +178,10 @@ public class ListActivity extends AppCompatActivity {
             mRecyclerViewItems.add("test");
         }
         for(int i = 0; i< ListAllGuides.size(); i+=2){
-            NativeExpressAdView adView = new NativeExpressAdView(this);
-            adView.setAdSize(new AdSize(360,100));
+            final NativeExpressAdView adView = new NativeExpressAdView(ListActivity.this);
+//            adView.setAdSize(new AdSize(360,100));
             adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
-            adView.loadAd(new AdRequest.Builder().build());
+//            adView.loadAd(new AdRequest.Builder().build());
             mRecyclerViewItems.add(i, adView);
             ArrayList typeTest = new ArrayList();
             typeTest.add("test");
@@ -189,6 +189,21 @@ public class ListActivity extends AppCompatActivity {
             ListAmounts.add(i,"0");
             ListAllReviews.add(i,new Reviews("test",0f,"test","test"));
         }
+
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                final float density = ListActivity.this.getResources().getDisplayMetrics().density;
+                AdSize size = new AdSize(
+                        (int)(recyclerView.getWidth()/density),100
+                );
+                for(int i = 0; i < mRecyclerViewItems.size(); i+=2){
+                    NativeExpressAdView adViewToSize = (NativeExpressAdView)mRecyclerViewItems.get(i);
+                    adViewToSize.setAdSize(size);
+                    adViewToSize.loadAd(new AdRequest.Builder().build());
+                }
+            }
+        });
 
         displayInList();
 
