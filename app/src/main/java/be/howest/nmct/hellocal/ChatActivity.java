@@ -33,7 +33,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import be.howest.nmct.hellocal.models.Const;
@@ -125,6 +127,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null) {
+            sendNotificationToUser(buddy.getProfileId(), s);
 
             TimeZone timeZone = TimeZone.getTimeZone("UTC");
             Calendar calendar = Calendar.getInstance(timeZone);
@@ -169,6 +172,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
         adp.notifyDataSetChanged();
         txt.setText(null);
+    }
+
+    private void sendNotificationToUser(String user, final String message) {
+        Map notification = new HashMap<>();
+        notification.put("userId", user);
+        notification.put("message", message);
+
+        FirebaseDatabase.getInstance().getReference("notificationRequests").push().setValue(notification);
     }
 
     private void loadConversationList() {
