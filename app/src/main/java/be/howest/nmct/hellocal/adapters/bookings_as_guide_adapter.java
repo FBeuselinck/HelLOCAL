@@ -103,6 +103,7 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
 
 
 
+
         holder.location.setText(guide.getLocation());
         holder.date.setText(req.getDate());
 
@@ -217,6 +218,10 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                                             .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog,int id) {
                                                     //TODO -> decline booking
+                                                    // remove booking + notificatie
+//                                                    mDatabaseReference.child("bookingRequests").child(uid).removeValue();
+
+
                                                 }
                                             })
                                             .setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -478,12 +483,6 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
     }
 
 
-
-
-
-
-
-//        Toast.makeText(context, date + guideId, Toast.LENGTH_SHORT).show();
 
 
 

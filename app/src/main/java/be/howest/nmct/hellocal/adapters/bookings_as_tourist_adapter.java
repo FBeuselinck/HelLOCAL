@@ -13,11 +13,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import be.howest.nmct.hellocal.ChatActivity;
 import be.howest.nmct.hellocal.R;
@@ -39,6 +46,7 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
 
     Context context;
 
+    private DatabaseReference mDatabaseReference;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -53,6 +61,9 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
             date = (TextView) view.findViewById(R.id.textViewTime);
             btnConfirm = (Button) view.findViewById(R.id.btnConfirm);
             confirmed = (ImageView) view.findViewById(R.id.imageConfirmed);
+
+            mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
         }
     }
 
@@ -75,10 +86,11 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
 
 
     @Override
-    public void onBindViewHolder(bookings_as_tourist_adapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(bookings_as_tourist_adapter.MyViewHolder holder, final int position) {
         final AvaiableGuides guide = guidesList.get(position);
         final BookingRequests req = reqsList.get(position);
         final ProfileDetails prof = profile.get(position);
+        final String key = keys.get(position);
 
 
 
@@ -169,6 +181,8 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
                                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     // TODO -> cancel booking
+                                                    // Remove bookingrequest
+                                                    mDatabaseReference.child("bookingRequests").child(key).removeValue();
                                                 }
                                             })
                                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -226,7 +240,7 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
                             context.startActivity(intent);
                         }
                     })
-                            .setNegativeButton("Cancel booking", new DialogInterface.OnClickListener() {
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
                                     dialog.cancel();
@@ -245,6 +259,8 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
         });
 
     }
+
+
 
     @Override
     public int getItemCount() {
