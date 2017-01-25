@@ -44,12 +44,12 @@ import be.howest.nmct.hellocal.models.ProfileDetails;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BecomeAGuideFragment extends Fragment implements View.OnClickListener  {
+public class BecomeAGuideFragment extends Fragment implements View.OnClickListener {
 
 
     private DatabaseReference mDatabaseReference;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-//    private EditText EditTextLocation;
+    //    private EditText EditTextLocation;
     private Spinner SpinnerCountry;
     private EditText EditTextFrom;
     private EditText EditTextTill;
@@ -69,7 +69,6 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     String stringUserId, mHomeTown;
 
 
-
     Calendar myCalendar = Calendar.getInstance();
 
     private GoogleApiClient mGoogleApiClient;
@@ -79,8 +78,6 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     private AutoCompleteTextView myLocation;
 
     FirebaseUser mUser;
-
-
 
 
     public BecomeAGuideFragment() {
@@ -128,10 +125,7 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
             }
 
 
-
-
         };
-
 
 
         final DatePickerDialog.OnDateSetListener date2 = new DatePickerDialog.OnDateSetListener() {
@@ -178,16 +172,14 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
                 .build();
 
 
-
         myLocation = (AutoCompleteTextView) v.findViewById(R.id.myLocation2);
         mPlacesAdapter = new PlacesAutoCompleteAdapter(getContext(), android.R.layout.simple_list_item_1,
-                mGoogleApiClient,null, null);
+                mGoogleApiClient, null, null);
         myLocation.setOnItemClickListener(mAutocompleteClickListener);
         myLocation.setAdapter(mPlacesAdapter);
 
 
         showHomeTown();
-
 
 
         return v;
@@ -237,7 +229,6 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         super.onDestroyView();
 
 
-
         mGoogleApiClient.disconnect();
 
     }
@@ -256,111 +247,144 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
     }
 
 
-    public void showHomeTown(){
+    public void showHomeTown() {
 
-            mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
 
-            if(mUser != null) {
+        if (mUser != null) {
 
-                stringUserId = mUser.getUid();
+            stringUserId = mUser.getUid();
 
-                ValueEventListener postListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+                    ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
 
-                        if(profileDetails != null){
+                    if (profileDetails != null) {
 
-                            mHomeTown = "";
+                        mHomeTown = "";
 
-                            mHomeTown = profileDetails.getHomeTown();
-                            myLocation.setText(mHomeTown);
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        mHomeTown = profileDetails.getHomeTown();
+                        myLocation.setText(mHomeTown);
 
                     }
-                };
+                }
 
-                DatabaseReference myRef = database.getReference("profileDetails").child(stringUserId);
-                myRef.addListenerForSingleValueEvent(postListener);
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+
+            DatabaseReference myRef = database.getReference("profileDetails").child(stringUserId);
+            myRef.addListenerForSingleValueEvent(postListener);
+        }
 
     }
 
+    private ArrayList<String> getSelectedTypes() {
+        ArrayList<String> types = new ArrayList<>();
+
+        if (chkActive.isChecked()) types.add(("Active"));
+        if (chkCity.isChecked()) types.add("City");
+        if (chkCulture.isChecked()) types.add("Culture");
+        if (chkElse.isChecked()) types.add("Else");
+
+        return types;
+    }
+
+    private void showToast(String messsage) {
+        Toast.makeText(getContext(), messsage, Toast.LENGTH_SHORT).show();
+    }
+
+    private Boolean checkForm() {
+        if (isEmpty(EditTextLocation)) {
+            showToast("Please enter a valid location!");
+            return true;
+        }
+        if (isEmpty(EditTextPrice)) {
+            showToast("Please enter a valid Price!");
+            return true;
+        }
+        if (isEmpty(EditTextFrom)) {
+            showToast("Please enter a valid start date!");
+            return true;
+        }
+        if (isEmpty(EditTextTill)) {
+            showToast("Please enter a valid end date!");
+            return true;
+        }
+
+
+        return false;
+    }
+
+
+    private void SaveBooking() {
+        if (checkForm()) return;
+
+        ArrayList<String> types = getSelectedTypes();
+        if (types.size() == 0) {
+            showToast("Please select one type");
+            return;
+        }
+
+        if (mUser.getPhotoUrl() == null) {
+            showToast("Please add a profile picture to your account!");
+            return;
+        }
+        if (mUser.getDisplayName() == null || mUser.getDisplayName() == "") {
+            showToast("Please add a new nickname to your account!");
+            return;
+        }
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+                if (profileDetails == null) {
+                    showToast("Please update your profile!");
+                    return;
+                }
+                if (profileDetails.getLanguage().size() == 0) {
+                    showToast("Please add a language to your account!");
+                    return;
+                }
+                if (profileDetails.getDescription() == null || profileDetails.getDescription() == "") {
+                    showToast("Please add a description to your account!");
+                    return;
+                }
+
+                newBooking(mUser.getDisplayName(), SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString(), EditTextFrom.getText().toString(),
+                        EditTextTill.getText().toString().trim(), spinnerPeople.getSelectedItem().toString(), EditTextPrice.getText().toString().trim(),
+                        getSelectedTypes(), spinnerTransport.getSelectedItem().toString(), mUser.getUid(), mUser.getPhotoUrl().toString());
+
+                showToast("The booking is added");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                showToast("Error finding your profile details, restart the app");
+            }
+        };
+        DatabaseReference myRef = database.getReference("profileDetails").child(mUser.getUid());
+        myRef.addListenerForSingleValueEvent(postListener);
+
+    }
 
 
     @Override
     public void onClick(View view) {
-        Boolean check;
-        if(chkActive.isChecked()|| chkCity.isChecked()|| chkCulture.isChecked() || chkElse.isChecked()) check= true;
-        else check = false;
-
-        switch(view.getId()){
+        switch (view.getId()) {
             case R.id.btnSave:
-                if((!isEmpty(EditTextLocation)) && !isEmpty(EditTextFrom) && !isEmpty(EditTextTill)&& !isEmpty(EditTextPrice) && check){
-
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
-
-                        final String uid = user.getUid();
-                        final String Naam = user.getDisplayName();
-
-                        final ArrayList<String> type = new ArrayList<String>();
-                        if(chkActive.isChecked()){
-                            type.add("Active");
-                        }
-                        if(chkCity.isChecked()){
-                            type.add("City");
-                        }
-                        if(chkCulture.isChecked()){
-                            type.add("Culture");
-                        }
-                        if(chkElse.isChecked()){
-                            type.add("Else");
-                        }
-
-                        final String photoUri = user.getPhotoUrl().toString();
-
-
-                if(!photoUri.isEmpty()){
-
-                    newBooking(Naam, SpinnerCountry.getSelectedItem().toString(), EditTextLocation.getText().toString(),EditTextFrom.getText().toString(),
-                            EditTextTill.getText().toString().trim(),spinnerPeople.getSelectedItem().toString(),EditTextPrice.getText().toString().trim(),
-                            type,spinnerTransport.getSelectedItem().toString(),uid,photoUri);
-
-                    Toast.makeText(getContext(),"The booking is added!", Toast.LENGTH_SHORT).show();
-
-                }else{
-                    Toast.makeText(getContext(),"Please update your profile first!", Toast.LENGTH_SHORT).show();
-                }
-
-
-                    }
-
-
-                }else{
-                    if(isEmpty(EditTextLocation)){
-                        Toast.makeText(getContext(), "Please enter a valid location!", Toast.LENGTH_SHORT).show();
-                    }else if(isEmpty(EditTextFrom)){
-                        Toast.makeText(getContext(), "Please enter a valid startdate", Toast.LENGTH_SHORT).show();
-                    }else if(isEmpty(EditTextTill)){
-                        Toast.makeText(getContext(), "Please enter a valid endDate", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (isEmpty(EditTextPrice)) Toast.makeText(getContext(), "Please enter a valid price", Toast.LENGTH_SHORT).show();
-                    else if(!check) Toast.makeText(getContext(), "Please select one type", Toast.LENGTH_SHORT).show();
-                }
-                //to remove current fragment
-
+                SaveBooking();
         }
     }
 
-    private void newBooking(String name, String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport,  String userId, String photoUri) {
-        AvaiableGuides guide = new AvaiableGuides(name, country ,location,dateFrom,dateTill,maxPeople,price,type,transport,userId, photoUri, true);
+    private void newBooking(String name, String country, String location, String dateFrom, String dateTill, String maxPeople, String price, ArrayList<String> type, String transport, String userId, String photoUri) {
+        AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri, true);
         mDatabaseReference.child("avaiableGuides").push().setValue(guide);
     }
 
@@ -388,9 +412,6 @@ public class BecomeAGuideFragment extends Fragment implements View.OnClickListen
         EditTextTill.setText(sdf.format(myCalendar.getTime()));
 
     }
-
-
-
 
 
 }

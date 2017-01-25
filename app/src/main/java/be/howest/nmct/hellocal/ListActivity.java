@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -164,13 +167,25 @@ public class ListActivity extends AppCompatActivity {
 
     private void addNativeExpressAds(){
 
+        String uid = "";
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+
+            uid = user.getUid();
+        }
+
         List<AvaiableGuides> listje = new ArrayList<>();
 
         for(int i = 0; i < ListAllGuides.size();i++){
             if(ListAllGuides.get(i).getCanBeBooked()) {
-                listje.add(ListAllGuides.get(i));
+                if(!ListAllGuides.get(i).getUserId().equals(uid)){
+                    listje.add(ListAllGuides.get(i));
+                }
             }
         }
+
+
 
         ListAllGuides = listje;
 
@@ -223,7 +238,6 @@ public class ListActivity extends AppCompatActivity {
                     AvaiableGuides ag = new AvaiableGuides();
                     Map<String, Object> ts = (HashMap<String,Object>) lst.get(i);
                     List<Object> gd = new ArrayList<>(ts.values());
-
 
                     ag.setId(keys.get(i).toString());
                     ag.country = (String) gd.get(2);
