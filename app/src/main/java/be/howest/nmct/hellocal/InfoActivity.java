@@ -27,7 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import be.howest.nmct.hellocal.models.BookingRequests;
 import be.howest.nmct.hellocal.models.Const;
@@ -338,11 +340,11 @@ public class InfoActivity extends AppCompatActivity {
         mDatabaseReference.child("bookingRequests").push().setValue(br);
         Toast.makeText(this, "Booking requested", Toast.LENGTH_SHORT).show();
 
-        // TODO -> FREEK: Hier een notificatie naar de gids die geboekt wordt
-        // TODO -> UserId is het id van de user waarnaartoe de notificatie moet verzonden worden (gids)
-        // TODO -> Met als boodschap: You have a new bookingrequest! (Ofsoiets)
-        // TODO -> Onclick -> Bookingsfragment
+        Map notification = new HashMap<>();
+        notification.put("userId", UserId);
+        notification.put("message", "You have a new bookingrequest!");
 
+        FirebaseDatabase.getInstance().getReference("notificationRequests").push().setValue(notification);
     }
 
     private void getProfile(){
