@@ -187,13 +187,8 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
 
                                                     removeDate(req.getDate(),req.getGuideId());
 
-
-                                                    // TODO -> FREEK Hier een notificatie naar de user die de booking heeft aangevraagd
-                                                    // TODO -> req.getRequestUserId() geeft het id van die user terug
-                                                    // TODO -> req.getDate() geeft de datum weer van de boeking
-                                                    // TODO -> Boodschap: "Your booking on [date] has been accepted. Check the details on your bookings page"
-                                                    // TODO -> (Of iets in die aard)
-                                                    // TODO -> Onclick -> sturen naar de bookings page (Bookingsfragment)
+                                                    String message = "Your booking on " + req.getDate() + " has been accepted. Check the details on your bookings page.";
+                                                    sendNotificationToUser(req.getRequestUserId(), message);
 
                                                 }})
 
@@ -228,11 +223,9 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                                                     // remove booking + notificatie
 //                                                    mDatabaseReference.child("bookingRequests").child(uid).removeValue();
 
-                                                    // TODO -> FREEK Hier een notificatie naar de user die de booking heeft aangevraagd
-                                                    // TODO -> req.getRequestUserId() geeft het id van die user terug
-                                                    // TODO -> Boodschap: "Your booking has been declined. Please consider making a new one bla bla bla"
-                                                    // TODO -> (Of iets in die aard)
-                                                    // TODO -> Onclick -> sturen naar de homepage (SearchFragment)
+
+                                                    String message = "Your booking has been declined";
+                                                    sendNotificationToUser(req.getRequestUserId(), message);
 
 
                                                 }
@@ -499,10 +492,13 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
     }
 
 
+    private void sendNotificationToUser(String receiverId, String message) {
+        Map notification = new HashMap<>();
+        notification.put("userId", receiverId);
+        notification.put("message", message);
 
-
-
-
+        FirebaseDatabase.getInstance().getReference("notificationRequests").push().setValue(notification);
+    }
 
     @Override
     public int getItemCount() {
