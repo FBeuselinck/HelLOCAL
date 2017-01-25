@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -102,10 +103,16 @@ public class MainActivity extends AppCompatActivity
                 }
                 else{
                     ShowNavigationTop();
+                    SubscribeforNotifications();
                 }
             }
         };
 
+    }
+
+    public void SubscribeforNotifications(){
+        //subscribe to topic for user specific notifications
+        FirebaseMessaging.getInstance().subscribeToTopic("user_"+mUser.getUid());
     }
 
     public void ShowNavigationTop() {
