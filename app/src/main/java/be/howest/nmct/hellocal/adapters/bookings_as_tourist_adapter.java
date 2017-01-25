@@ -180,9 +180,7 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
                                             .setCancelable(false)
                                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
-                                                    // TODO -> cancel booking
-                                                    // Remove bookingrequest
-                                                    mDatabaseReference.child("bookingRequests").child(key).removeValue();
+                                                mDatabaseReference.child("bookingRequests").child(key).removeValue();
                                                 }
                                             })
                                             .setNegativeButton("No", new DialogInterface.OnClickListener() {

@@ -188,6 +188,13 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                                                     removeDate(req.getDate(),req.getGuideId());
 
 
+                                                    // TODO -> FREEK Hier een notificatie naar de user die de booking heeft aangevraagd
+                                                    // TODO -> req.getRequestUserId() geeft het id van die user terug
+                                                    // TODO -> req.getDate() geeft de datum weer van de boeking
+                                                    // TODO -> Boodschap: "Your booking on [date] has been accepted. Check the details on your bookings page"
+                                                    // TODO -> (Of iets in die aard)
+                                                    // TODO -> Onclick -> sturen naar de bookings page (Bookingsfragment)
+
                                                 }})
 
 
@@ -220,6 +227,12 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                                                     //TODO -> decline booking
                                                     // remove booking + notificatie
 //                                                    mDatabaseReference.child("bookingRequests").child(uid).removeValue();
+
+                                                    // TODO -> FREEK Hier een notificatie naar de user die de booking heeft aangevraagd
+                                                    // TODO -> req.getRequestUserId() geeft het id van die user terug
+                                                    // TODO -> Boodschap: "Your booking has been declined. Please consider making a new one bla bla bla"
+                                                    // TODO -> (Of iets in die aard)
+                                                    // TODO -> Onclick -> sturen naar de homepage (SearchFragment)
 
 
                                                 }
@@ -286,8 +299,9 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
                         })
                         .setPositiveButton("Contact",new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
-                                //contact guide
-                            }
+                                Intent intent = new Intent(context, ChatActivity.class);
+                                intent.putExtra(Const.EXTRA_DATA, (Serializable) prof);
+                                context.startActivity(intent);                            }
                         })
                         .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
