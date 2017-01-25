@@ -436,7 +436,7 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
 
             try {
                 stringCheckDateFrom2 = format.format(checkDateFrom2);
-                stringCheckDateTill2 = format.format(checkDateFrom2);
+                stringCheckDateTill2 = format.format(checkDateTill2);
 
 
             } catch (Exception e) {
@@ -478,6 +478,8 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
             if(canBeBooked){
                 mDatabaseReference.child("avaiableGuides").child(key).updateChildren(result);
             }
+
+
 
         }
     }
