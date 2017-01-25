@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,6 +77,8 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
 
     FirebaseUser mUser;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    FirebaseAuth.AuthStateListener mAuthListener;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     Calendar myCalendar = Calendar.getInstance();
 
@@ -127,6 +131,8 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
         homeTown.setAdapter(mPlacesAdapter);
 
         mProfileDetails = new ProfileDetails();
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+
 
         showDetails();
 
@@ -164,6 +170,24 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
         });
 
 
+        //authState listener
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                mUser = firebaseAuth.getCurrentUser();
+                if (mUser != null) {
+                    // User is signed in
+                    showDetails();
+                    Log.d("ArnoDev", "AuthStateChanged");
+                } else {
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            }
+        };
+
+
+
         return view;
     }
 
@@ -199,12 +223,14 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
+        mAuth.removeAuthStateListener(mAuthListener);
     }
 
 
@@ -291,10 +317,6 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
     public void showDetails()
     {
         getDataFromSharedPreference();
-
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-
 
         if(mUser != null) {
 
@@ -430,6 +452,8 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
             mDatabase.child("profileDetails").child(profileDetails.getProfileId()).setValue(profileDetails);
             saveDataToSharedPreference();
             Toast.makeText(getContext(), "Changes made", Toast.LENGTH_SHORT).show();
+
+
         }
         else Toast.makeText(getContext(), "You need to change something", Toast.LENGTH_SHORT).show();
 
@@ -439,4 +463,9 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         editTextBirthDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
     }
+
+    public void setImageViewProfilePic(String path){
+        Picasso.with(getContext()).load(new File(path)).into(imageViewProfilePic);
+    }
+
 }

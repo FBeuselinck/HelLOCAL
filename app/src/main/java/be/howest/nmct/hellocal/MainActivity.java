@@ -1,8 +1,11 @@
 package be.howest.nmct.hellocal;
 
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -11,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +32,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import be.howest.nmct.hellocal.helpers.FileSystemHelper;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, InfoFragment.OnFragmentInteractionListener {
 
@@ -42,9 +50,8 @@ public class MainActivity extends AppCompatActivity
     FirebaseStorage storage = FirebaseStorage.getInstance();
     private ProfileFragment mprofileFramgnet;
 
-    private ImageView imageViewNavHead;
+    private ImageView imageViewNavHead, imageViewProfile_ProfilePicture;
     private TextView textViewNavName;
-
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +72,6 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setElevation(0);
 
 
-
-
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -76,8 +81,9 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View hView =  navigationView.getHeaderView(0);
+        View hView = navigationView.getHeaderView(0);
         imageViewNavHead = (ImageView) hView.findViewById(R.id.imageView_Nav);
+        imageViewProfile_ProfilePicture = (ImageView) mprofileFramgnet.imageViewProfilePic;
         textViewNavName = (TextView) hView.findViewById(R.id.textview_Nav_Name);
 
         textViewNavName.setOnClickListener(new View.OnClickListener() {
@@ -99,8 +105,7 @@ public class MainActivity extends AppCompatActivity
                 FirebaseUser mUser = firebaseAuth.getCurrentUser();
                 if (mUser == null) {
                     GotoLogin();
-                }
-                else{
+                } else {
                     ShowNavigationTop();
                 }
             }
@@ -111,7 +116,7 @@ public class MainActivity extends AppCompatActivity
     public void ShowNavigationTop() {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         Uri photoUrl = mUser.getPhotoUrl();
-        if(photoUrl != null){
+        if (photoUrl != null) {
             Picasso.with(getBaseContext()).load(photoUrl.toString()).into(imageViewNavHead);
 
         }
@@ -210,8 +215,7 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
             setTitle("Profile");
 
-        }
-        else if(id == R.id.nav_logOut){
+        } else if (id == R.id.nav_logOut) {
             SignOut();
         }
 
@@ -219,8 +223,8 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    private void SignOut()
-    {
+
+    private void SignOut() {
         mAuth.signOut();
     }
 
@@ -232,19 +236,44 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        UploadProfileImage(data.getData());
+        try{
+            UploadProfileImage(data.getData());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    private void  UploadProfileImage (Uri uri)
-    {
+    private void UploadProfileImage(Uri uri) throws IOException {
         StorageReference storageRef = storage.getReferenceFromUrl("gs://hellocal-c2e9f.appspot.com");
 
 
-
-        StorageReference riversRef = storageRef.child("Profile_Pictures/"+ mUser.getUid());
+        StorageReference riversRef = storageRef.child("Profile_Pictures/" + mUser.getUid());
         UploadTask uploadTask = riversRef.putFile(uri);
 
-// Register observers to listen for when the download is done or if it fails
+
+        Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+        //save file local
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // Create imageDir
+        File mypath=new File(this.getApplicationContext().getFilesDir(), FileSystemHelper.ProfilePicture);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -256,26 +285,30 @@ public class MainActivity extends AppCompatActivity
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 String sUri = taskSnapshot.getDownloadUrl().toString();
                 UpdateProfileUri(sUri);
+            }
+
+            private void UpdateProfileUri(String uri) {
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setPhotoUri(Uri.parse(uri))
+                        .build();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                user.updateProfile(profileUpdates)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    changeProfilePictureImageViews();
+                                }
+                            }
+                        });
+            }
+        });
     }
 
-    private void UpdateProfileUri(String uri)
-    {
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(Uri.parse(uri))
-                .build();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        user.updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            mAuthListener.onAuthStateChanged(mAuth);
-                            mprofileFramgnet.showDetails();
-                        }
-                    }
-                });
-    }
-        });
+    private void changeProfilePictureImageViews(){
+        String path = this.getApplicationContext().getFilesDir().getPath() + "/" +FileSystemHelper.ProfilePicture;
+        Picasso.with(this.getBaseContext()).load(new File(path)).into(imageViewNavHead);
+        mprofileFramgnet.setImageViewProfilePic(path);
     }
 
     @Override
