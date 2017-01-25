@@ -127,7 +127,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null) {
-            sendNotificationToUser(buddy.getProfileId(), s);
+            sendNotificationToUser(buddy.getProfileId(), user.getDisplayName());
 
             TimeZone timeZone = TimeZone.getTimeZone("UTC");
             Calendar calendar = Calendar.getInstance(timeZone);
@@ -174,10 +174,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         txt.setText(null);
     }
 
-    private void sendNotificationToUser(String user, final String message) {
+    private void sendNotificationToUser(String receiverId, String senderName) {
         Map notification = new HashMap<>();
-        notification.put("userId", user);
-        notification.put("message", message);
+        notification.put("userId", receiverId);
+        notification.put("message", "New message from " + senderName);
 
         FirebaseDatabase.getInstance().getReference("notificationRequests").push().setValue(notification);
     }
