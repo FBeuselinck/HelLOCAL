@@ -227,7 +227,7 @@ public class BookingsFragment extends Fragment {
 
                 displayInList("first");
 
-                sqliteSave();
+//                sqliteSave();
 
 
             }

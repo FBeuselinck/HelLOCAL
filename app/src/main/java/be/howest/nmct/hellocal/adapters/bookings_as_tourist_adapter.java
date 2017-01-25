@@ -262,7 +262,7 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
 
     @Override
     public int getItemCount() {
-        return guidesList.size();
+        return reqsList.size();
     }
 
 

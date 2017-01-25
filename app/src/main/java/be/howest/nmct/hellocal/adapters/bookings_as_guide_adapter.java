@@ -506,6 +506,6 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
 
     @Override
     public int getItemCount() {
-        return guidesList.size();
+        return reqsList.size();
     }
 }
