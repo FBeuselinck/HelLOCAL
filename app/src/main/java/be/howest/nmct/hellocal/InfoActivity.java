@@ -338,6 +338,10 @@ public class InfoActivity extends AppCompatActivity {
         mDatabaseReference.child("bookingRequests").push().setValue(br);
         Toast.makeText(this, "Booking requested", Toast.LENGTH_SHORT).show();
 
+        // TODO -> FREEK: Hier een notificatie naar de gids die geboekt wordt
+        // TODO -> UserId is het id van de user waarnaartoe de notificatie moet verzonden worden (gids)
+        // TODO -> Met als boodschap: You have a new bookingrequest! (Ofsoiets)
+        // TODO -> Onclick -> Bookingsfragment
 
     }
 

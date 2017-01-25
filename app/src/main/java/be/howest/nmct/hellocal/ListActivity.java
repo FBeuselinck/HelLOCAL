@@ -176,18 +176,22 @@ public class ListActivity extends AppCompatActivity {
         }
 
         List<AvaiableGuides> listje = new ArrayList<>();
+        List<Reviews> listjeReviews = new ArrayList<>();
+        List<String> listjeAmount = new ArrayList<>();
 
         for(int i = 0; i < ListAllGuides.size();i++){
             if(ListAllGuides.get(i).getCanBeBooked()) {
                 if(!ListAllGuides.get(i).getUserId().equals(uid)){
                     listje.add(ListAllGuides.get(i));
+                    listjeReviews.add(ListAllReviews.get(i));
+                    listjeAmount.add(ListAmounts.get(i));
                 }
             }
         }
 
-
-
         ListAllGuides = listje;
+        ListAllReviews = listjeReviews;
+        ListAmounts = listjeAmount;
 
         for(int i = 0; i< ListAllGuides.size(); i++){
             mRecyclerViewItems.add("test");
