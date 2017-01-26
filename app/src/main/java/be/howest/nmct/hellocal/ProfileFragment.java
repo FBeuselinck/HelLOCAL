@@ -270,6 +270,9 @@ public class ProfileFragment extends Fragment implements MultiSelectionSpinner.O
     private void getDataFromSharedPreference(){
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
 
+        if(mUser.getUid() != sharedPref.getString("id","")) return;
+
+
         mProfileDetails.setAvailable(sharedPref.getBoolean("availible", false));
         mProfileDetails.setDescription(sharedPref.getString("description", ""));
         mProfileDetails.setHomeTown(sharedPref.getString("hometown", ""));
