@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     FirebaseUser mUser;
     FirebaseStorage storage = FirebaseStorage.getInstance();
-    private ProfileFragment mprofileFramgnet;
+    private ProfileFragment mprofileFragment;
 
     private ImageView imageViewNavHead, imageViewProfile_ProfilePicture;
     private TextView textViewNavName;
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
         setTitle("Search");
 
-        mprofileFramgnet = new ProfileFragment();
+        mprofileFragment = new ProfileFragment();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,14 +84,14 @@ public class MainActivity extends AppCompatActivity
 
         View hView = navigationView.getHeaderView(0);
         imageViewNavHead = (ImageView) hView.findViewById(R.id.imageView_Nav);
-        imageViewProfile_ProfilePicture = (ImageView) mprofileFramgnet.imageViewProfilePic;
+        imageViewProfile_ProfilePicture = (ImageView) mprofileFragment.imageViewProfilePic;
         textViewNavName = (TextView) hView.findViewById(R.id.textview_Nav_Name);
 
         textViewNavName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragmentContainer, mprofileFramgnet);
+                fragmentTransaction.replace(R.id.fragmentContainer, mprofileFragment);
                 fragmentTransaction.commit();
                 setTitle("Profile");
                 drawer.closeDrawers();
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_Profile) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragmentContainer, mprofileFramgnet);
+            fragmentTransaction.replace(R.id.fragmentContainer, mprofileFragment);
             fragmentTransaction.commit();
             setTitle("Profile");
 
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void SignOut() {
-        mAuth.signOut();
+        FirebaseAuth.getInstance().signOut();
     }
 
     @Override
@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity
     private void changeProfilePictureImageViews(){
         String path = this.getApplicationContext().getFilesDir().getPath() + "/" +FileSystemHelper.ProfilePicture;
         Picasso.with(this.getBaseContext()).load(new File(path)).into(imageViewNavHead);
-        mprofileFramgnet.setImageViewProfilePic(path);
+        mprofileFragment.setImageViewProfilePic(path);
     }
 
     @Override
