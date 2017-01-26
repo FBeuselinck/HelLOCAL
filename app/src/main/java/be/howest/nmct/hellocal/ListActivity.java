@@ -194,7 +194,7 @@ public class ListActivity extends AppCompatActivity {
         for(int i = 0; i< ListAllGuides.size(); i++){
             mRecyclerViewItems.add("test");
         }
-        for(int i = 0; i< ListAllGuides.size(); i+=2){
+        for(int i = 0; i< ListAllGuides.size(); i+=4){
             final NativeExpressAdView adView = new NativeExpressAdView(ListActivity.this);
 //            adView.setAdSize(new AdSize(360,100));
             adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
@@ -214,7 +214,7 @@ public class ListActivity extends AppCompatActivity {
                 AdSize size = new AdSize(
                         (int)(recyclerView.getWidth()/density),100
                 );
-                for(int i = 0; i < mRecyclerViewItems.size(); i+=2){
+                for(int i = 0; i < mRecyclerViewItems.size(); i+=4){
                     NativeExpressAdView adViewToSize = (NativeExpressAdView)mRecyclerViewItems.get(i);
                     adViewToSize.setAdSize(size);
                     adViewToSize.loadAd(new AdRequest.Builder().build());
