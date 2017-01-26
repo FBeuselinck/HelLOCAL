@@ -2,26 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_rating"
+        android:id="@+id/action_Sign_Out"
         android:orderInCategory="100"
-        android:title="Order by Rating"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_name"
-        android:orderInCategory="100"
-        android:title="Order by Name"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_price_low"
-        android:orderInCategory="100"
-        android:title="Order by Price "
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_price_high"
-        android:orderInCategory="100"
-        android:title="Order by Price"
+        android:title="Sign Out"
         app:showAsAction="never" />
 </menu>

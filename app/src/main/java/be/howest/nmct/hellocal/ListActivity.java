@@ -79,9 +79,6 @@ public class ListActivity extends AppCompatActivity {
 
     private static final String NO_PREF = "No preference";
 
-
-//    private String Combined;
-
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabaseReference = database.getReference();
 
@@ -108,9 +105,6 @@ public class ListActivity extends AppCompatActivity {
 
 
     static Activity thisActivity = null;
-
-    // TODO -> 1. Get all review scores | 2. If review GuideId equals userId in availabeGuides -> save score
-    // TODO -> 3. Take the average and add it to ratingbar.
 
 
 
@@ -169,6 +163,7 @@ public class ListActivity extends AppCompatActivity {
 
         String uid = "";
 
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
 
@@ -182,12 +177,15 @@ public class ListActivity extends AppCompatActivity {
         for(int i = 0; i < ListAllGuides.size();i++){
             if(ListAllGuides.get(i).getCanBeBooked()) {
                 if(!ListAllGuides.get(i).getUserId().equals(uid)){
+
                     listje.add(ListAllGuides.get(i));
                     listjeReviews.add(ListAllReviews.get(i));
                     listjeAmount.add(ListAmounts.get(i));
                 }
             }
         }
+
+
 
         ListAllGuides = listje;
         ListAllReviews = listjeReviews;

@@ -54,13 +54,8 @@ public class AvailabeGuidesAdapter extends RecyclerView.Adapter<AvailabeGuidesAd
 
 
     public AvailabeGuidesAdapter(List<AvaiableGuides> guidesList, List<String> bookingIds, Context context) {
-        List<AvaiableGuides> listje = new ArrayList<>();
-        for(int i = 0; i< guidesList.size(); i++){
-            if(guidesList.get(i).getCanBeBooked()){
-                listje.add(guidesList.get(i));
-            }
-        }
-        this.guidesList = listje;
+
+        this.guidesList = guidesList;
         this.bookingIds = bookingIds;
         this.context = context;
     }

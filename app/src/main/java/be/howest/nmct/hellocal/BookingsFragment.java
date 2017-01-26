@@ -28,7 +28,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +91,10 @@ public class BookingsFragment extends Fragment {
     private Button btnRemove;
 
     static Activity thisActivity = null;
+
+    private Date today = new Date();
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
 
 
 
@@ -214,12 +221,28 @@ public class BookingsFragment extends Fragment {
                              type.add(list2.get(o).toString());
                            }
 
+                        format.format(today);
+
+                        Date checkDateTill = new Date();
+
+                        try {
+                            checkDateTill = format.parse(dateTill);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+
+                        }
 
 
-                        AvaiableGuides guide =  new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri,canBeBooked);
+                        if(checkDateTill.after(today)  ){
 
-                        ListUserGuides.add(guide);
-                        ListBookingIds.add(Keys.get(i).toString());
+                            AvaiableGuides guide =  new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri,canBeBooked);
+
+                            ListUserGuides.add(guide);
+                            ListBookingIds.add(Keys.get(i).toString());
+
+                        }
+
+
 
                     }
 
@@ -523,12 +546,30 @@ public class BookingsFragment extends Fragment {
                         String guideId = list.get(3).toString();
                         String availableGuideAdapterId = list.get(4).toString();
 
-                        BookingRequests req = new BookingRequests(guideId,requestId,confirmed,date,availableGuideAdapterId);
+                        format.format(today);
 
-                        ListBookingRequests.add(req);
-                        ListAvailableGuidesIds.add(availableGuideAdapterId);
-                        ListRequestUserIds.add(requestId);
-                        ListKeys1.add(keys.get(i).toString());
+
+                        Date checkDateTill = new Date();
+
+                        try {
+                            checkDateTill = format.parse(date);
+                        } catch (ParseException e) {
+                        }
+
+
+                        if(checkDateTill.after(today)  ){
+
+                            BookingRequests req = new BookingRequests(guideId,requestId,confirmed,date,availableGuideAdapterId);
+
+                            ListBookingRequests.add(req);
+                            ListAvailableGuidesIds.add(availableGuideAdapterId);
+                            ListRequestUserIds.add(requestId);
+                            ListKeys1.add(keys.get(i).toString());
+
+                        }
+
+
+
 
                     }else if(Uid.equals(UidRequest)){
 
@@ -538,12 +579,31 @@ public class BookingsFragment extends Fragment {
                         String guideId = list.get(3).toString();
                         String availableGuideAdapterId = list.get(4).toString();
 
-                        BookingRequests req = new BookingRequests(guideId,requestId,confirmed,date,availableGuideAdapterId);
+                        format.format(today);
 
-                        ListBookingRequestsTourist.add(req);
-                        ListAvailableGuidesIds2.add(availableGuideAdapterId);
-                        ListGuideUserIds.add(guideId);
-                        ListKeys2.add(keys.get(i).toString());
+
+                        Date checkDateTill = new Date();
+
+                        try {
+                            checkDateTill = format.parse(date);
+                        } catch (ParseException e) {
+                        }
+
+
+                        if(checkDateTill.after(today)  ){
+
+                            BookingRequests req = new BookingRequests(guideId,requestId,confirmed,date,availableGuideAdapterId);
+
+                            ListBookingRequestsTourist.add(req);
+                            ListAvailableGuidesIds2.add(availableGuideAdapterId);
+                            ListGuideUserIds.add(guideId);
+                            ListKeys2.add(keys.get(i).toString());
+
+                        }
+
+
+
+
 
 
                     }
@@ -777,12 +837,30 @@ public class BookingsFragment extends Fragment {
                                 for (int o = 0; o < list2.size(); o++) {
                                     type.add(list2.get(o).toString());
                                 }
-                                AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri);
-                                ListUserGuides2.add(guide);
+
+                                format.format(today);
+
+
+                                Date checkDateTill = new Date();
+
+                                try {
+                                    checkDateTill = format.parse(dateTill);
+                                } catch (ParseException e) {
+                                }
+
+
+                                if(checkDateTill.after(today)  ){
+
+                                    AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri);
+                                    ListUserGuides2.add(guide);
+                                }
+
+
+
                             }
                 }
                 displayInList("second");
-//                sqliteSave();
+                sqliteSave();
             }
 
             @Override
@@ -845,12 +923,30 @@ public class BookingsFragment extends Fragment {
                         for (int o = 0; o < list2.size(); o++) {
                             type.add(list2.get(o).toString());
                         }
-                        AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri);
-                        ListUserGuides3.add(guide);
+
+                        format.format(today);
+
+
+                        Date checkDateTill = new Date();
+
+                        try {
+                            checkDateTill = format.parse(dateTill);
+                        } catch (ParseException e) {
+                        }
+
+
+                        if(checkDateTill.after(today)  ){
+
+                            AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri);
+                            ListUserGuides3.add(guide);
+                        }
+
+
+
                     }
                 }
                 displayInList("third");
-//                sqliteSave();
+                sqliteSave();
             }
 
             @Override

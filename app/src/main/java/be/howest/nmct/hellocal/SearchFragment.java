@@ -135,9 +135,11 @@ public class SearchFragment extends Fragment  {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                new DatePickerDialog(getContext(), date, myCalendar
+                 DatePickerDialog datePickerDialog = new DatePickerDialog (getContext(), date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()-1000);
+                datePickerDialog.show();
             }
         });
 

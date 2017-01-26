@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -170,6 +171,94 @@ public class InfoActivity extends AppCompatActivity {
         ImageView11.setVisibility(View.GONE);
         ImageView12.setVisibility(View.GONE);
 
+        ImageView1.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "Active tour", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView2.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "City tour", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView3.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "Culture tour", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView4.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "Special tour", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView6.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "English", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView7.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "Dutch", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView8.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "French", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView9.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "German", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView10.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "Spanish", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView11.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "Portuguese", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView12.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(getApplicationContext(), "Russian", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
 
         linearLayout = (LinearLayout) findViewById(R.id.LinearLayoutsz4);
 
@@ -279,10 +368,40 @@ public class InfoActivity extends AppCompatActivity {
 
         if(Transport.equals("Guides transport")){
             ImageView5.setImageResource(R.drawable.guidetransport);
+            ImageView5.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Toast.makeText(getApplicationContext(), "Guides transport", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
         }else if(Transport.equals("Own transport")){
             ImageView5.setImageResource(R.drawable.owntransport);
+            ImageView5.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Toast.makeText(getApplicationContext(), "Own transport", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
         }else if(Transport.equals("No transport")){
             ImageView5.setImageResource(R.drawable.notransport);
+            ImageView5.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Toast.makeText(getApplicationContext(), "No transport", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+        }else if(Transport.equals("No preference")){
+            ImageView5.setImageResource(R.drawable.notransport);
+            ImageView5.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Toast.makeText(getApplicationContext(), "No transport preference", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
         }
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
