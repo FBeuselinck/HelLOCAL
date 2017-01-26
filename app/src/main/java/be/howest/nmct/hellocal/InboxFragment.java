@@ -348,7 +348,9 @@ public class InboxFragment extends Fragment {
             holder.textViewNaam.setText(profile.getName());
 
             if(!profile.getPhotoUri().isEmpty())
-                Picasso.with(getActivity().getApplicationContext()).load(profile.getPhotoUri()).into(holder.imageViewPhoto);
+                Picasso.with(getActivity().getApplicationContext()).load(profile.getPhotoUri())
+                        .placeholder(R.drawable.ic_menu_camera).fit()
+                        .centerCrop().into(holder.imageViewPhoto);
 
             String[] previewMsg;
             for(Message msg : mMessages){
