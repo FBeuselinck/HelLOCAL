@@ -188,7 +188,7 @@ public class AllGuidesAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return (position % 2 == 0) ? AD_VIEW_TYPE: ITEM_VIEW_TYPE;
+        return (position % 4 == 0) ? AD_VIEW_TYPE: ITEM_VIEW_TYPE;
     }
 
 

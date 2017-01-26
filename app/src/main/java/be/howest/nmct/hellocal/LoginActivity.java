@@ -152,6 +152,14 @@ public class LoginActivity extends AppCompatActivity implements
 
    private void SignIn()
    {
+       String sEmail = editTextEmail.getText().toString();
+       String sPassword = editTextPassword.getText().toString();
+
+       if(sEmail.matches("") || sPassword.matches(""))
+       {
+            Toast.makeText(LoginActivity.this, "NO INPUT", Toast.LENGTH_SHORT).show();
+       }
+       else{
        mAuth.signInWithEmailAndPassword(editTextEmail.getText().toString(), editTextPassword.getText().toString())
                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                    @Override
@@ -162,30 +170,38 @@ public class LoginActivity extends AppCompatActivity implements
                        // signed in user can be handled in the listener.
                        if (!task.isSuccessful()) {
 
-                           Toast.makeText(LoginActivity.this, "MY MESSAGE NO CORRECT LOGIN",
+                           Toast.makeText(LoginActivity.this, "LOGIN UNSUCCESSFUL",
                                    Toast.LENGTH_SHORT).show();
                        }
                    }
                });
+            }
    }
 
-    private void SignUp()
-    {
-        mAuth.createUserWithEmailAndPassword(editTextEmail.getText().toString(), editTextPassword.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+    private void SignUp() {
+        String sEmail = editTextEmail.getText().toString();
+        String sPassword = editTextPassword.getText().toString();
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "MY MESSAGE LOGIN FAILED",
-                                    Toast.LENGTH_SHORT).show();
+        if(sEmail.matches("") || sPassword.matches(""))
+        {
+            Toast.makeText(LoginActivity.this, "NO INPUT", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            mAuth.createUserWithEmailAndPassword(editTextEmail.getText().toString(), editTextPassword.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(LoginActivity.this, "SIGNUP FAILED",
+                                        Toast.LENGTH_SHORT).show();
+                            } else CreateDefaultProfileValues();
                         }
-                        else CreateDefaultProfileValues();
-                    }
-                });
+                    });
+        }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
@@ -227,19 +243,6 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
 
-    private void revokeAccess() {
-        // Firebase sign out
-        mAuth.signOut();
-
-        // Google revoke access
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-
-                    }
-                });
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

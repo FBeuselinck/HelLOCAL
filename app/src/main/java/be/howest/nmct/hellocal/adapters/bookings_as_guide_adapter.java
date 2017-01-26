@@ -265,7 +265,7 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
 
                 alertDialogBuilder
                         .setCancelable(true)
-                        .setNeutralButton("Save to calander", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("Save to calender", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Calendar beginTime = Calendar.getInstance();

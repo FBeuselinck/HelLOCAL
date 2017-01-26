@@ -101,6 +101,7 @@ public class ListActivity extends AppCompatActivity {
     boolean blDate = false;
 
     boolean UserAvailable = true;
+    boolean boolCheckItems = false;
 
 
 
@@ -139,8 +140,7 @@ public class ListActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Do something after 5s = 5000ms
-//                noGuides.setVisibility(View.VISIBLE);
+
 
                 progress.dismiss();
             }
@@ -194,7 +194,7 @@ public class ListActivity extends AppCompatActivity {
         for(int i = 0; i< ListAllGuides.size(); i++){
             mRecyclerViewItems.add("test");
         }
-        for(int i = 0; i< ListAllGuides.size(); i+=2){
+        for(int i = 0; i< ListAllGuides.size(); i+=4){
             final NativeExpressAdView adView = new NativeExpressAdView(ListActivity.this);
 //            adView.setAdSize(new AdSize(360,100));
             adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
@@ -214,7 +214,7 @@ public class ListActivity extends AppCompatActivity {
                 AdSize size = new AdSize(
                         (int)(recyclerView.getWidth()/density),100
                 );
-                for(int i = 0; i < mRecyclerViewItems.size(); i+=2){
+                for(int i = 0; i < mRecyclerViewItems.size(); i+=4){
                     NativeExpressAdView adViewToSize = (NativeExpressAdView)mRecyclerViewItems.get(i);
                     adViewToSize.setAdSize(size);
                     adViewToSize.loadAd(new AdRequest.Builder().build());
@@ -230,36 +230,42 @@ public class ListActivity extends AppCompatActivity {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                if(dataSnapshot.exists()){
                 Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
-                mAvailibleGuides = new ArrayList<>();
-                List<Object> lst = new ArrayList<>(td.values());
-                List keys = new ArrayList(td.keySet());
-                mUserids = new ArrayList<>();
-                for(int i = 0; i<lst.size(); i++){
-                    AvaiableGuides ag = new AvaiableGuides();
-                    Map<String, Object> ts = (HashMap<String,Object>) lst.get(i);
-                    List<Object> gd = new ArrayList<>(ts.values());
 
-                    ag.setId(keys.get(i).toString());
-                    ag.country = (String) gd.get(2);
-                    ag.dateFrom = (String) gd.get(8);
-                    ag.dateTill = (String) gd.get(1);
-                    ag.location = (String) gd.get(4);
-                    ag.maxPeople = (String) gd.get(6);
-                    ag.name = (String) gd.get(9);
-                    ag.photoUri = (String) gd.get(3);
-                    ag.price = (String) gd.get(0);
-                    ag.transport = (String) gd.get(11);
-                    ag.userId = (String) gd.get(5);
-                    ag.type = (ArrayList<String>) gd.get(10);
-                    ag.canBeBooked = (Boolean) gd.get(7);
+                    mAvailibleGuides = new ArrayList<>();
+                    List<Object> lst = new ArrayList<>(td.values());
+                    List keys = new ArrayList(td.keySet());
+                    mUserids = new ArrayList<>();
+                    for(int i = 0; i<lst.size(); i++){
+                        AvaiableGuides ag = new AvaiableGuides();
+                        Map<String, Object> ts = (HashMap<String,Object>) lst.get(i);
+                        List<Object> gd = new ArrayList<>(ts.values());
 
-                    mUserids.add(ag.userId);
-                    mAvailibleGuides.add(ag);
+                        ag.setId(keys.get(i).toString());
+                        ag.country = (String) gd.get(2);
+                        ag.dateFrom = (String) gd.get(8);
+                        ag.dateTill = (String) gd.get(1);
+                        ag.location = (String) gd.get(4);
+                        ag.maxPeople = (String) gd.get(6);
+                        ag.name = (String) gd.get(9);
+                        ag.photoUri = (String) gd.get(3);
+                        ag.price = (String) gd.get(0);
+                        ag.transport = (String) gd.get(11);
+                        ag.userId = (String) gd.get(5);
+                        ag.type = (ArrayList<String>) gd.get(10);
+                        ag.canBeBooked = (Boolean) gd.get(7);
+
+                        mUserids.add(ag.userId);
+                        mAvailibleGuides.add(ag);
+                    }
+                    getUsersInfo();
+
+                }else{
+                    displayInList();
                 }
 
-                getUsersInfo();
+
 
             }
 
@@ -534,44 +540,57 @@ public class ListActivity extends AppCompatActivity {
 
         progress.dismiss();
 
-        mAdapter = new AllGuidesAdapter(ListAllGuides,ListAllReviews,ListAmounts, mRecyclerViewItems,thisActivity);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+        if(ListAllGuides.isEmpty()){
+            noGuides.setVisibility(View.VISIBLE);
+        }else{
 
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+            noGuides.setVisibility(View.GONE);
 
-                TextView Name = (TextView) v.findViewById(R.id.textViewNaam);
-                TextView City = (TextView) v.findViewById(R.id.textViewCity);
-                TextView Country = (TextView) v.findViewById(R.id.textViewCountry);
-                TextView Price = (TextView) v.findViewById(R.id.textViewPrice);
-                TextView id = (TextView) v.findViewById(R.id.textViewAvailibleGuideId);
+            mAdapter = new AllGuidesAdapter(ListAllGuides,ListAllReviews,ListAmounts, mRecyclerViewItems,thisActivity);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(mAdapter);
 
-                Intent intent = new Intent(thisActivity, InfoActivity.class);
-                intent.putExtra("Name",Name.getText().toString());
-                intent.putExtra("City",City.getText().toString());
-                intent.putExtra("Country",Country.getText().toString());
-                intent.putExtra("Price",Price.getText().toString());
-                intent.putExtra("UserId",Name.getTag(R.id.guideId).toString());
-                intent.putExtra("Transport",Name.getTag(R.id.transport).toString());
-                intent.putExtra("Active",Name.getTag(R.id.active).toString());
-                intent.putExtra("City2",Name.getTag(R.id.city).toString());
-                intent.putExtra("Culture",Name.getTag(R.id.culture).toString());
-                intent.putExtra("SmthElse",Name.getTag(R.id.smthElse).toString());
-                intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
-                intent.putExtra("Rating",Name.getTag(R.id.rating).toString());
-                intent.putExtra("Date", DateWant);
-                intent.putExtra("AvaiableGuidesId", id.getText());
-                intent.putExtra("Amount",Name.getTag(R.id.amount).toString());
+            ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                @Override
+                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                    TextView Name = (TextView) v.findViewById(R.id.textViewNaam);
+                    TextView City = (TextView) v.findViewById(R.id.textViewCity);
+                    TextView Country = (TextView) v.findViewById(R.id.textViewCountry);
+                    TextView Price = (TextView) v.findViewById(R.id.textViewPrice);
+                    TextView id = (TextView) v.findViewById(R.id.textViewAvailibleGuideId);
+
+                    Intent intent = new Intent(thisActivity, InfoActivity.class);
+                    intent.putExtra("Name",Name.getText().toString());
+                    intent.putExtra("City",City.getText().toString());
+                    intent.putExtra("Country",Country.getText().toString());
+                    intent.putExtra("Price",Price.getText().toString());
+                    intent.putExtra("UserId",Name.getTag(R.id.guideId).toString());
+                    intent.putExtra("Transport",Name.getTag(R.id.transport).toString());
+                    intent.putExtra("Active",Name.getTag(R.id.active).toString());
+                    intent.putExtra("City2",Name.getTag(R.id.city).toString());
+                    intent.putExtra("Culture",Name.getTag(R.id.culture).toString());
+                    intent.putExtra("SmthElse",Name.getTag(R.id.smthElse).toString());
+                    intent.putExtra("PhotoUri",Name.getTag(R.id.photoUri).toString());
+                    intent.putExtra("Rating",Name.getTag(R.id.rating).toString());
+                    intent.putExtra("Date", DateWant);
+                    intent.putExtra("AvaiableGuidesId", id.getText());
+                    intent.putExtra("Amount",Name.getTag(R.id.amount).toString());
 
 
-                thisActivity.startActivity(intent);
+                    thisActivity.startActivity(intent);
 
-            }
-        });
+                }
+            });
+
+        }
+
+
+
+
+
 
 
     }

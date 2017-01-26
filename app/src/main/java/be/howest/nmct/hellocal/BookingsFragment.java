@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -140,6 +142,16 @@ public class BookingsFragment extends Fragment {
         progress.setCancelable(false);
         progress.show();
 
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+
+                progress.dismiss();
+            }
+        }, 5000);
+
         mdbHelper = new SqliteHelper(v.getContext());
 
         ConnectivityManager connMgr = (ConnectivityManager) getActivity()
@@ -232,8 +244,15 @@ public class BookingsFragment extends Fragment {
 
                         }
 
+                        Calendar cal1 = Calendar.getInstance();
+                        Calendar cal2 = Calendar.getInstance();
+                        cal1.setTime(today);
+                        cal2.setTime(checkDateTill);
+                        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
-                        if(checkDateTill.after(today)  ){
+
+                        if(checkDateTill.after(today)  || sameDay  ){
 
                             AvaiableGuides guide =  new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri,canBeBooked);
 
@@ -351,6 +370,8 @@ public class BookingsFragment extends Fragment {
                 sortOrder                                 // The sort order
         );
 
+        if(c.getCount() == 0) return;
+
         c.moveToFirst();
         do {
             BookingRequests br = new BookingRequests();
@@ -395,6 +416,8 @@ public class BookingsFragment extends Fragment {
                 null,                                     // don't filter by row groups
                 null                                 // The sort order
         );
+
+        if(c.getCount() == 0) return;
 
         c.moveToFirst();
         do {
@@ -548,7 +571,6 @@ public class BookingsFragment extends Fragment {
 
                         format.format(today);
 
-
                         Date checkDateTill = new Date();
 
                         try {
@@ -556,8 +578,15 @@ public class BookingsFragment extends Fragment {
                         } catch (ParseException e) {
                         }
 
+                        Calendar cal1 = Calendar.getInstance();
+                        Calendar cal2 = Calendar.getInstance();
+                        cal1.setTime(today);
+                        cal2.setTime(checkDateTill);
+                        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
-                        if(checkDateTill.after(today)  ){
+
+                        if(checkDateTill.after(today)  || sameDay  ){
 
                             BookingRequests req = new BookingRequests(guideId,requestId,confirmed,date,availableGuideAdapterId);
 
@@ -589,8 +618,15 @@ public class BookingsFragment extends Fragment {
                         } catch (ParseException e) {
                         }
 
+                        Calendar cal1 = Calendar.getInstance();
+                        Calendar cal2 = Calendar.getInstance();
+                        cal1.setTime(today);
+                        cal2.setTime(checkDateTill);
+                        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
-                        if(checkDateTill.after(today)  ){
+
+                        if(checkDateTill.after(today)  || sameDay  ){
 
                             BookingRequests req = new BookingRequests(guideId,requestId,confirmed,date,availableGuideAdapterId);
 
@@ -848,8 +884,15 @@ public class BookingsFragment extends Fragment {
                                 } catch (ParseException e) {
                                 }
 
+                                Calendar cal1 = Calendar.getInstance();
+                                Calendar cal2 = Calendar.getInstance();
+                                cal1.setTime(today);
+                                cal2.setTime(checkDateTill);
+                                boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                                        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
-                                if(checkDateTill.after(today)  ){
+
+                                if(checkDateTill.after(today)  || sameDay  ){
 
                                     AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri);
                                     ListUserGuides2.add(guide);
@@ -934,8 +977,15 @@ public class BookingsFragment extends Fragment {
                         } catch (ParseException e) {
                         }
 
+                        Calendar cal1 = Calendar.getInstance();
+                        Calendar cal2 = Calendar.getInstance();
+                        cal1.setTime(today);
+                        cal2.setTime(checkDateTill);
+                        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
-                        if(checkDateTill.after(today)  ){
+
+                        if(checkDateTill.after(today)  || sameDay  ){
 
                             AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri);
                             ListUserGuides3.add(guide);
@@ -967,53 +1017,62 @@ public class BookingsFragment extends Fragment {
 
         progress.dismiss();
 
-        if(position.equals("first")){
+        if(ListUserGuides.isEmpty() && (ListBookingRequests.isEmpty()) && (ListBookingRequestsTourist.isEmpty())){
+            textViewNoBookings.setVisibility(View.VISIBLE);
 
-            textViewAvailable.setVisibility(View.VISIBLE);
+        }else{
+            textViewNoBookings.setVisibility(View.GONE);
 
-            mAdapter = new AvailabeGuidesAdapter(ListUserGuides, ListBookingIds, thisActivity);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-            recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setAdapter(mAdapter);
+            if(position.equals("first")){
 
-            ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                @Override
-                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                textViewAvailable.setVisibility(View.VISIBLE);
 
-                    TextView date = (TextView) v.findViewById(R.id.textViewTime);
+                mAdapter = new AvailabeGuidesAdapter(ListUserGuides, ListBookingIds, thisActivity);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(mAdapter);
+
+                ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                        TextView date = (TextView) v.findViewById(R.id.textViewTime);
 
 
-                    Toast.makeText(getActivity(), date.getText().toString(),
-                            Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), date.getText().toString(),
+                                Toast.LENGTH_LONG).show();
 
-                }
-            });
+                    }
+                });
+            }
+
+            if(position.equals("second")){
+
+                textViewBookings.setVisibility(View.VISIBLE);
+
+                mBAdapter = new bookings_as_guide_adapter(ListBookingRequests, ListProfileDetails, ListUserGuides2, ListKeys1 , thisActivity);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                recyclerViewBookings.setLayoutManager(mLayoutManager);
+                recyclerViewBookings.setItemAnimator(new DefaultItemAnimator());
+                recyclerViewBookings.setAdapter(mBAdapter);
+
+            }
+
+            if(position.equals("third")){
+
+                textViewTourist.setVisibility(View.VISIBLE);
+
+                mTAdapter = new bookings_as_tourist_adapter(ListBookingRequestsTourist, ListProfileDetailsGuide, ListUserGuides3 , ListKeys2, thisActivity);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                recyclerViewTourist.setLayoutManager(mLayoutManager);
+                recyclerViewTourist.setItemAnimator(new DefaultItemAnimator());
+                recyclerViewTourist.setAdapter(mTAdapter);
+
+            }
         }
 
-        if(position.equals("second")){
 
-            textViewBookings.setVisibility(View.VISIBLE);
-
-            mBAdapter = new bookings_as_guide_adapter(ListBookingRequests, ListProfileDetails, ListUserGuides2, ListKeys1 , thisActivity);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-            recyclerViewBookings.setLayoutManager(mLayoutManager);
-            recyclerViewBookings.setItemAnimator(new DefaultItemAnimator());
-            recyclerViewBookings.setAdapter(mBAdapter);
-
-        }
-
-        if(position.equals("third")){
-
-            textViewTourist.setVisibility(View.VISIBLE);
-
-            mTAdapter = new bookings_as_tourist_adapter(ListBookingRequestsTourist, ListProfileDetailsGuide, ListUserGuides3 , ListKeys2, thisActivity);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-            recyclerViewTourist.setLayoutManager(mLayoutManager);
-            recyclerViewTourist.setItemAnimator(new DefaultItemAnimator());
-            recyclerViewTourist.setAdapter(mTAdapter);
-
-        }
 
 
 

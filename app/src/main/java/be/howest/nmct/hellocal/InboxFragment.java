@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,7 +67,19 @@ public class InboxFragment extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        progressDia = ProgressDialog.show(getActivity(), null, getString(R.string.alert_loading));
+        progressDia = new ProgressDialog(getActivity());
+        progressDia.setTitle("Loading inbox");
+        progressDia.setMessage("Hold on, we are finding your messages!");
+        progressDia.setCancelable(false);
+        progressDia.show();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDia.dismiss();
+            }
+        }, 5000);
+
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         View v =inflater.inflate(R.layout.fragment_inbox, container, false);
@@ -348,12 +361,18 @@ public class InboxFragment extends Fragment {
             holder.textViewNaam.setText(profile.getName());
 
             if(!profile.getPhotoUri().isEmpty())
-                Picasso.with(getActivity().getApplicationContext()).load(profile.getPhotoUri()).into(holder.imageViewPhoto);
+                Picasso.with(getActivity().getApplicationContext()).load(profile.getPhotoUri())
+                        .placeholder(R.drawable.ic_menu_camera).fit()
+                        .centerCrop().into(holder.imageViewPhoto);
 
+            String[] previewMsg;
             for(Message msg : mMessages){
                 if(msg.getReceiver().equals(profile.getProfileId()) || msg.getSender().equals(profile.getProfileId())){
                     holder.textViewReceived.setText(DateUtils.getRelativeDateTimeString(getActivity(), msg.getDate().getTime(), DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
-                    holder.textViewPreview.setText(msg.getMsg());
+
+                    previewMsg = msg.getMsg().split("\n", 2);
+                    previewMsg[0] = previewMsg[0].length() > 30 ? previewMsg[0].substring(0, 27) + "..." : previewMsg[0];
+                    holder.textViewPreview.setText(previewMsg[0]);
                 }
             }
         }

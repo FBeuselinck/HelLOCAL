@@ -13,12 +13,16 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true">
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
@@ -96,6 +100,12 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBnp5Q6RCTjQAQGXtlZRKqwnjLWntMUQ6Q" />
+
+
+        <provider
+            android:exported="false"
+            android:authorities="be.howest.nmct.hellocal"
+            android:name=".models.ContentProviderClass"/>
     </application>
 
 </manifest>

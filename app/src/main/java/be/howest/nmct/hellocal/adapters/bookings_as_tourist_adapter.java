@@ -143,7 +143,7 @@ public class bookings_as_tourist_adapter  extends RecyclerView.Adapter<bookings_
 
                                 }
                             })
-                            .setNeutralButton("Save", new DialogInterface.OnClickListener() {
+                            .setNeutralButton("Save to calendar", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Calendar beginTime = Calendar.getInstance();

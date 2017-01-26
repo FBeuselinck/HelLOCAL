@@ -141,7 +141,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     buddy.getProfileId(),
                     "");
             conversation.setStatus(Conversation.STATUS_SENDING);
-            convList.add(conversation);
             final String key = FirebaseDatabase.getInstance()
                     .getReference("messages")
                     .push().getKey();
@@ -151,13 +150,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                                @Override
                                                public void onComplete(@NonNull Task<Void> task) {
                                                    if (task.isSuccessful()) {
-                                                       convList.get(convList.indexOf(conversation)).setStatus(Conversation.STATUS_SENT);
+                                                       conversation.setStatus(conversation.STATUS_SENT);
                                                    } else {
-                                                       convList.get(convList.indexOf(conversation)).setStatus(Conversation.STATUS_FAILED);
+                                                       conversation.setStatus(conversation.STATUS_FAILED);
                                                    }
                                                    FirebaseDatabase.getInstance()
                                                            .getReference("messages")
-                                                           .child(key).setValue(convList.get(convList.indexOf(conversation)))
+                                                           .child(key).setValue(conversation)
                                                            .addOnCompleteListener(new
                                                                                           OnCompleteListener<Void>() {
                                                                                               @Override
@@ -189,7 +188,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user != null) {
                     Conversation conversation = ds.getValue(Conversation.class);
-                    if ((conversation.getReceiver().contentEquals(user.getUid()) && conversation.getSender().contentEquals(buddy.getProfileId())) || (conversation.getSender().contentEquals(user.getUid()) && conversation.getReceiver().contentEquals(buddy.getProfileId()))) {
+                    if (conversation.getReceiver().contentEquals(user.getUid()) && conversation.getSender().contentEquals(buddy.getProfileId()) || (conversation.getSender().contentEquals(user.getUid()) && conversation.getReceiver().contentEquals(buddy.getProfileId()))) {
                         convList.add(conversation);
                         if (lastMsgDate == null
                                 || lastMsgDate.before(conversation.getDate()))
@@ -216,34 +215,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        /*
-        FirebaseDatabase.getInstance().getReference("messages").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user != null) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        Conversation conversation = ds.getValue(Conversation.class);
-                        if ((conversation.getReceiver().contentEquals(user.getUid()) && conversation.getSender().contentEquals(buddy.getProfileId())) || (conversation.getSender().contentEquals(user.getUid()) && conversation.getReceiver().contentEquals(buddy.getProfileId()))) {
-                            convList.add(conversation);
-                            if (lastMsgDate == null
-                                    || lastMsgDate.before(conversation.getDate()))
-                                lastMsgDate = conversation.getDate();
-
-                            adp.notifyDataSetChanged();
-
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        */
-
     }
 
     private class ChatAdapter extends BaseAdapter {
