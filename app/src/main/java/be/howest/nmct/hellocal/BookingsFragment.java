@@ -32,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -243,8 +244,15 @@ public class BookingsFragment extends Fragment {
 
                         }
 
+                        Calendar cal1 = Calendar.getInstance();
+                        Calendar cal2 = Calendar.getInstance();
+                        cal1.setTime(today);
+                        cal2.setTime(checkDateTill);
+                        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
-                        if(checkDateTill.after(today)  ){
+
+                        if(checkDateTill.after(today)  || sameDay  ){
 
                             AvaiableGuides guide =  new AvaiableGuides(name,country,location,dateFrom,dateTill,maxPeople,price,type,transport,userId,photoUri,canBeBooked);
 
@@ -559,7 +567,6 @@ public class BookingsFragment extends Fragment {
 
                         format.format(today);
 
-
                         Date checkDateTill = new Date();
 
                         try {
@@ -567,8 +574,15 @@ public class BookingsFragment extends Fragment {
                         } catch (ParseException e) {
                         }
 
+                        Calendar cal1 = Calendar.getInstance();
+                        Calendar cal2 = Calendar.getInstance();
+                        cal1.setTime(today);
+                        cal2.setTime(checkDateTill);
+                        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
-                        if(checkDateTill.after(today)  ){
+
+                        if(checkDateTill.after(today)  || sameDay  ){
 
                             BookingRequests req = new BookingRequests(guideId,requestId,confirmed,date,availableGuideAdapterId);
 
@@ -600,8 +614,15 @@ public class BookingsFragment extends Fragment {
                         } catch (ParseException e) {
                         }
 
+                        Calendar cal1 = Calendar.getInstance();
+                        Calendar cal2 = Calendar.getInstance();
+                        cal1.setTime(today);
+                        cal2.setTime(checkDateTill);
+                        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
-                        if(checkDateTill.after(today)  ){
+
+                        if(checkDateTill.after(today)  || sameDay  ){
 
                             BookingRequests req = new BookingRequests(guideId,requestId,confirmed,date,availableGuideAdapterId);
 
@@ -859,8 +880,15 @@ public class BookingsFragment extends Fragment {
                                 } catch (ParseException e) {
                                 }
 
+                                Calendar cal1 = Calendar.getInstance();
+                                Calendar cal2 = Calendar.getInstance();
+                                cal1.setTime(today);
+                                cal2.setTime(checkDateTill);
+                                boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                                        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
-                                if(checkDateTill.after(today)  ){
+
+                                if(checkDateTill.after(today)  || sameDay  ){
 
                                     AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri);
                                     ListUserGuides2.add(guide);
@@ -945,8 +973,15 @@ public class BookingsFragment extends Fragment {
                         } catch (ParseException e) {
                         }
 
+                        Calendar cal1 = Calendar.getInstance();
+                        Calendar cal2 = Calendar.getInstance();
+                        cal1.setTime(today);
+                        cal2.setTime(checkDateTill);
+                        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 
-                        if(checkDateTill.after(today)  ){
+
+                        if(checkDateTill.after(today)  || sameDay  ){
 
                             AvaiableGuides guide = new AvaiableGuides(name, country, location, dateFrom, dateTill, maxPeople, price, type, transport, userId, photoUri);
                             ListUserGuides3.add(guide);
