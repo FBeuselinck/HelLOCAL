@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -139,6 +140,16 @@ public class BookingsFragment extends Fragment {
         progress.setMessage("Hold on, we are finding your bookings!");
         progress.setCancelable(false);
         progress.show();
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+
+                progress.dismiss();
+            }
+        }, 5000);
 
         mdbHelper = new SqliteHelper(v.getContext());
 
@@ -967,53 +978,62 @@ public class BookingsFragment extends Fragment {
 
         progress.dismiss();
 
-        if(position.equals("first")){
+        if(ListUserGuides.isEmpty() && (ListBookingRequests.isEmpty()) && (ListBookingRequestsTourist.isEmpty())){
+            textViewNoBookings.setVisibility(View.VISIBLE);
 
-            textViewAvailable.setVisibility(View.VISIBLE);
+        }else{
+            textViewNoBookings.setVisibility(View.GONE);
 
-            mAdapter = new AvailabeGuidesAdapter(ListUserGuides, ListBookingIds, thisActivity);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-            recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setAdapter(mAdapter);
+            if(position.equals("first")){
 
-            ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                @Override
-                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                textViewAvailable.setVisibility(View.VISIBLE);
 
-                    TextView date = (TextView) v.findViewById(R.id.textViewTime);
+                mAdapter = new AvailabeGuidesAdapter(ListUserGuides, ListBookingIds, thisActivity);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(mAdapter);
+
+                ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                        TextView date = (TextView) v.findViewById(R.id.textViewTime);
 
 
-                    Toast.makeText(getActivity(), date.getText().toString(),
-                            Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), date.getText().toString(),
+                                Toast.LENGTH_LONG).show();
 
-                }
-            });
+                    }
+                });
+            }
+
+            if(position.equals("second")){
+
+                textViewBookings.setVisibility(View.VISIBLE);
+
+                mBAdapter = new bookings_as_guide_adapter(ListBookingRequests, ListProfileDetails, ListUserGuides2, ListKeys1 , thisActivity);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                recyclerViewBookings.setLayoutManager(mLayoutManager);
+                recyclerViewBookings.setItemAnimator(new DefaultItemAnimator());
+                recyclerViewBookings.setAdapter(mBAdapter);
+
+            }
+
+            if(position.equals("third")){
+
+                textViewTourist.setVisibility(View.VISIBLE);
+
+                mTAdapter = new bookings_as_tourist_adapter(ListBookingRequestsTourist, ListProfileDetailsGuide, ListUserGuides3 , ListKeys2, thisActivity);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                recyclerViewTourist.setLayoutManager(mLayoutManager);
+                recyclerViewTourist.setItemAnimator(new DefaultItemAnimator());
+                recyclerViewTourist.setAdapter(mTAdapter);
+
+            }
         }
 
-        if(position.equals("second")){
 
-            textViewBookings.setVisibility(View.VISIBLE);
-
-            mBAdapter = new bookings_as_guide_adapter(ListBookingRequests, ListProfileDetails, ListUserGuides2, ListKeys1 , thisActivity);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-            recyclerViewBookings.setLayoutManager(mLayoutManager);
-            recyclerViewBookings.setItemAnimator(new DefaultItemAnimator());
-            recyclerViewBookings.setAdapter(mBAdapter);
-
-        }
-
-        if(position.equals("third")){
-
-            textViewTourist.setVisibility(View.VISIBLE);
-
-            mTAdapter = new bookings_as_tourist_adapter(ListBookingRequestsTourist, ListProfileDetailsGuide, ListUserGuides3 , ListKeys2, thisActivity);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-            recyclerViewTourist.setLayoutManager(mLayoutManager);
-            recyclerViewTourist.setItemAnimator(new DefaultItemAnimator());
-            recyclerViewTourist.setAdapter(mTAdapter);
-
-        }
 
 
 
