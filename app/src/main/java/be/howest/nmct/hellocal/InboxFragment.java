@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,7 +67,19 @@ public class InboxFragment extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        progressDia = ProgressDialog.show(getActivity(), null, getString(R.string.alert_loading));
+        progressDia = new ProgressDialog(getActivity());
+        progressDia.setTitle("Loading inbox");
+        progressDia.setMessage("Hold on, we are finding your messages!");
+        progressDia.setCancelable(false);
+        progressDia.show();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDia.dismiss();
+            }
+        }, 5000);
+
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         View v =inflater.inflate(R.layout.fragment_inbox, container, false);
