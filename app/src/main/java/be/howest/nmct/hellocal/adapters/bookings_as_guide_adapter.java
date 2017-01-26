@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.FormatException;
 import android.provider.CalendarContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -96,6 +94,7 @@ public class bookings_as_guide_adapter extends RecyclerView.Adapter<bookings_as_
 
     @Override
     public void onBindViewHolder(bookings_as_guide_adapter.MyViewHolder holder, int position) {
+        if(guidesList.size() == 0) return;
         final AvaiableGuides guide = guidesList.get(position);
         final BookingRequests req = reqsList.get(position);
         final ProfileDetails prof = profile.get(position);

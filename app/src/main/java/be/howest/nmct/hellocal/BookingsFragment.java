@@ -226,7 +226,7 @@ public class BookingsFragment extends Fragment {
                 }
 
                 displayInList("first");
-//                               sqliteSave();
+                sqliteSave();
 
 
             }
@@ -404,6 +404,7 @@ public class BookingsFragment extends Fragment {
 
     public void sqliteSaveUserGuidesTable(List<AvaiableGuides> listag, Boolean mybooking){
         SQLiteDatabase db = mdbHelper.getWritableDatabase();
+        if(listag.size() == 0) return;
         for(int i = 0; i< listag.size(); i++)
         {
 
