@@ -350,10 +350,14 @@ public class InboxFragment extends Fragment {
             if(!profile.getPhotoUri().isEmpty())
                 Picasso.with(getActivity().getApplicationContext()).load(profile.getPhotoUri()).into(holder.imageViewPhoto);
 
+            String[] previewMsg;
             for(Message msg : mMessages){
                 if(msg.getReceiver().equals(profile.getProfileId()) || msg.getSender().equals(profile.getProfileId())){
                     holder.textViewReceived.setText(DateUtils.getRelativeDateTimeString(getActivity(), msg.getDate().getTime(), DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
-                    holder.textViewPreview.setText(msg.getMsg());
+
+                    previewMsg = msg.getMsg().split("\n", 2);
+                    previewMsg[0] = previewMsg[0].length() > 30 ? previewMsg[0].substring(0, 27) + "..." : previewMsg[0];
+                    holder.textViewPreview.setText(previewMsg[0]);
                 }
             }
         }
