@@ -1,15 +1,268 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nmct.howest.be.hellocal.BecomeAGuideFragment">
+    android:fillViewport="true"
+    android:padding="10dp"
+    android:scrollbarStyle="outsideOverlay">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/LinearLayoutsz"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="BECOME A GUIDE"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="70dp">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/textViewLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"/>
+
+    <RelativeLayout
+        android:id="@+id/LinearLayoutsz13"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+        <Spinner
+            android:id="@+id/SpinnerCountry"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/countries_array"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignBottom="@+id/myLocation2"
+            android:layout_alignParentTop="true"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/myLocation2"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter Location..."
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            />
+
+
+
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/LinearLayoutsz18"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutsz19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            >
+
+        <TextView
+            android:id="@+id/textViewFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="From"
+            />
+
+        <EditText
+            android:id="@+id/EditTextFrom"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/LinearLayoutsz20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/LinearLayoutsz19"
+            >
+
+
+            <TextView
+                android:id="@+id/textViewTill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Till"
+                />
+
+            <EditText
+                android:id="@+id/EditTextTill"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+
+
+        <RelativeLayout
+            android:id="@+id/LinearLayoutsz2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutsz4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                >
+
+                <TextView
+                    android:id="@+id/textViewTransport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Transport"/>
+
+                <Spinner
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinnerTransport"
+                    android:entries="@array/transport_array"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutsz3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:id="@+id/textViewPeople"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Max people"
+                    />
+
+                <Spinner
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinnerPeople"
+                    android:entries="@array/people_array"/>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/textViewType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type"
+            android:layout_marginTop="10dp"/>
+
+        <RelativeLayout
+            android:id="@+id/LinearLayoutsz5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutsz6"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                >
+
+                <CheckBox
+                    android:id="@+id/chkActive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Active" />
+
+                <CheckBox
+                    android:id="@+id/chkCity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="City" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutsz7"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:orientation="vertical"
+                >
+
+                <CheckBox
+                    android:id="@+id/chkCulture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Culture" />
+
+                <CheckBox
+                    android:id="@+id/chkElse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Else" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <TextView
+
+            android:id="@+id/textViewPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price per hour"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/EditTextPrice"
+            android:layout_width="160dp"
+            android:layout_height="50dp"
+            android:layout_gravity="left"
+            />
+
+
+        <Button
+            android:layout_marginTop="20dp"
+            android:text="SAVE"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:id="@+id/btnSave"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="350dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="#02D31C"/>
+
+
+    </LinearLayout>
+
+</ScrollView>

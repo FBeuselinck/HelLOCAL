@@ -8,18 +8,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:441500532356:android:2aac9e78bd3c16ca",
+        "mobilesdk_app_id": "1:441500532356:android:0c90405f31b3f071",
         "android_client_info": {
           "package_name": "be.howest.nmct.hellocal"
         }
       },
       "oauth_client": [
         {
-          "client_id": "441500532356-amj1d97m9se569crakubhbq81nrrocg5.apps.googleusercontent.com",
+          "client_id": "441500532356-nmnhtalktcusaa4ng9gkosaqtikkem8q.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "be.howest.nmct.hellocal",
-            "certificate_hash": "4DB71DE1FE38C026394627C52BC2A56F1A6C4903"
+            "certificate_hash": "3B713D06AE7EA5A999B6070CFB6864725A71AE4A"
+          }
+        },
+        {
+          "client_id": "441500532356-3d33vhi9jv7v1d8df91kt94mj8ll6jj4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "be.howest.nmct.hellocal",
+            "certificate_hash": "A6DDAA97DFC9B422CC94A3230287123E20055AE1"
           }
         },
         {
@@ -37,13 +45,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "441500532356-5s9qob34mjgptc2bujuf2p60ioagpa05.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

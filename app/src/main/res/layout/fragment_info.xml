@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:scrollbars = "vertical"
+    android:scrollbarStyle="insideInset">
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutsz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="70dp">
+
+        <ImageView
+            android:id="@+id/imagePhoto"
+            android:layout_width="350dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_menu_camera" />
+
+
+
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutsz2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="10dp"
+            >
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutsz3"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/textViewName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="George"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/textViewCity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ghent"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewCountry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Belgium"
+                    />
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutsz4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:id="@+id/ratingBar"
+                    style = "?android:attr/ratingBarStyleSmall"
+                    android:numStars = "5"
+                    android:rating   = "4"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewReviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5 reviews"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="€10/h"
+                    />
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutsz5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+
+            >
+
+            <ImageView
+                android:id="@+id/imageIcon1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_menu_camera"
+                android:layout_marginRight="20dp"/>
+            <ImageView
+                android:id="@+id/imageIcon2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_menu_camera"
+                android:layout_marginRight="20dp"/>
+            <ImageView
+                android:id="@+id/imageIcon3"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_menu_camera"
+                android:layout_marginRight="20dp"/>
+            <ImageView
+                android:id="@+id/imageIcon4"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_menu_camera"
+                android:layout_marginRight="20dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewBioLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="Bio"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            />
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:id="@+id/textViewBio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut venenatis justo, sed posuere eros. Suspendisse facilisis felis nec libero consequat fringilla. Ut lacus enim, ultricies sit amet lectus sed, eleifend vestibulum lorem."
+            />
+
+        <Button
+            android:layout_marginTop="20dp"
+            android:text="BOOK GEORGE"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:id="@+id/btnBook"
+
+            android:layout_width="350dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="#02D31C"/>
+
+        <Button
+            android:layout_marginTop="0dp"
+            android:text="CONTACT GEORGE"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:id="@+id/btnContact"
+
+            android:layout_width="350dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="#02D31C"/>
+
+    </LinearLayout>
+
+</ScrollView>

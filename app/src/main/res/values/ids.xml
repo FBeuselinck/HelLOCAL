@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="item_click_support" type="id" />
+    <item name="guideId" type="id" />
+    <item name="active" type="id" />
+    <item name="culture" type="id" />
+    <item name="city" type="id" />
+    <item name="smthElse" type="id" />
+    <item name="transport" type="id" />
+    <item name="photoUri" type="id" />
+    <item name="rating" type="id" />
+    <item name="amount" type="id" />
+    <item name="bookingId" type="id" />
+
+
+</resources>

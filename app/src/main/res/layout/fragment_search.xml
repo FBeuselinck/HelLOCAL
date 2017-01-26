@@ -1,15 +1,206 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nmct.howest.be.hellocal.SearchFragment">
+    android:fillViewport="true"
+    android:padding="10dp"
+    android:scrollbarStyle="outsideOverlay">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/LinearLayoutsz"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="This is the search fragment"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="70dp"
+        android:focusableInTouchMode="true"
+        >
 
-</RelativeLayout>
+
+        <TextView
+            android:id="@+id/textViewLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            />
+
+        <RelativeLayout
+            android:id="@+id/LinearLayoutsz13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="6dp"
+
+            >
+
+            <Spinner
+                android:id="@+id/SpinnerCountry"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:entries="@array/countries_array"
+                android:layout_alignBottom="@+id/myLocation"
+                android:layout_alignParentTop="true"
+                />
+
+
+            <AutoCompleteTextView
+                android:id="@+id/myLocation"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:hint="Enter Location..."
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                />
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            />
+
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:inputType="date"
+            android:focusable="false"
+            />
+
+    <RelativeLayout
+        android:id="@+id/LinearLayoutsz2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutsz4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            >
+
+
+            <TextView
+                android:id="@+id/textViewType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type"
+                />
+
+            <Spinner
+                android:id="@+id/spinnerType"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/type_array"/>
+
+            <TextView
+                android:id="@+id/textViewLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Language"
+                android:layout_marginTop="10dp"
+                />
+
+            <Spinner
+                android:id="@+id/spinnerLanguage"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/language_array"/>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutsz3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+
+            <TextView
+                android:id="@+id/textViewPeople"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="People"
+                />
+
+            <Spinner
+                android:id="@+id/spinnerPeople"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/people_array"/>
+
+            <TextView
+                android:id="@+id/textViewTransport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transport"
+                android:layout_marginTop="10dp"
+                />
+
+            <Spinner
+                android:id="@+id/spinnerTransport"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/transport_array"/>
+
+
+
+            </LinearLayout>
+
+    </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Max price per hour"
+            android:layout_marginTop="20dp"
+            />
+
+        <SeekBar
+            android:id="@+id/rangeSeekbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:max="50"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <TextView
+            android:id="@+id/textViewseekbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            android:layout_marginTop="30dp"
+            android:text="SEARCH"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:id="@+id/btnSearch"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="350dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="#02D31C"/>
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
