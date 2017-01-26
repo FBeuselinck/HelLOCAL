@@ -100,6 +100,12 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBnp5Q6RCTjQAQGXtlZRKqwnjLWntMUQ6Q" />
+
+
+        <provider
+            android:exported="false"
+            android:authorities="be.howest.nmct.hellocal"
+            android:name=".models.ContentProviderClass"/>
     </application>
 
 </manifest>

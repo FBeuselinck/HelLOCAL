@@ -370,6 +370,8 @@ public class BookingsFragment extends Fragment {
                 sortOrder                                 // The sort order
         );
 
+        if(c.getCount() == 0) return;
+
         c.moveToFirst();
         do {
             BookingRequests br = new BookingRequests();
@@ -414,6 +416,8 @@ public class BookingsFragment extends Fragment {
                 null,                                     // don't filter by row groups
                 null                                 // The sort order
         );
+
+        if(c.getCount() == 0) return;
 
         c.moveToFirst();
         do {
