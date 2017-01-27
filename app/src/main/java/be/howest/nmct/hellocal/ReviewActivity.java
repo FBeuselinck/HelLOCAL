@@ -134,7 +134,6 @@ public class ReviewActivity extends AppCompatActivity {
                     Map<String, Object> ts = (HashMap<String,Object>) lst.get(i);
                     List<Object> list = new ArrayList<>(ts.values());
 
-                    Log.e("list",list.toString());
 
                         review.comment = list.get(2).toString();
                         review.rating = Float.parseFloat(list.get(3).toString());
