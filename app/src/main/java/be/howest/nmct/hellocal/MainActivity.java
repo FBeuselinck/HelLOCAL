@@ -244,6 +244,7 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try{
+            if(data == null) return;
             UploadProfileImage(data.getData());
         } catch (IOException e) {
             e.printStackTrace();
