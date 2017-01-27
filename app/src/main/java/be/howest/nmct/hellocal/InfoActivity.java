@@ -285,7 +285,8 @@ public class InfoActivity extends AppCompatActivity {
 
         amountInt = amountInt.substring(1,amountInt.length());
 
-        textViewReviews.setText(amountInt + " reviews");
+//        textViewReviews.setText(amountInt + " reviews");
+        textViewReviews.setText("See reviews");
 
         textViewName.setText(Name);
         textViewCity.setText(City);
